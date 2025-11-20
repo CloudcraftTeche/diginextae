@@ -1,0 +1,576 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Management - Diginext{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0"><i class="fas fa-address-book"></i> Contact Management</h1>
+            <p class="text-muted">Manage your contact information, leads, and SEO settings</p>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+              <li class="breadcrumb-item active">Contacts</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Display Messages -->
+    {% if messages %}
+    <div class="container-fluid">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i> {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        
+        <!-- Statistics Cards -->
+        <div class="row mb-3">
+          <div class="col-lg-4 col-6">
+            <div class="small-box bg-gradient-info">
+              <div class="inner">
+                <h3>{{ contact_sa_count }}</h3>
+                <p>Contact Information Items</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-address-card"></i>
+              </div>
+              <a href="#contactSASection" class="small-box-footer">
+                Manage Contact Info <i class="fas fa-arrow-circle-down"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-6">
+            <div class="small-box bg-gradient-success">
+              <div class="inner">
+                <h3>{{ leads_count }}</h3>
+                <p>Total Leads</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <a href="#leadsSection" class="small-box-footer">
+                View All Leads <i class="fas fa-arrow-circle-down"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-6">
+            <div class="small-box bg-gradient-warning">
+              <div class="inner">
+                <h3><i class="fas fa-cog"></i></h3>
+                <p>SEO Settings</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-search"></i>
+              </div>
+              <a href="#seoSection" class="small-box-footer">
+                Configure SEO <i class="fas fa-arrow-circle-down"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="card card-outline card-primary">
+              <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-bolt"></i> Quick Actions</h3>
+              </div>
+              <div class="card-body">
+                <button type="button" class="btn btn-info btn-lg mr-2 mb-2" data-toggle="modal" data-target="#createContactSAModal">
+                  <i class="fas fa-plus-circle"></i> Add Contact Info
+                </button>
+                <button type="button" class="btn btn-success btn-lg mr-2 mb-2" data-toggle="modal" data-target="#createLeadModal">
+                  <i class="fas fa-user-plus"></i> Add New Lead
+                </button>
+                <button type="button" class="btn btn-warning btn-lg mb-2" data-toggle="modal" data-target="#contactDigitalMarketingModal">
+                  <i class="fas fa-cog"></i> {% if contact_digital_marketing %}Update{% else %}Configure{% endif %} SEO
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Information Section -->
+        <div class="row mb-4" id="contactSASection">
+          <div class="col-12">
+            <div class="card card-primary card-outline">
+              <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-address-card"></i> Contact Information</h3>
+                <div class="card-tools">
+                  <span class="badge badge-info">{{ contact_sa_count }} item(s)</span>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if contact_sa %}
+                <div class="row">
+                  {% for contact in contact_sa %}
+                  <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                    <div class="info-box shadow-sm hover-shadow">
+                      <span class="info-box-icon bg-info elevation-1">
+                        <i class="{{ contact.icon }}"></i>
+                      </span>
+                      <div class="info-box-content">
+                        <span class="info-box-text font-weight-bold">{{ contact.title }}</span>
+                        <span class="info-box-number" style="font-size: 14px;">{{ contact.text|truncatewords:10 }}</span>
+                        <div class="mt-2">
+                          <button type="button" class="btn btn-sm btn-warning" onclick="editContactSA({{ contact.pk }}, '{{ contact.title|escapejs }}', '{{ contact.icon|escapejs }}', '{{ contact.text|escapejs }}')">
+                            <i class="fas fa-edit"></i> Edit
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'contact_sa_delete' contact.pk %}', 'contact information')">
+                            <i class="fas fa-trash"></i> Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+                {% else %}
+                <div class="callout callout-info">
+                  <h5><i class="fas fa-info-circle"></i> No Contact Information</h5>
+                  <p>You haven't added any contact information yet. Click the button above to add your first contact detail like phone, email, or address.</p>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Digital Marketing / SEO Section -->
+        <div class="row mb-4" id="seoSection">
+          <div class="col-12">
+            <div class="card card-warning card-outline">
+              <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-search"></i> SEO / Digital Marketing Settings</h3>
+                <div class="card-tools">
+                  {% if contact_digital_marketing %}
+                  {% if contact_digital_marketing.is_active %}
+                  <span class="badge badge-success">Active</span>
+                  {% else %}
+                  <span class="badge badge-secondary">Inactive</span>
+                  {% endif %}
+                  {% else %}
+                  <span class="badge badge-warning">Not Configured</span>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="card-body">
+                {% if contact_digital_marketing %}
+                <div class="row">
+                  <div class="col-md-8">
+                    <dl class="row">
+                      <dt class="col-sm-4"><i class="fas fa-heading"></i> Meta Title:</dt>
+                      <dd class="col-sm-8">{{ contact_digital_marketing.meta_title|default:"<span class='text-muted'>Not set</span>" }}</dd>
+                      
+                      <dt class="col-sm-4"><i class="fas fa-align-left"></i> Meta Description:</dt>
+                      <dd class="col-sm-8">{{ contact_digital_marketing.meta_description|default:"<span class='text-muted'>Not set</span>" }}</dd>
+                      
+                      <dt class="col-sm-4"><i class="fas fa-tags"></i> Meta Keywords:</dt>
+                      <dd class="col-sm-8">{{ contact_digital_marketing.meta_keywords|default:"<span class='text-muted'>Not set</span>" }}</dd>
+                      
+                      <dt class="col-sm-4"><i class="fas fa-toggle-on"></i> Status:</dt>
+                      <dd class="col-sm-8">
+                        {% if contact_digital_marketing.is_active %}
+                        <span class="badge badge-success"><i class="fas fa-check"></i> Active</span>
+                        {% else %}
+                        <span class="badge badge-secondary"><i class="fas fa-times"></i> Inactive</span>
+                        {% endif %}
+                      </dd>
+                    </dl>
+                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#contactDigitalMarketingModal">
+                      <i class="fas fa-edit"></i> Update Settings
+                    </button>
+                  </div>
+                  <div class="col-md-4">
+                    {% if contact_digital_marketing.banner_image %}
+                    <div class="text-center">
+                      <label class="d-block mb-2"><strong><i class="fas fa-image"></i> Banner Image:</strong></label>
+                      <img src="{{ contact_digital_marketing.banner_image.url }}" alt="Banner" class="img-fluid img-thumbnail shadow-sm">
+                    </div>
+                    {% else %}
+                    <div class="callout callout-warning">
+                      <p class="mb-0"><i class="fas fa-exclamation-triangle"></i> No banner image set</p>
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+                {% else %}
+                <div class="callout callout-warning">
+                  <h5><i class="fas fa-exclamation-triangle"></i> SEO Not Configured</h5>
+                  <p>Configure your SEO settings to improve your contact page's search engine visibility. Add meta tags and a banner image.</p>
+                  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#contactDigitalMarketingModal">
+                    <i class="fas fa-cog"></i> Configure Now
+                  </button>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leads Section -->
+        <div class="row mb-4" id="leadsSection">
+          <div class="col-12">
+            <div class="card card-success card-outline">
+              <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-users"></i> Leads Management</h3>
+                <div class="card-tools">
+                  <span class="badge badge-success">{{ leads_count }} lead(s)</span>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if leads %}
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover table-striped">
+                    <thead class="thead-light">
+                      <tr>
+                        <th width="50"><i class="fas fa-hashtag"></i> ID</th>
+                        <th><i class="fas fa-user"></i> Full Name</th>
+                        <th><i class="fas fa-envelope"></i> Email</th>
+                        <th><i class="fas fa-comment"></i> Message</th>
+                        <th width="180" class="text-center"><i class="fas fa-cogs"></i> Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for lead in leads %}
+                      <tr>
+                        <td class="align-middle">{{ lead.pk }}</td>
+                        <td class="align-middle font-weight-bold">{{ lead.fullname }}</td>
+                        <td class="align-middle">
+                          <a href="mailto:{{ lead.email }}">{{ lead.email }}</a>
+                        </td>
+                        <td class="align-middle">{{ lead.message|truncatewords:15 }}</td>
+                        <td class="align-middle text-center">
+                          <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-sm btn-info" onclick="viewLead({{ lead.pk }}, '{{ lead.fullname|escapejs }}', '{{ lead.email|escapejs }}', '{{ lead.message|escapejs }}')" title="View">
+                              <i class="fas fa-eye"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-warning" onclick="editLead({{ lead.pk }}, '{{ lead.fullname|escapejs }}', '{{ lead.email|escapejs }}', '{{ lead.message|escapejs }}')" title="Edit">
+                              <i class="fas fa-edit"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'leads_delete' lead.pk %}', 'lead')" title="Delete">
+                              <i class="fas fa-trash"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% else %}
+                <div class="callout callout-success">
+                  <h5><i class="fas fa-info-circle"></i> No Leads Yet</h5>
+                  <p>You don't have any leads at the moment. When visitors submit inquiries through your contact form, they will appear here.</p>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- ===================== MODALS ===================== -->
+
+  <!-- Create Contact SA Modal -->
+  <div class="modal fade" id="createContactSAModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'contact_sa_create' %}">
+          {% csrf_token %}
+          <div class="modal-header bg-primary">
+            <h5 class="modal-title">Add Contact Information</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="contact_title">Title</label>
+              <input type="text" class="form-control" id="contact_title" name="title" placeholder="E.g., Phone, Email, Address" required>
+            </div>
+            <div class="form-group">
+              <label for="contact_icon">Icon Class</label>
+              <input type="text" class="form-control" id="contact_icon" name="icon" placeholder="E.g., fas fa-phone, fas fa-envelope" required>
+              <small class="form-text text-muted">Use Font Awesome icon classes. Visit <a href="https://fontawesome.com/icons" target="_blank">fontawesome.com</a> for icons.</small>
+            </div>
+            <div class="form-group">
+              <label for="contact_text">Text/Value</label>
+              <textarea class="form-control" id="contact_text" name="text" rows="3" placeholder="Enter contact information" required></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Contact SA Modal -->
+  <div class="modal fade" id="editContactSAModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" id="editContactSAForm">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Edit Contact Information</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="edit_contact_title">Title</label>
+              <input type="text" class="form-control" id="edit_contact_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="edit_contact_icon">Icon Class</label>
+              <input type="text" class="form-control" id="edit_contact_icon" name="icon" required>
+              <small class="form-text text-muted">Use Font Awesome icon classes.</small>
+            </div>
+            <div class="form-group">
+              <label for="edit_contact_text">Text/Value</label>
+              <textarea class="form-control" id="edit_contact_text" name="text" rows="3" required></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Lead Modal -->
+  <div class="modal fade" id="createLeadModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'leads_create' %}">
+          {% csrf_token %}
+          <div class="modal-header bg-success">
+            <h5 class="modal-title">Add New Lead</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="lead_fullname">Full Name</label>
+              <input type="text" class="form-control" id="lead_fullname" name="fullname" placeholder="Enter full name" required>
+            </div>
+            <div class="form-group">
+              <label for="lead_email">Email</label>
+              <input type="email" class="form-control" id="lead_email" name="email" placeholder="Enter email address" required>
+            </div>
+            <div class="form-group">
+              <label for="lead_message">Message</label>
+              <textarea class="form-control" id="lead_message" name="message" rows="5" placeholder="Enter message" required></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-success">Create Lead</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Lead Modal -->
+  <div class="modal fade" id="editLeadModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" id="editLeadForm">
+          {% csrf_token %}
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title">Edit Lead</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="edit_lead_fullname">Full Name</label>
+              <input type="text" class="form-control" id="edit_lead_fullname" name="fullname" required>
+            </div>
+            <div class="form-group">
+              <label for="edit_lead_email">Email</label>
+              <input type="email" class="form-control" id="edit_lead_email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="edit_lead_message">Message</label>
+              <textarea class="form-control" id="edit_lead_message" name="message" rows="5" required></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-warning">Update Lead</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Lead Modal -->
+  <div class="modal fade" id="viewLeadModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-info">
+          <h5 class="modal-title">Lead Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Full Name:</strong></p>
+              <p id="view_lead_fullname"></p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Email:</strong></p>
+              <p id="view_lead_email"></p>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-12">
+              <p><strong>Message:</strong></p>
+              <p id="view_lead_message" class="border p-3 bg-light"></p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Digital Marketing Modal -->
+  <div class="modal fade" id="contactDigitalMarketingModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'contact_digital_marketing_update' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Contact Page SEO / Digital Marketing Settings</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="cdm_meta_title">Meta Title</label>
+              <input type="text" class="form-control" id="cdm_meta_title" name="meta_title" 
+                     placeholder="Enter meta title" 
+                     value="{% if contact_digital_marketing %}{{ contact_digital_marketing.meta_title }}{% endif %}" required>
+            </div>
+            <div class="form-group">
+              <label for="cdm_meta_description">Meta Description</label>
+              <textarea class="form-control" id="cdm_meta_description" name="meta_description" rows="3" 
+                        placeholder="Enter meta description" required>{% if contact_digital_marketing %}{{ contact_digital_marketing.meta_description }}{% endif %}</textarea>
+            </div>
+            <div class="form-group">
+              <label for="cdm_meta_keywords">Meta Keywords</label>
+              <input type="text" class="form-control" id="cdm_meta_keywords" name="meta_keywords" 
+                     placeholder="Enter meta keywords (comma separated)" 
+                     value="{% if contact_digital_marketing %}{{ contact_digital_marketing.meta_keywords }}{% endif %}">
+            </div>
+            <div class="form-group">
+              {% if contact_digital_marketing.banner_image %}
+              <div class="mb-3">
+                <label class="d-block mb-2"><strong>Current Banner Image:</strong></label>
+                <img src="{{ contact_digital_marketing.banner_image.url }}" alt="Banner" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+              </div>
+              {% endif %}
+              <label for="cdm_banner_image">Banner Image (leave empty to keep current)</label>
+              <input type="file" class="form-control" id="cdm_banner_image" name="banner_image" accept="image/*">
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="cdm_is_active" name="is_active" 
+                     {% if contact_digital_marketing %}{% if contact_digital_marketing.is_active %}checked{% endif %}{% else %}checked{% endif %}>
+              <label class="form-check-label" for="cdm_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">{% if contact_digital_marketing %}Update{% else %}Create{% endif %} Settings</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Functions -->
+  <script>
+    // Edit Contact SA
+    function editContactSA(id, title, icon, text) {
+      document.getElementById('editContactSAForm').action = "{% url 'contact_sa_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_contact_title').value = title;
+      document.getElementById('edit_contact_icon').value = icon;
+      document.getElementById('edit_contact_text').value = text;
+      $('#editContactSAModal').modal('show');
+    }
+
+    // View Lead
+    function viewLead(id, fullname, email, message) {
+      document.getElementById('view_lead_fullname').textContent = fullname;
+      document.getElementById('view_lead_email').textContent = email;
+      document.getElementById('view_lead_message').textContent = message;
+      $('#viewLeadModal').modal('show');
+    }
+
+    // Edit Lead
+    function editLead(id, fullname, email, message) {
+      document.getElementById('editLeadForm').action = "{% url 'leads_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_lead_fullname').value = fullname;
+      document.getElementById('edit_lead_email').value = email;
+      document.getElementById('edit_lead_message').value = message;
+      $('#editLeadModal').modal('show');
+    }
+
+    // Delete Item
+    function deleteItem(url, itemType) {
+      if (confirm('Are you sure you want to delete this ' + itemType + '?')) {
+        window.location.href = url;
+      }
+    }
+
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+      $('.alert').fadeOut('slow');
+    }, 5000);
+  </script>
+
+{% endblock %}

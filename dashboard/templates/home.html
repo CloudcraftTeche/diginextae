@@ -1,0 +1,2094 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home Page Management - Diginext{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Home Page Management</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+              <li class="breadcrumb-item active">Home</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Display Messages -->
+    {% if messages %}
+    <div class="container-fluid">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        
+        <!-- Statistics Cards -->
+        <div class="row">
+          <div class="col-lg-3 col-6">
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{ home_banners_count }}</h3>
+                <p>Home Banners</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-image"></i>
+              </div>
+              <a href="#homeBannersSection" class="small-box-footer">View Section <i class="fas fa-arrow-circle-down"></i></a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-6">
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>{{ home_text1_count }}</h3>
+                <p>Text Sections 1</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-file-alt"></i>
+              </div>
+              <a href="#homeText1Section" class="small-box-footer">View Section <i class="fas fa-arrow-circle-down"></i></a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-6">
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>{{ home_banner2_count }}</h3>
+                <p>Secondary Banners</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-images"></i>
+              </div>
+              <a href="#homeBanner2Section" class="small-box-footer">View Section <i class="fas fa-arrow-circle-down"></i></a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-6">
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>{{ concepts_count }}</h3>
+                <p>Concepts</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-lightbulb"></i>
+              </div>
+              <a href="#conceptsSection" class="small-box-footer">View Section <i class="fas fa-arrow-circle-down"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Home Banners Section -->
+        <div class="row" id="homeBannersSection">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Home Banners</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createHomeBannerModal">
+                    <i class="fas fa-plus"></i> Add New Banner
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if home_banners %}
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th width="60">Image</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th width="80">Status</th>
+                        <th width="100">Created</th>
+                        <th width="150">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for banner in home_banners %}
+                      <tr>
+                        <td>
+                          {% if banner.image %}
+                          <img src="{{ banner.image.url }}" alt="{{ banner.title }}" class="img-thumbnail" style="max-width: 50px;">
+                          {% else %}
+                          <span class="badge badge-secondary">No Image</span>
+                          {% endif %}
+                        </td>
+                        <td>{{ banner.title }}</td>
+                        <td>{{ banner.description|truncatewords:15 }}</td>
+                        <td>
+                          {% if banner.is_active %}
+                          <span class="badge badge-success">Active</span>
+                          {% else %}
+                          <span class="badge badge-secondary">Inactive</span>
+                          {% endif %}
+                        </td>
+                        <td>{{ banner.created_at|date:"M d, Y" }}</td>
+                        <td>
+                          <button type="button" class="btn btn-sm btn-info" onclick="editHomeBanner({{ banner.pk }}, '{{ banner.title|escapejs }}', '{{ banner.description|escapejs }}', {{ banner.is_active|lower }}, '{% if banner.image %}{{ banner.image.url }}{% endif %}')">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'home_banner_delete' banner.pk %}', 'banner')">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No home banners found. Click "Add New Banner" to create one.
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Home Text 1 Section -->
+        <div class="row" id="homeText1Section">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Text Section 1</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#createHomeText1Modal">
+                    <i class="fas fa-plus"></i> Add New Text
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if home_text1 %}
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                        <th>Content</th>
+                        <th width="80">Status</th>
+                        <th width="100">Created</th>
+                        <th width="150">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for text in home_text1 %}
+                      <tr>
+                        <td>{{ text.title }}</td>
+                        <td>{{ text.content|truncatewords:20 }}</td>
+                        <td>
+                          {% if text.is_active %}
+                          <span class="badge badge-success">Active</span>
+                          {% else %}
+                          <span class="badge badge-secondary">Inactive</span>
+                          {% endif %}
+                        </td>
+                        <td>{{ text.created_at|date:"M d, Y" }}</td>
+                        <td>
+                          <button type="button" class="btn btn-sm btn-info" onclick="editHomeText1({{ text.pk }}, '{{ text.title|escapejs }}', '{{ text.content|escapejs }}', {{ text.is_active|lower }})">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'home_text1_delete' text.pk %}', 'text section')">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No text sections found. Click "Add New Text" to create one.
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Home Banner 2 Section -->
+        <div class="row" id="homeBanner2Section">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Secondary Banners</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#createHomeBanner2Modal">
+                    <i class="fas fa-plus"></i> Add New Banner
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if home_banner2 %}
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th width="60">Image</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th width="80">Status</th>
+                        <th width="100">Created</th>
+                        <th width="150">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for banner in home_banner2 %}
+                      <tr>
+                        <td>
+                          {% if banner.image %}
+                          <img src="{{ banner.image.url }}" alt="{{ banner.title }}" class="img-thumbnail" style="max-width: 50px;">
+                          {% else %}
+                          <span class="badge badge-secondary">No Image</span>
+                          {% endif %}
+                        </td>
+                        <td>{{ banner.title }}</td>
+                        <td>{{ banner.description|truncatewords:15 }}</td>
+                        <td>
+                          {% if banner.is_active %}
+                          <span class="badge badge-success">Active</span>
+                          {% else %}
+                          <span class="badge badge-secondary">Inactive</span>
+                          {% endif %}
+                        </td>
+                        <td>{{ banner.created_at|date:"M d, Y" }}</td>
+                        <td>
+                          <button type="button" class="btn btn-sm btn-info" onclick="editHomeBanner2({{ banner.pk }}, '{{ banner.title|escapejs }}', '{{ banner.description|escapejs }}', {{ banner.is_active|lower }}, '{% if banner.image %}{{ banner.image.url }}{% endif %}')">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'home_banner2_delete' banner.pk %}', 'banner')">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No secondary banners found. Click "Add New Banner" to create one.
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Home Text 2 Section -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Text Section 2</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createHomeText2Modal">
+                    <i class="fas fa-plus"></i> Add New Text
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if home_text2 %}
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                        <th>Content</th>
+                        <th width="80">Status</th>
+                        <th width="100">Created</th>
+                        <th width="150">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for text in home_text2 %}
+                      <tr>
+                        <td>{{ text.title }}</td>
+                        <td>{{ text.content|truncatewords:20 }}</td>
+                        <td>
+                          {% if text.is_active %}
+                          <span class="badge badge-success">Active</span>
+                          {% else %}
+                          <span class="badge badge-secondary">Inactive</span>
+                          {% endif %}
+                        </td>
+                        <td>{{ text.created_at|date:"M d, Y" }}</td>
+                        <td>
+                          <button type="button" class="btn btn-sm btn-info" onclick="editHomeText2({{ text.pk }}, '{{ text.title|escapejs }}', '{{ text.content|escapejs }}', {{ text.is_active|lower }})">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'home_text2_delete' text.pk %}', 'text section')">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No text sections found. Click "Add New Text" to create one.
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Concepts Section -->
+        <div class="row" id="conceptsSection">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Concepts</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#createConceptModal">
+                    <i class="fas fa-plus"></i> Add New Concept
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if concepts %}
+                <div class="row">
+                  {% for concept in concepts %}
+                  <div class="col-md-4 col-sm-6">
+                    <div class="card card-widget widget-user-2">
+                      <div class="widget-user-header bg-gradient-danger">
+                        <h3 class="widget-user-username">{{ concept.title }}</h3>
+                        <h5 class="widget-user-desc">
+                          {% if concept.is_active %}
+                          <span class="badge badge-success">Active</span>
+                          {% else %}
+                          <span class="badge badge-secondary">Inactive</span>
+                          {% endif %}
+                        </h5>
+                      </div>
+                      <div class="card-footer p-0">
+                        {% if concept.image %}
+                        <img src="{{ concept.image.url }}" alt="{{ concept.title }}" class="img-fluid" style="max-height: 200px; width: 100%; object-fit: cover;">
+                        {% endif %}
+                        <div class="p-3">
+                          <p>{{ concept.description|truncatewords:15 }}</p>
+                          <small class="text-muted">Created: {{ concept.created_at|date:"M d, Y" }}</small>
+                        </div>
+                        <div class="p-2 text-center">
+                          <button type="button" class="btn btn-sm btn-info mr-1" onclick="editConcept({{ concept.pk }}, '{{ concept.title|escapejs }}', '{{ concept.description|escapejs }}', {{ concept.is_active|lower }}, '{% if concept.image %}{{ concept.image.url }}{% endif %}')">
+                            <i class="fas fa-edit"></i> Edit
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'concepts_delete' concept.pk %}', 'concept')">
+                            <i class="fas fa-trash"></i> Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No concepts found. Click "Add New Concept" to create one.
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Home Banner 3 Section -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Home Banner 3</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createHomeBanner3Modal">
+                    <i class="fas fa-plus"></i> Add New Banner 3
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if home_banner3 %}
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th width="60">Image</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th width="80">Status</th>
+                        <th width="100">Created</th>
+                        <th width="150">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for banner in home_banner3 %}
+                      <tr>
+                        <td>
+                          {% if banner.image %}
+                          <img src="{{ banner.image.url }}" alt="{{ banner.title }}" class="img-thumbnail" style="max-width: 50px;">
+                          {% else %}
+                          <span class="badge badge-secondary">No Image</span>
+                          {% endif %}
+                        </td>
+                        <td>{{ banner.title }}</td>
+                        <td>{{ banner.description|truncatewords:15 }}</td>
+                        <td>
+                          {% if banner.is_active %}
+                          <span class="badge badge-success">Active</span>
+                          {% else %}
+                          <span class="badge badge-secondary">Inactive</span>
+                          {% endif %}
+                        </td>
+                        <td>{{ banner.created_at|date:"M d, Y" }}</td>
+                        <td>
+                          <button type="button" class="btn btn-sm btn-info" onclick="editHomeBanner3({{ banner.pk }}, '{{ banner.title|escapejs }}', '{{ banner.description|escapejs }}', {{ banner.is_active|lower }}, '{% if banner.image %}{{ banner.image.url }}{% endif %}')">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'home_banner3_delete' banner.pk %}', 'banner')">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No banner 3 found. Click "Add New Banner 3" to create one.
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Home Text 3 Section -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Text Section 3</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#createHomeText3Modal">
+                    <i class="fas fa-plus"></i> Add New Text 3
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if home_text3 %}
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                        <th>Content</th>
+                        <th width="80">Status</th>
+                        <th width="100">Created</th>
+                        <th width="150">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for text in home_text3 %}
+                      <tr>
+                        <td>{{ text.title }}</td>
+                        <td>{{ text.content|truncatewords:20 }}</td>
+                        <td>
+                          {% if text.is_active %}
+                          <span class="badge badge-success">Active</span>
+                          {% else %}
+                          <span class="badge badge-secondary">Inactive</span>
+                          {% endif %}
+                        </td>
+                        <td>{{ text.created_at|date:"M d, Y" }}</td>
+                        <td>
+                          <button type="button" class="btn btn-sm btn-info" onclick="editHomeText3({{ text.pk }}, '{{ text.title|escapejs }}', '{{ text.content|escapejs }}', {{ text.is_active|lower }})">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'home_text3_delete' text.pk %}', 'text section')">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No text section 3 found. Click "Add New Text 3" to create one.
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Home Available Works Section -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Available Works</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#createAvailableWorksModal">
+                    <i class="fas fa-plus"></i> Add New Work
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if home_available_works %}
+                <div class="row">
+                  {% for work in home_available_works %}
+                  <div class="col-md-4 col-sm-6">
+                    <div class="card card-widget widget-user-2">
+                      <div class="widget-user-header bg-gradient-info">
+                        <h3 class="widget-user-username">{{ work.title }}</h3>
+                        <h5 class="widget-user-desc">
+                          {% if work.is_active %}
+                          <span class="badge badge-success">Active</span>
+                          {% else %}
+                          <span class="badge badge-secondary">Inactive</span>
+                          {% endif %}
+                        </h5>
+                      </div>
+                      <div class="card-footer p-0">
+                        {% if work.image %}
+                        <img src="{{ work.image.url }}" alt="{{ work.title }}" class="img-fluid" style="max-height: 200px; width: 100%; object-fit: cover;">
+                        {% endif %}
+                        <div class="p-3">
+                          <p>{{ work.description|truncatewords:15 }}</p>
+                          <small class="text-muted">Created: {{ work.created_at|date:"M d, Y" }}</small>
+                        </div>
+                        <div class="p-2 text-center">
+                          <button type="button" class="btn btn-sm btn-info mr-1" onclick="editAvailableWork({{ work.pk }}, '{{ work.title|escapejs }}', '{{ work.description|escapejs }}', {{ work.is_active|lower }}, '{% if work.image %}{{ work.image.url }}{% endif %}')">
+                            <i class="fas fa-edit"></i> Edit
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'home_available_works_delete' work.pk %}', 'work')">
+                            <i class="fas fa-trash"></i> Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No available works found. Click "Add New Work" to create one.
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Home Banner 4 Section -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Home Banner 4</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#createHomeBanner4Modal">
+                    <i class="fas fa-plus"></i> Add New Banner 4
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if home_banner4 %}
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th width="60">Image</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th width="80">Status</th>
+                        <th width="100">Created</th>
+                        <th width="150">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for banner in home_banner4 %}
+                      <tr>
+                        <td>
+                          {% if banner.image %}
+                          <img src="{{ banner.image.url }}" alt="{{ banner.title }}" class="img-thumbnail" style="max-width: 50px;">
+                          {% else %}
+                          <span class="badge badge-secondary">No Image</span>
+                          {% endif %}
+                        </td>
+                        <td>{{ banner.title }}</td>
+                        <td>{{ banner.description|truncatewords:15 }}</td>
+                        <td>
+                          {% if banner.is_active %}
+                          <span class="badge badge-success">Active</span>
+                          {% else %}
+                          <span class="badge badge-secondary">Inactive</span>
+                          {% endif %}
+                        </td>
+                        <td>{{ banner.created_at|date:"M d, Y" }}</td>
+                        <td>
+                          <button type="button" class="btn btn-sm btn-info" onclick="editHomeBanner4({{ banner.pk }}, '{{ banner.title|escapejs }}', '{{ banner.description|escapejs }}', {{ banner.is_active|lower }}, '{% if banner.image %}{{ banner.image.url }}{% endif %}')">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'home_banner4_delete' banner.pk %}', 'banner')">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No banner 4 found. Click "Add New Banner 4" to create one.
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Home About Us Section -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">About Us Section</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createAboutUsModal">
+                    <i class="fas fa-plus"></i> Add About Us
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if home_about_us %}
+                <div class="row">
+                  {% for about in home_about_us %}
+                  <div class="col-md-6">
+                    <div class="card">
+                      <div class="card-body">
+                        {% if about.image %}
+                        <img src="{{ about.image.url }}" alt="{{ about.title }}" class="img-fluid mb-3" style="max-height: 250px; width: 100%; object-fit: cover;">
+                        {% endif %}
+                        <h4>{{ about.title }}</h4>
+                        <p>{{ about.description|truncatewords:30 }}</p>
+                        <p>
+                          {% if about.is_active %}
+                          <span class="badge badge-success">Active</span>
+                          {% else %}
+                          <span class="badge badge-secondary">Inactive</span>
+                          {% endif %}
+                        </p>
+                        <small class="text-muted">Created: {{ about.created_at|date:"M d, Y" }}</small>
+                      </div>
+                      <div class="card-footer text-center">
+                        <button type="button" class="btn btn-sm btn-info mr-1" onclick="editAboutUs({{ about.pk }}, '{{ about.title|escapejs }}', '{{ about.description|escapejs }}', {{ about.is_active|lower }}, '{% if about.image %}{{ about.image.url }}{% endif %}')">
+                          <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'home_about_us_delete' about.pk %}', 'about us section')">
+                          <i class="fas fa-trash"></i> Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No about us section found. Click "Add About Us" to create one.
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Home Questions/FAQ Section -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">FAQ Sections</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#createFAQModal">
+                    <i class="fas fa-plus"></i> Add FAQ Section
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if home_questions %}
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th width="80">Status</th>
+                        <th width="100">Created</th>
+                        <th width="150">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for faq in home_questions %}
+                      <tr>
+                        <td>{{ faq.title }}</td>
+                        <td>{{ faq.description|truncatewords:20 }}</td>
+                        <td>
+                          {% if faq.is_active %}
+                          <span class="badge badge-success">Active</span>
+                          {% else %}
+                          <span class="badge badge-secondary">Inactive</span>
+                          {% endif %}
+                        </td>
+                        <td>{{ faq.created_at|date:"M d, Y" }}</td>
+                        <td>
+                          <button type="button" class="btn btn-sm btn-info" onclick="editFAQ({{ faq.pk }}, '{{ faq.title|escapejs }}', '{{ faq.description|escapejs }}', {{ faq.is_active|lower }})">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'home_questions_delete' faq.pk %}', 'FAQ section')">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No FAQ sections found. Click "Add FAQ Section" to create one.
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Footer</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#createFooterModal">
+                    <i class="fas fa-plus"></i> Add Footer
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if footer %}
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th width="80">Status</th>
+                        <th width="100">Created</th>
+                        <th width="150">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for foot in footer %}
+                      <tr>
+                        <td>{{ foot.title }}</td>
+                        <td>{{ foot.description|truncatewords:20 }}</td>
+                        <td>
+                          {% if foot.is_active %}
+                          <span class="badge badge-success">Active</span>
+                          {% else %}
+                          <span class="badge badge-secondary">Inactive</span>
+                          {% endif %}
+                        </td>
+                        <td>{{ foot.created_at|date:"M d, Y" }}</td>
+                        <td>
+                          <button type="button" class="btn btn-sm btn-info" onclick="editFooter({{ foot.pk }}, '{{ foot.title|escapejs }}', '{{ foot.description|escapejs }}', {{ foot.is_active|lower }})">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'footer_delete' foot.pk %}', 'footer')">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No footer found. Click "Add Footer" to create one.
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Digital Marketing / SEO Section -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">SEO / Digital Marketing Settings</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#digitalMarketingModal">
+                    <i class="fas fa-cog"></i> {% if home_digital_marketing %}Update{% else %}Configure{% endif %}
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if home_digital_marketing %}
+                <div class="row">
+                  <div class="col-md-8">
+                    <table class="table table-bordered">
+                      <tr>
+                        <th width="200">Meta Title</th>
+                        <td>{{ home_digital_marketing.meta_title|default:"Not set" }}</td>
+                      </tr>
+                      <tr>
+                        <th>Meta Description</th>
+                        <td>{{ home_digital_marketing.meta_description|default:"Not set" }}</td>
+                      </tr>
+                      <tr>
+                        <th>Meta Keywords</th>
+                        <td>{{ home_digital_marketing.meta_keywords|default:"Not set" }}</td>
+                      </tr>
+                      <tr>
+                        <th>Status</th>
+                        <td>
+                          {% if home_digital_marketing.is_active %}
+                          <span class="badge badge-success">Active</span>
+                          {% else %}
+                          <span class="badge badge-secondary">Inactive</span>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div class="col-md-4">
+                    {% if home_digital_marketing.banner_image %}
+                    <label class="d-block mb-2"><strong>Banner Image:</strong></label>
+                    <img src="{{ home_digital_marketing.banner_image.url }}" alt="Banner" class="img-fluid img-thumbnail">
+                    {% else %}
+                    <p class="text-muted">No banner image set</p>
+                    {% endif %}
+                  </div>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No SEO settings configured. Click "Configure" to set up.
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- ===================== MODALS ===================== -->
+
+  <!-- Create Home Banner Modal -->
+  <div class="modal fade" id="createHomeBannerModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'home_banner_create' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-primary">
+            <h5 class="modal-title">Create Home Banner</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="banner_title">Title</label>
+              <input type="text" class="form-control" id="banner_title" name="title" placeholder="Enter banner title" required>
+            </div>
+            <div class="form-group">
+              <label for="banner_description">Description</label>
+              <textarea class="form-control" id="banner_description" name="description" rows="4" placeholder="Enter banner description"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="banner_image">Image</label>
+              <input type="file" class="form-control" id="banner_image" name="image" accept="image/*" required>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="banner_is_active" name="is_active" checked>
+              <label class="form-check-label" for="banner_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Create Banner</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Home Banner Modal -->
+  <div class="modal fade" id="editHomeBannerModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" id="editHomeBannerForm" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Edit Home Banner</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="edit_banner_title">Title</label>
+              <input type="text" class="form-control" id="edit_banner_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="edit_banner_description">Description</label>
+              <textarea class="form-control" id="edit_banner_description" name="description" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+              <div id="edit_banner_image_preview"></div>
+              <label for="edit_banner_image">Image (leave empty to keep current)</label>
+              <input type="file" class="form-control" id="edit_banner_image" name="image" accept="image/*">
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="edit_banner_is_active" name="is_active">
+              <label class="form-check-label" for="edit_banner_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Update Banner</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Home Text 1 Modal -->
+  <div class="modal fade" id="createHomeText1Modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'home_text1_create' %}">
+          {% csrf_token %}
+          <div class="modal-header bg-success">
+            <h5 class="modal-title">Create Text Section 1</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="text1_title">Title</label>
+              <input type="text" class="form-control" id="text1_title" name="title" placeholder="Enter title" required>
+            </div>
+            <div class="form-group">
+              <label for="text1_content">Content</label>
+              <textarea class="form-control" id="text1_content" name="content" rows="6" placeholder="Enter content" required></textarea>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="text1_is_active" name="is_active" checked>
+              <label class="form-check-label" for="text1_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-success">Create Text</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Home Text 1 Modal -->
+  <div class="modal fade" id="editHomeText1Modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" id="editHomeText1Form">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Edit Text Section 1</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="edit_text1_title">Title</label>
+              <input type="text" class="form-control" id="edit_text1_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="edit_text1_content">Content</label>
+              <textarea class="form-control" id="edit_text1_content" name="content" rows="6" required></textarea>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="edit_text1_is_active" name="is_active">
+              <label class="form-check-label" for="edit_text1_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Update Text</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Home Banner 2 Modal -->
+  <div class="modal fade" id="createHomeBanner2Modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'home_banner2_create' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title">Create Secondary Banner</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="banner2_title">Title</label>
+              <input type="text" class="form-control" id="banner2_title" name="title" placeholder="Enter banner title" required>
+            </div>
+            <div class="form-group">
+              <label for="banner2_description">Description</label>
+              <textarea class="form-control" id="banner2_description" name="description" rows="4" placeholder="Enter banner description"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="banner2_image">Image</label>
+              <input type="file" class="form-control" id="banner2_image" name="image" accept="image/*" required>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="banner2_is_active" name="is_active" checked>
+              <label class="form-check-label" for="banner2_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-warning">Create Banner</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Home Banner 2 Modal -->
+  <div class="modal fade" id="editHomeBanner2Modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" id="editHomeBanner2Form" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Edit Secondary Banner</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="edit_banner2_title">Title</label>
+              <input type="text" class="form-control" id="edit_banner2_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="edit_banner2_description">Description</label>
+              <textarea class="form-control" id="edit_banner2_description" name="description" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+              <div id="edit_banner2_image_preview"></div>
+              <label for="edit_banner2_image">Image (leave empty to keep current)</label>
+              <input type="file" class="form-control" id="edit_banner2_image" name="image" accept="image/*">
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="edit_banner2_is_active" name="is_active">
+              <label class="form-check-label" for="edit_banner2_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Update Banner</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Home Text 2 Modal -->
+  <div class="modal fade" id="createHomeText2Modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'home_text2_create' %}">
+          {% csrf_token %}
+          <div class="modal-header bg-primary">
+            <h5 class="modal-title">Create Text Section 2</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="text2_title">Title</label>
+              <input type="text" class="form-control" id="text2_title" name="title" placeholder="Enter title" required>
+            </div>
+            <div class="form-group">
+              <label for="text2_content">Content</label>
+              <textarea class="form-control" id="text2_content" name="content" rows="6" placeholder="Enter content" required></textarea>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="text2_is_active" name="is_active" checked>
+              <label class="form-check-label" for="text2_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Create Text</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Home Text 2 Modal -->
+  <div class="modal fade" id="editHomeText2Modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" id="editHomeText2Form">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Edit Text Section 2</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="edit_text2_title">Title</label>
+              <input type="text" class="form-control" id="edit_text2_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="edit_text2_content">Content</label>
+              <textarea class="form-control" id="edit_text2_content" name="content" rows="6" required></textarea>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="edit_text2_is_active" name="is_active">
+              <label class="form-check-label" for="edit_text2_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Update Text</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Concept Modal -->
+  <div class="modal fade" id="createConceptModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'concepts_create' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-danger">
+            <h5 class="modal-title">Create Concept</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="concept_title">Title</label>
+              <input type="text" class="form-control" id="concept_title" name="title" placeholder="Enter concept title" required>
+            </div>
+            <div class="form-group">
+              <label for="concept_description">Description</label>
+              <textarea class="form-control" id="concept_description" name="description" rows="4" placeholder="Enter concept description"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="concept_image">Image</label>
+              <input type="file" class="form-control" id="concept_image" name="image" accept="image/*" required>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="concept_is_active" name="is_active" checked>
+              <label class="form-check-label" for="concept_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-danger">Create Concept</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Concept Modal -->
+  <div class="modal fade" id="editConceptModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" id="editConceptForm" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Edit Concept</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="edit_concept_title">Title</label>
+              <input type="text" class="form-control" id="edit_concept_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="edit_concept_description">Description</label>
+              <textarea class="form-control" id="edit_concept_description" name="description" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+              <div id="edit_concept_image_preview"></div>
+              <label for="edit_concept_image">Image (leave empty to keep current)</label>
+              <input type="file" class="form-control" id="edit_concept_image" name="image" accept="image/*">
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="edit_concept_is_active" name="is_active">
+              <label class="form-check-label" for="edit_concept_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Update Concept</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Home Banner 3 Modal -->
+  <div class="modal fade" id="createHomeBanner3Modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'home_banner3_create' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-primary">
+            <h5 class="modal-title">Create Home Banner 3</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="banner3_title">Title</label>
+              <input type="text" class="form-control" id="banner3_title" name="title" placeholder="Enter banner title" required>
+            </div>
+            <div class="form-group">
+              <label for="banner3_description">Description</label>
+              <textarea class="form-control" id="banner3_description" name="description" rows="4" placeholder="Enter banner description"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="banner3_image">Image</label>
+              <input type="file" class="form-control" id="banner3_image" name="image" accept="image/*" required>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="banner3_is_active" name="is_active" checked>
+              <label class="form-check-label" for="banner3_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Create Banner</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Home Banner 3 Modal -->
+  <div class="modal fade" id="editHomeBanner3Modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" id="editHomeBanner3Form" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Edit Home Banner 3</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="edit_banner3_title">Title</label>
+              <input type="text" class="form-control" id="edit_banner3_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="edit_banner3_description">Description</label>
+              <textarea class="form-control" id="edit_banner3_description" name="description" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+              <div id="edit_banner3_image_preview"></div>
+              <label for="edit_banner3_image">Image (leave empty to keep current)</label>
+              <input type="file" class="form-control" id="edit_banner3_image" name="image" accept="image/*">
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="edit_banner3_is_active" name="is_active">
+              <label class="form-check-label" for="edit_banner3_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Update Banner</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Home Text 3 Modal -->
+  <div class="modal fade" id="createHomeText3Modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'home_text3_create' %}">
+          {% csrf_token %}
+          <div class="modal-header bg-success">
+            <h5 class="modal-title">Create Text Section 3</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="text3_title">Title</label>
+              <input type="text" class="form-control" id="text3_title" name="title" placeholder="Enter title" required>
+            </div>
+            <div class="form-group">
+              <label for="text3_content">Content</label>
+              <textarea class="form-control" id="text3_content" name="content" rows="6" placeholder="Enter content" required></textarea>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="text3_is_active" name="is_active" checked>
+              <label class="form-check-label" for="text3_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-success">Create Text</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Home Text 3 Modal -->
+  <div class="modal fade" id="editHomeText3Modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" id="editHomeText3Form">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Edit Text Section 3</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="edit_text3_title">Title</label>
+              <input type="text" class="form-control" id="edit_text3_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="edit_text3_content">Content</label>
+              <textarea class="form-control" id="edit_text3_content" name="content" rows="6" required></textarea>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="edit_text3_is_active" name="is_active">
+              <label class="form-check-label" for="edit_text3_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Update Text</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Available Works Modal -->
+  <div class="modal fade" id="createAvailableWorksModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'home_available_works_create' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Create Available Work</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="work_title">Title</label>
+              <input type="text" class="form-control" id="work_title" name="title" placeholder="Enter work title" required>
+            </div>
+            <div class="form-group">
+              <label for="work_description">Description</label>
+              <textarea class="form-control" id="work_description" name="description" rows="4" placeholder="Enter work description"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="work_image">Image</label>
+              <input type="file" class="form-control" id="work_image" name="image" accept="image/*" required>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="work_is_active" name="is_active" checked>
+              <label class="form-check-label" for="work_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Create Work</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Available Work Modal -->
+  <div class="modal fade" id="editAvailableWorkModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" id="editAvailableWorkForm" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Edit Available Work</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="edit_work_title">Title</label>
+              <input type="text" class="form-control" id="edit_work_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="edit_work_description">Description</label>
+              <textarea class="form-control" id="edit_work_description" name="description" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+              <div id="edit_work_image_preview"></div>
+              <label for="edit_work_image">Image (leave empty to keep current)</label>
+              <input type="file" class="form-control" id="edit_work_image" name="image" accept="image/*">
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="edit_work_is_active" name="is_active">
+              <label class="form-check-label" for="edit_work_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Update Work</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Home Banner 4 Modal -->
+  <div class="modal fade" id="createHomeBanner4Modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'home_banner4_create' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title">Create Home Banner 4</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="banner4_title">Title</label>
+              <input type="text" class="form-control" id="banner4_title" name="title" placeholder="Enter banner title" required>
+            </div>
+            <div class="form-group">
+              <label for="banner4_description">Description</label>
+              <textarea class="form-control" id="banner4_description" name="description" rows="4" placeholder="Enter banner description"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="banner4_image">Image</label>
+              <input type="file" class="form-control" id="banner4_image" name="image" accept="image/*" required>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="banner4_is_active" name="is_active" checked>
+              <label class="form-check-label" for="banner4_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-warning">Create Banner</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Home Banner 4 Modal -->
+  <div class="modal fade" id="editHomeBanner4Modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" id="editHomeBanner4Form" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Edit Home Banner 4</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="edit_banner4_title">Title</label>
+              <input type="text" class="form-control" id="edit_banner4_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="edit_banner4_description">Description</label>
+              <textarea class="form-control" id="edit_banner4_description" name="description" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+              <div id="edit_banner4_image_preview"></div>
+              <label for="edit_banner4_image">Image (leave empty to keep current)</label>
+              <input type="file" class="form-control" id="edit_banner4_image" name="image" accept="image/*">
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="edit_banner4_is_active" name="is_active">
+              <label class="form-check-label" for="edit_banner4_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Update Banner</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create About Us Modal -->
+  <div class="modal fade" id="createAboutUsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'home_about_us_create' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-primary">
+            <h5 class="modal-title">Create About Us</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="about_title">Title</label>
+              <input type="text" class="form-control" id="about_title" name="title" placeholder="Enter about us title" required>
+            </div>
+            <div class="form-group">
+              <label for="about_description">Description</label>
+              <textarea class="form-control" id="about_description" name="description" rows="6" placeholder="Enter about us description" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="about_image">Image</label>
+              <input type="file" class="form-control" id="about_image" name="image" accept="image/*" required>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="about_is_active" name="is_active" checked>
+              <label class="form-check-label" for="about_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Create About Us</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit About Us Modal -->
+  <div class="modal fade" id="editAboutUsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" id="editAboutUsForm" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Edit About Us</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="edit_about_title">Title</label>
+              <input type="text" class="form-control" id="edit_about_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="edit_about_description">Description</label>
+              <textarea class="form-control" id="edit_about_description" name="description" rows="6" required></textarea>
+            </div>
+            <div class="form-group">
+              <div id="edit_about_image_preview"></div>
+              <label for="edit_about_image">Image (leave empty to keep current)</label>
+              <input type="file" class="form-control" id="edit_about_image" name="image" accept="image/*">
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="edit_about_is_active" name="is_active">
+              <label class="form-check-label" for="edit_about_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Update About Us</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create FAQ Modal -->
+  <div class="modal fade" id="createFAQModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'home_questions_create' %}">
+          {% csrf_token %}
+          <div class="modal-header bg-success">
+            <h5 class="modal-title">Create FAQ Section</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="faq_title">Title</label>
+              <input type="text" class="form-control" id="faq_title" name="title" placeholder="Enter FAQ section title" required>
+            </div>
+            <div class="form-group">
+              <label for="faq_description">Description</label>
+              <textarea class="form-control" id="faq_description" name="description" rows="4" placeholder="Enter FAQ section description"></textarea>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="faq_is_active" name="is_active" checked>
+              <label class="form-check-label" for="faq_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-success">Create FAQ</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit FAQ Modal -->
+  <div class="modal fade" id="editFAQModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" id="editFAQForm">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Edit FAQ Section</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="edit_faq_title">Title</label>
+              <input type="text" class="form-control" id="edit_faq_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="edit_faq_description">Description</label>
+              <textarea class="form-control" id="edit_faq_description" name="description" rows="4"></textarea>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="edit_faq_is_active" name="is_active">
+              <label class="form-check-label" for="edit_faq_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Update FAQ</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Footer Modal -->
+  <div class="modal fade" id="createFooterModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'footer_create' %}">
+          {% csrf_token %}
+          <div class="modal-header bg-dark">
+            <h5 class="modal-title text-white">Create Footer</h5>
+            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="footer_title">Title</label>
+              <input type="text" class="form-control" id="footer_title" name="title" placeholder="Enter footer title" required>
+            </div>
+            <div class="form-group">
+              <label for="footer_description">Description</label>
+              <textarea class="form-control" id="footer_description" name="description" rows="5" placeholder="Enter footer description" required></textarea>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="footer_is_active" name="is_active" checked>
+              <label class="form-check-label" for="footer_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-dark">Create Footer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Footer Modal -->
+  <div class="modal fade" id="editFooterModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" id="editFooterForm">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Edit Footer</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="edit_footer_title">Title</label>
+              <input type="text" class="form-control" id="edit_footer_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="edit_footer_description">Description</label>
+              <textarea class="form-control" id="edit_footer_description" name="description" rows="5" required></textarea>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="edit_footer_is_active" name="is_active">
+              <label class="form-check-label" for="edit_footer_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Update Footer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Digital Marketing Modal -->
+  <div class="modal fade" id="digitalMarketingModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'home_digital_marketing_update' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">SEO / Digital Marketing Settings</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="dm_meta_title">Meta Title</label>
+              <input type="text" class="form-control" id="dm_meta_title" name="meta_title" 
+                     placeholder="Enter meta title" 
+                     value="{% if home_digital_marketing %}{{ home_digital_marketing.meta_title }}{% endif %}" required>
+            </div>
+            <div class="form-group">
+              <label for="dm_meta_description">Meta Description</label>
+              <textarea class="form-control" id="dm_meta_description" name="meta_description" rows="3" 
+                        placeholder="Enter meta description" required>{% if home_digital_marketing %}{{ home_digital_marketing.meta_description }}{% endif %}</textarea>
+            </div>
+            <div class="form-group">
+              <label for="dm_meta_keywords">Meta Keywords</label>
+              <input type="text" class="form-control" id="dm_meta_keywords" name="meta_keywords" 
+                     placeholder="Enter meta keywords (comma separated)" 
+                     value="{% if home_digital_marketing %}{{ home_digital_marketing.meta_keywords }}{% endif %}">
+            </div>
+            <div class="form-group">
+              {% if home_digital_marketing.banner_image %}
+              <div class="mb-3">
+                <label class="d-block mb-2"><strong>Current Banner Image:</strong></label>
+                <img src="{{ home_digital_marketing.banner_image.url }}" alt="Banner" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+              </div>
+              {% endif %}
+              <label for="dm_banner_image">Banner Image (leave empty to keep current)</label>
+              <input type="file" class="form-control" id="dm_banner_image" name="banner_image" accept="image/*">
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="dm_is_active" name="is_active" 
+                     {% if home_digital_marketing %}{% if home_digital_marketing.is_active %}checked{% endif %}{% else %}checked{% endif %}>
+              <label class="form-check-label" for="dm_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">{% if home_digital_marketing %}Update{% else %}Create{% endif %} Settings</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Functions -->
+  <script>
+    // Edit Home Banner
+    function editHomeBanner(id, title, description, isActive, imageUrl) {
+      document.getElementById('editHomeBannerForm').action = "{% url 'home_banner_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_banner_title').value = title;
+      document.getElementById('edit_banner_description').value = description;
+      document.getElementById('edit_banner_is_active').checked = isActive;
+      
+      const imagePreview = document.getElementById('edit_banner_image_preview');
+      if (imageUrl) {
+        imagePreview.innerHTML = `
+          <div class="mb-3">
+            <label class="d-block mb-2"><strong>Current Image:</strong></label>
+            <img src="${imageUrl}" alt="Current image" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+          </div>
+        `;
+      } else {
+        imagePreview.innerHTML = '<p class="text-muted mb-2">No image uploaded</p>';
+      }
+      
+      $('#editHomeBannerModal').modal('show');
+    }
+
+    // Edit Home Text 1
+    function editHomeText1(id, title, content, isActive) {
+      document.getElementById('editHomeText1Form').action = "{% url 'home_text1_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_text1_title').value = title;
+      document.getElementById('edit_text1_content').value = content;
+      document.getElementById('edit_text1_is_active').checked = isActive;
+      $('#editHomeText1Modal').modal('show');
+    }
+
+    // Edit Home Banner 2
+    function editHomeBanner2(id, title, description, isActive, imageUrl) {
+      document.getElementById('editHomeBanner2Form').action = "{% url 'home_banner2_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_banner2_title').value = title;
+      document.getElementById('edit_banner2_description').value = description;
+      document.getElementById('edit_banner2_is_active').checked = isActive;
+      
+      const imagePreview = document.getElementById('edit_banner2_image_preview');
+      if (imageUrl) {
+        imagePreview.innerHTML = `
+          <div class="mb-3">
+            <label class="d-block mb-2"><strong>Current Image:</strong></label>
+            <img src="${imageUrl}" alt="Current image" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+          </div>
+        `;
+      } else {
+        imagePreview.innerHTML = '<p class="text-muted mb-2">No image uploaded</p>';
+      }
+      
+      $('#editHomeBanner2Modal').modal('show');
+    }
+
+    // Edit Home Text 2
+    function editHomeText2(id, title, content, isActive) {
+      document.getElementById('editHomeText2Form').action = "{% url 'home_text2_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_text2_title').value = title;
+      document.getElementById('edit_text2_content').value = content;
+      document.getElementById('edit_text2_is_active').checked = isActive;
+      $('#editHomeText2Modal').modal('show');
+    }
+
+    // Edit Concept
+    function editConcept(id, title, description, isActive, imageUrl) {
+      document.getElementById('editConceptForm').action = "{% url 'concepts_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_concept_title').value = title;
+      document.getElementById('edit_concept_description').value = description;
+      document.getElementById('edit_concept_is_active').checked = isActive;
+      
+      const imagePreview = document.getElementById('edit_concept_image_preview');
+      if (imageUrl) {
+        imagePreview.innerHTML = `
+          <div class="mb-3">
+            <label class="d-block mb-2"><strong>Current Image:</strong></label>
+            <img src="${imageUrl}" alt="Current image" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+          </div>
+        `;
+      } else {
+        imagePreview.innerHTML = '<p class="text-muted mb-2">No image uploaded</p>';
+      }
+      
+      $('#editConceptModal').modal('show');
+    }
+
+    // Edit Home Banner 3
+    function editHomeBanner3(id, title, description, isActive, imageUrl) {
+      document.getElementById('editHomeBanner3Form').action = "{% url 'home_banner3_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_banner3_title').value = title;
+      document.getElementById('edit_banner3_description').value = description;
+      document.getElementById('edit_banner3_is_active').checked = isActive;
+      
+      const imagePreview = document.getElementById('edit_banner3_image_preview');
+      if (imageUrl) {
+        imagePreview.innerHTML = `
+          <div class="mb-3">
+            <label class="d-block mb-2"><strong>Current Image:</strong></label>
+            <img src="${imageUrl}" alt="Current image" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+          </div>
+        `;
+      } else {
+        imagePreview.innerHTML = '<p class="text-muted mb-2">No image uploaded</p>';
+      }
+      
+      $('#editHomeBanner3Modal').modal('show');
+    }
+
+    // Edit Home Text 3
+    function editHomeText3(id, title, content, isActive) {
+      document.getElementById('editHomeText3Form').action = "{% url 'home_text3_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_text3_title').value = title;
+      document.getElementById('edit_text3_content').value = content;
+      document.getElementById('edit_text3_is_active').checked = isActive;
+      $('#editHomeText3Modal').modal('show');
+    }
+
+    // Edit Available Work
+    function editAvailableWork(id, title, description, isActive, imageUrl) {
+      document.getElementById('editAvailableWorkForm').action = "{% url 'home_available_works_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_work_title').value = title;
+      document.getElementById('edit_work_description').value = description;
+      document.getElementById('edit_work_is_active').checked = isActive;
+      
+      const imagePreview = document.getElementById('edit_work_image_preview');
+      if (imageUrl) {
+        imagePreview.innerHTML = `
+          <div class="mb-3">
+            <label class="d-block mb-2"><strong>Current Image:</strong></label>
+            <img src="${imageUrl}" alt="Current image" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+          </div>
+        `;
+      } else {
+        imagePreview.innerHTML = '<p class="text-muted mb-2">No image uploaded</p>';
+      }
+      
+      $('#editAvailableWorkModal').modal('show');
+    }
+
+    // Edit Home Banner 4
+    function editHomeBanner4(id, title, description, isActive, imageUrl) {
+      document.getElementById('editHomeBanner4Form').action = "{% url 'home_banner4_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_banner4_title').value = title;
+      document.getElementById('edit_banner4_description').value = description;
+      document.getElementById('edit_banner4_is_active').checked = isActive;
+      
+      const imagePreview = document.getElementById('edit_banner4_image_preview');
+      if (imageUrl) {
+        imagePreview.innerHTML = `
+          <div class="mb-3">
+            <label class="d-block mb-2"><strong>Current Image:</strong></label>
+            <img src="${imageUrl}" alt="Current image" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+          </div>
+        `;
+      } else {
+        imagePreview.innerHTML = '<p class="text-muted mb-2">No image uploaded</p>';
+      }
+      
+      $('#editHomeBanner4Modal').modal('show');
+    }
+
+    // Edit About Us
+    function editAboutUs(id, title, description, isActive, imageUrl) {
+      document.getElementById('editAboutUsForm').action = "{% url 'home_about_us_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_about_title').value = title;
+      document.getElementById('edit_about_description').value = description;
+      document.getElementById('edit_about_is_active').checked = isActive;
+      
+      const imagePreview = document.getElementById('edit_about_image_preview');
+      if (imageUrl) {
+        imagePreview.innerHTML = `
+          <div class="mb-3">
+            <label class="d-block mb-2"><strong>Current Image:</strong></label>
+            <img src="${imageUrl}" alt="Current image" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+          </div>
+        `;
+      } else {
+        imagePreview.innerHTML = '<p class="text-muted mb-2">No image uploaded</p>';
+      }
+      
+      $('#editAboutUsModal').modal('show');
+    }
+
+    // Edit FAQ
+    function editFAQ(id, title, description, isActive) {
+      document.getElementById('editFAQForm').action = "{% url 'home_questions_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_faq_title').value = title;
+      document.getElementById('edit_faq_description').value = description;
+      document.getElementById('edit_faq_is_active').checked = isActive;
+      $('#editFAQModal').modal('show');
+    }
+
+    // Edit Footer
+    function editFooter(id, title, description, isActive) {
+      document.getElementById('editFooterForm').action = "{% url 'footer_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_footer_title').value = title;
+      document.getElementById('edit_footer_description').value = description;
+      document.getElementById('edit_footer_is_active').checked = isActive;
+      $('#editFooterModal').modal('show');
+    }
+
+    // Delete Item
+    function deleteItem(url, itemType) {
+      if (confirm('Are you sure you want to delete this ' + itemType + '?')) {
+        window.location.href = url;
+      }
+    }
+
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+      $('.alert').fadeOut('slow');
+    }, 5000);
+  </script>
+
+{% endblock %}

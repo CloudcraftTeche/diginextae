@@ -1,0 +1,880 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us Management - Diginext{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0"><i class="fas fa-info-circle"></i> About Us Management</h1>
+            <p class="text-muted">Manage your about us page content</p>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+              <li class="breadcrumb-item active">About Us</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Display Messages -->
+    {% if messages %}
+    <div class="container-fluid">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i> {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+          <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+            <div class="small-box bg-info elevation-2">
+              <div class="inner">
+                <h3>{{ aboutus_banner1_count }}</h3>
+                <p>Banner Sections</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-images"></i>
+              </div>
+              <a href="#banner1" class="small-box-footer" onclick="$('#banner1-tab').click()">
+                View Details <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+            <div class="small-box bg-success elevation-2">
+              <div class="inner">
+                <h3>{{ aboutus_text1_count }}</h3>
+                <p>Text Sections 1</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-file-alt"></i>
+              </div>
+              <a href="#text1" class="small-box-footer" onclick="$('#text1-tab').click()">
+                View Details <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+            <div class="small-box bg-warning elevation-2">
+              <div class="inner">
+                <h3>{{ aboutus_mission_count }}</h3>
+                <p>Mission Items</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-bullseye"></i>
+              </div>
+              <a href="#mission" class="small-box-footer" onclick="$('#mission-tab').click()">
+                View Details <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+            <div class="small-box bg-danger elevation-2">
+              <div class="inner">
+                <h3>{{ aboutus_text2_count }}</h3>
+                <p>Text Sections 2</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-paragraph"></i>
+              </div>
+              <a href="#text2" class="small-box-footer" onclick="$('#text2-tab').click()">
+                View Details <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEO Settings Card -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="card card-warning card-outline elevation-2">
+              <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-search"></i> SEO / Digital Marketing Settings</h3>
+                <div class="card-tools">
+                  {% if aboutus_digital_marketing %}
+                  {% if aboutus_digital_marketing.is_active %}
+                  <span class="badge badge-success"><i class="fas fa-check-circle"></i> Active</span>
+                  {% else %}
+                  <span class="badge badge-secondary"><i class="fas fa-times-circle"></i> Inactive</span>
+                  {% endif %}
+                  {% else %}
+                  <span class="badge badge-warning"><i class="fas fa-exclamation-triangle"></i> Not Configured</span>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="card-body">
+                {% if aboutus_digital_marketing %}
+                <div class="row">
+                  <div class="col-md-9">
+                    <dl class="row mb-0">
+                      <dt class="col-sm-3">Meta Title:</dt>
+                      <dd class="col-sm-9">{{ aboutus_digital_marketing.meta_title|default:"<em class='text-muted'>Not set</em>" }}</dd>
+                      
+                      <dt class="col-sm-3">Meta Description:</dt>
+                      <dd class="col-sm-9">{{ aboutus_digital_marketing.meta_description|truncatewords:20|default:"<em class='text-muted'>Not set</em>" }}</dd>
+                    </dl>
+                  </div>
+                  <div class="col-md-3 text-center">
+                    {% if aboutus_digital_marketing.banner_image %}
+                    <img src="{{ aboutus_digital_marketing.banner_image.url }}" alt="SEO Banner" class="img-thumbnail" style="max-height: 80px;">
+                    {% else %}
+                    <div class="text-muted"><i class="fas fa-image fa-3x"></i><br><small>No Banner</small></div>
+                    {% endif %}
+                  </div>
+                </div>
+                {% else %}
+                <p class="text-muted mb-0"><i class="fas fa-info-circle"></i> Configure SEO settings to improve your about us page's search engine visibility.</p>
+                {% endif %}
+              </div>
+              <div class="card-footer">
+                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#aboutusDigitalMarketingModal">
+                  <i class="fas fa-cog"></i> {% if aboutus_digital_marketing %}Update{% else %}Configure{% endif %} SEO Settings
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="card card-primary card-outline card-outline-tabs elevation-2">
+          <div class="card-header p-0 border-bottom-0">
+            <ul class="nav nav-tabs" id="aboutusTabs" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="banner1-tab" data-toggle="pill" href="#banner1" role="tab">
+                  <i class="fas fa-images"></i> Banners
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="text1-tab" data-toggle="pill" href="#text1" role="tab">
+                  <i class="fas fa-file-alt"></i> Text 1
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="mission-tab" data-toggle="pill" href="#mission" role="tab">
+                  <i class="fas fa-bullseye"></i> Mission
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="text2-tab" data-toggle="pill" href="#text2" role="tab">
+                  <i class="fas fa-paragraph"></i> Text 2
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="card-body">
+            <div class="tab-content" id="aboutusTabsContent">
+              
+              <!-- Banner1 Tab -->
+              <div class="tab-pane fade show active" id="banner1" role="tabpanel">
+                <div class="mb-3">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createBanner1Modal">
+                    <i class="fas fa-plus-circle"></i> Add New Banner
+                  </button>
+                </div>
+                
+                {% if aboutus_banner1 %}
+                <div class="row">
+                  {% for banner in aboutus_banner1 %}
+                  <div class="col-lg-6 col-md-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                      {% if banner.image %}
+                      <img src="{{ banner.image.url }}" class="card-img-top" alt="{{ banner.title }}" style="height: 250px; object-fit: cover;">
+                      {% else %}
+                      <div class="bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                        <span class="text-muted"><i class="fas fa-image fa-5x"></i></span>
+                      </div>
+                      {% endif %}
+                      <div class="card-body">
+                        <h5 class="card-title font-weight-bold">{{ banner.title }}</h5>
+                        {% if banner.subtitle %}
+                        <h6 class="card-subtitle mb-2 text-primary">{{ banner.subtitle }}</h6>
+                        {% endif %}
+                        <p class="card-text text-muted">{{ banner.description|truncatewords:25|default:"<em>No description</em>" }}</p>
+                      </div>
+                      <div class="card-footer bg-white border-top">
+                        <div class="d-flex justify-content-between align-items-center">
+                          <span class="badge badge-pill {% if banner.is_active %}badge-success{% else %}badge-secondary{% endif %}">
+                            <i class="fas {% if banner.is_active %}fa-check-circle{% else %}fa-times-circle{% endif %}"></i>
+                            {% if banner.is_active %}Active{% else %}Inactive{% endif %}
+                          </span>
+                          <div>
+                            <button class="btn btn-sm btn-warning" onclick="editBanner1({{ banner.pk }}, '{{ banner.title|escapejs }}', '{{ banner.subtitle|escapejs }}', '{{ banner.description|escapejs }}', {{ banner.is_active|yesno:'true,false' }}, '{% if banner.image %}{{ banner.image.url }}{% endif %}')">
+                              <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'aboutus_banner1_delete' banner.pk %}', 'banner')">
+                              <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No banners added yet. Click the button above to add your first banner.
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Text1 Tab -->
+              <div class="tab-pane fade" id="text1" role="tabpanel">
+                <div class="mb-3">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createText1Modal">
+                    <i class="fas fa-plus-circle"></i> Add New Text Section
+                  </button>
+                </div>
+                
+                {% if aboutus_text1 %}
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover table-striped">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th width="20%"><i class="fas fa-heading"></i> Heading</th>
+                        <th><i class="fas fa-align-left"></i> Content</th>
+                        <th width="10%" class="text-center"><i class="fas fa-toggle-on"></i> Status</th>
+                        <th width="15%" class="text-center"><i class="fas fa-cogs"></i> Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for text in aboutus_text1 %}
+                      <tr>
+                        <td class="font-weight-bold">{{ text.heading }}</td>
+                        <td>{{ text.content|truncatewords:30 }}</td>
+                        <td class="text-center">
+                          <span class="badge badge-pill {% if text.is_active %}badge-success{% else %}badge-secondary{% endif %}">
+                            <i class="fas {% if text.is_active %}fa-check{% else %}fa-times{% endif %}"></i>
+                            {% if text.is_active %}Active{% else %}Inactive{% endif %}
+                          </span>
+                        </td>
+                        <td class="text-center">
+                          <div class="btn-group" role="group">
+                            <button class="btn btn-sm btn-warning" onclick="editText1({{ text.pk }}, '{{ text.heading|escapejs }}', '{{ text.content|escapejs }}', {{ text.is_active|yesno:'true,false' }})" title="Edit">
+                              <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'aboutus_text1_delete' text.pk %}', 'text section')" title="Delete">
+                              <i class="fas fa-trash-alt"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No text sections added yet. Click the button above to add your first text section.
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Mission Tab -->
+              <div class="tab-pane fade" id="mission" role="tabpanel">
+                <div class="mb-3">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createMissionModal">
+                    <i class="fas fa-plus-circle"></i> Add New Mission
+                  </button>
+                </div>
+                
+                {% if aboutus_mission %}
+                <div class="row">
+                  {% for mission in aboutus_mission %}
+                  <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card shadow-sm h-100 text-center">
+                      <div class="card-body">
+                        {% if mission.icon %}
+                        <img src="{{ mission.icon.url }}" class="mb-3" alt="{{ mission.title }}" style="height: 100px; object-fit: contain;">
+                        {% else %}
+                        <div class="mb-3">
+                          <i class="fas fa-bullseye fa-5x text-muted"></i>
+                        </div>
+                        {% endif %}
+                        <h5 class="card-title font-weight-bold">{{ mission.title }}</h5>
+                        <p class="card-text text-muted">{{ mission.mission_text|truncatewords:25 }}</p>
+                        <span class="badge badge-pill {% if mission.is_active %}badge-success{% else %}badge-secondary{% endif %}">
+                          <i class="fas {% if mission.is_active %}fa-check-circle{% else %}fa-times-circle{% endif %}"></i>
+                          {% if mission.is_active %}Active{% else %}Inactive{% endif %}
+                        </span>
+                      </div>
+                      <div class="card-footer bg-white border-top">
+                        <button class="btn btn-sm btn-warning mr-1" onclick="editMission({{ mission.pk }}, '{{ mission.title|escapejs }}', '{{ mission.mission_text|escapejs }}', {{ mission.is_active|yesno:'true,false' }}, '{% if mission.icon %}{{ mission.icon.url }}{% endif %}')">
+                          <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'aboutus_mission_delete' mission.pk %}', 'mission')">
+                          <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No mission items added yet. Click the button above to add your first mission.
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Text2 Tab -->
+              <div class="tab-pane fade" id="text2" role="tabpanel">
+                <div class="mb-3">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createText2Modal">
+                    <i class="fas fa-plus-circle"></i> Add New Text Section
+                  </button>
+                </div>
+                
+                {% if aboutus_text2 %}
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover table-striped">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th width="20%"><i class="fas fa-heading"></i> Heading</th>
+                        <th><i class="fas fa-align-left"></i> Content</th>
+                        <th width="10%" class="text-center"><i class="fas fa-toggle-on"></i> Status</th>
+                        <th width="15%" class="text-center"><i class="fas fa-cogs"></i> Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for text in aboutus_text2 %}
+                      <tr>
+                        <td class="font-weight-bold">{{ text.heading }}</td>
+                        <td>{{ text.content|truncatewords:30 }}</td>
+                        <td class="text-center">
+                          <span class="badge badge-pill {% if text.is_active %}badge-success{% else %}badge-secondary{% endif %}">
+                            <i class="fas {% if text.is_active %}fa-check{% else %}fa-times{% endif %}"></i>
+                            {% if text.is_active %}Active{% else %}Inactive{% endif %}
+                          </span>
+                        </td>
+                        <td class="text-center">
+                          <div class="btn-group" role="group">
+                            <button class="btn btn-sm btn-warning" onclick="editText2({{ text.pk }}, '{{ text.heading|escapejs }}', '{{ text.content|escapejs }}', {{ text.is_active|yesno:'true,false' }})" title="Edit">
+                              <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'aboutus_text2_delete' text.pk %}', 'text section')" title="Delete">
+                              <i class="fas fa-trash-alt"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No text sections added yet. Click the button above to add your first text section.
+                </div>
+                {% endif %}
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <!-- ===================== MODALS ===================== -->
+
+  <!-- Create Banner1 Modal -->
+  <div class="modal fade" id="createBanner1Modal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'aboutus_banner1_create' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add About Us Banner</h5>
+            <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Title <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="title" placeholder="Enter banner title" required>
+            </div>
+            <div class="form-group">
+              <label>Subtitle</label>
+              <input type="text" class="form-control" name="subtitle" placeholder="Enter banner subtitle (optional)">
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea class="form-control" name="description" rows="3" placeholder="Enter banner description (optional)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Image <span class="text-danger">*</span></label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" name="image" id="create_banner1_image" accept="image/*" required>
+                <label class="custom-file-label" for="create_banner1_image">Choose file</label>
+              </div>
+              <small class="form-text text-muted">Recommended size: 1920x600px. Max file size: 5MB</small>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" name="is_active" id="create_banner1_active" checked>
+              <label class="custom-control-label" for="create_banner1_active">Set as Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create Banner</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Banner1 Modal -->
+  <div class="modal fade" id="editBanner1Modal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" id="editBanner1Form" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title"><i class="fas fa-edit"></i> Edit About Us Banner</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Title <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="edit_banner1_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label>Subtitle</label>
+              <input type="text" class="form-control" id="edit_banner1_subtitle" name="subtitle">
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea class="form-control" id="edit_banner1_description" name="description" rows="3"></textarea>
+            </div>
+            
+            <!-- Current Image Preview -->
+            <div id="edit_banner1_current_image_container" class="form-group" style="display:none;">
+              <label>Current Image</label>
+              <div class="border p-2 text-center bg-light">
+                <img id="edit_banner1_current_image" src="" alt="Current Banner" class="img-thumbnail" style="max-height: 150px;">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Change Image <small class="text-muted">(leave empty to keep current)</small></label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" name="image" id="edit_banner1_image" accept="image/*">
+                <label class="custom-file-label" for="edit_banner1_image">Choose new file</label>
+              </div>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="edit_banner1_is_active" name="is_active">
+              <label class="custom-control-label" for="edit_banner1_is_active">Set as Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update Banner</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Text1 Modal -->
+  <div class="modal fade" id="createText1Modal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'aboutus_text1_create' %}">
+          {% csrf_token %}
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Text Section 1</h5>
+            <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Heading <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="heading" placeholder="Enter heading" required>
+            </div>
+            <div class="form-group">
+              <label>Content <span class="text-danger">*</span></label>
+              <textarea class="form-control" name="content" rows="6" placeholder="Enter content" required></textarea>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" name="is_active" id="create_text1_active" checked>
+              <label class="custom-control-label" for="create_text1_active">Set as Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Text1 Modal -->
+  <div class="modal fade" id="editText1Modal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" id="editText1Form">
+          {% csrf_token %}
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Text Section 1</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Heading <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="edit_text1_heading" name="heading" required>
+            </div>
+            <div class="form-group">
+              <label>Content <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="edit_text1_content" name="content" rows="6" required></textarea>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="edit_text1_is_active" name="is_active">
+              <label class="custom-control-label" for="edit_text1_is_active">Set as Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Mission Modal -->
+  <div class="modal fade" id="createMissionModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'aboutus_mission_create' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Mission</h5>
+            <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Title <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="title" placeholder="Enter mission title" required>
+            </div>
+            <div class="form-group">
+              <label>Mission Text <span class="text-danger">*</span></label>
+              <textarea class="form-control" name="mission_text" rows="5" placeholder="Enter mission description" required></textarea>
+            </div>
+            <div class="form-group">
+              <label>Icon / Image</label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" name="icon" id="create_mission_icon" accept="image/*">
+                <label class="custom-file-label" for="create_mission_icon">Choose file (optional)</label>
+              </div>
+              <small class="form-text text-muted">Upload an icon or image for this mission</small>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" name="is_active" id="create_mission_active" checked>
+              <label class="custom-control-label" for="create_mission_active">Set as Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create Mission</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Mission Modal -->
+  <div class="modal fade" id="editMissionModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" id="editMissionForm" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Mission</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Title <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="edit_mission_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label>Mission Text <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="edit_mission_text" name="mission_text" rows="5" required></textarea>
+            </div>
+            
+            <!-- Current Icon Preview -->
+            <div id="edit_mission_current_icon_container" class="form-group" style="display:none;">
+              <label>Current Icon</label>
+              <div class="border p-2 text-center bg-light">
+                <img id="edit_mission_current_icon" src="" alt="Current Icon" class="img-thumbnail" style="max-height: 100px;">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Change Icon <small class="text-muted">(leave empty to keep current)</small></label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" name="icon" id="edit_mission_icon" accept="image/*">
+                <label class="custom-file-label" for="edit_mission_icon">Choose new file</label>
+              </div>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="edit_mission_is_active" name="is_active">
+              <label class="custom-control-label" for="edit_mission_is_active">Set as Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update Mission</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Text2 Modal -->
+  <div class="modal fade" id="createText2Modal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'aboutus_text2_create' %}">
+          {% csrf_token %}
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Text Section 2</h5>
+            <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Heading <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="heading" placeholder="Enter heading" required>
+            </div>
+            <div class="form-group">
+              <label>Content <span class="text-danger">*</span></label>
+              <textarea class="form-control" name="content" rows="6" placeholder="Enter content" required></textarea>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" name="is_active" id="create_text2_active" checked>
+              <label class="custom-control-label" for="create_text2_active">Set as Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Text2 Modal -->
+  <div class="modal fade" id="editText2Modal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" id="editText2Form">
+          {% csrf_token %}
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Text Section 2</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Heading <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="edit_text2_heading" name="heading" required>
+            </div>
+            <div class="form-group">
+              <label>Content <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="edit_text2_content" name="content" rows="6" required></textarea>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="edit_text2_is_active" name="is_active">
+              <label class="custom-control-label" for="edit_text2_is_active">Set as Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- About Us Digital Marketing Modal -->
+  <div class="modal fade" id="aboutusDigitalMarketingModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'aboutus_digital_marketing_update' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title"><i class="fas fa-search"></i> About Us Page SEO Settings</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Meta Title <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="meta_title" 
+                     value="{% if aboutus_digital_marketing %}{{ aboutus_digital_marketing.meta_title }}{% endif %}" 
+                     placeholder="Enter meta title for SEO" required>
+              <small class="form-text text-muted">Recommended length: 50-60 characters</small>
+            </div>
+            <div class="form-group">
+              <label>Meta Description <span class="text-danger">*</span></label>
+              <textarea class="form-control" name="meta_description" rows="3" placeholder="Enter meta description for SEO" required>{% if aboutus_digital_marketing %}{{ aboutus_digital_marketing.meta_description }}{% endif %}</textarea>
+              <small class="form-text text-muted">Recommended length: 150-160 characters</small>
+            </div>
+            <div class="form-group">
+              <label>Meta Keywords</label>
+              <input type="text" class="form-control" name="meta_keywords" 
+                     value="{% if aboutus_digital_marketing %}{{ aboutus_digital_marketing.meta_keywords }}{% endif %}"
+                     placeholder="Enter keywords separated by commas">
+            </div>
+            
+            {% if aboutus_digital_marketing.banner_image %}
+            <div class="form-group">
+              <label>Current Banner Image</label>
+              <div class="border p-2 text-center bg-light">
+                <img src="{{ aboutus_digital_marketing.banner_image.url }}" alt="Current Banner" class="img-thumbnail" style="max-height: 150px;">
+              </div>
+            </div>
+            {% endif %}
+            
+            <div class="form-group">
+              <label>Banner Image {% if aboutus_digital_marketing.banner_image %}<small class="text-muted">(leave empty to keep current)</small>{% endif %}</label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" name="banner_image" id="seo_banner_image" accept="image/*">
+                <label class="custom-file-label" for="seo_banner_image">Choose file</label>
+              </div>
+            </div>
+            
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" name="is_active" id="seo_is_active"
+                     {% if aboutus_digital_marketing %}{% if aboutus_digital_marketing.is_active %}checked{% endif %}{% else %}checked{% endif %}>
+              <label class="custom-control-label" for="seo_is_active">Set as Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> {% if aboutus_digital_marketing %}Update{% else %}Create{% endif %} Settings</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Functions -->
+  <script>
+    // File input label update
+    $('.custom-file-input').on('change', function() {
+      var fileName = $(this).val().split('\\').pop();
+      $(this).siblings('.custom-file-label').addClass('selected').html(fileName);
+    });
+
+    // Edit Banner1 with image preview
+    function editBanner1(id, title, subtitle, description, isActive, currentImage) {
+      document.getElementById('editBanner1Form').action = "{% url 'aboutus_banner1_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_banner1_title').value = title;
+      document.getElementById('edit_banner1_subtitle').value = subtitle;
+      document.getElementById('edit_banner1_description').value = description;
+      document.getElementById('edit_banner1_is_active').checked = isActive;
+      
+      // Show current image if exists
+      if (currentImage) {
+        document.getElementById('edit_banner1_current_image').src = currentImage;
+        document.getElementById('edit_banner1_current_image_container').style.display = 'block';
+      } else {
+        document.getElementById('edit_banner1_current_image_container').style.display = 'none';
+      }
+      
+      // Reset file input
+      $('#edit_banner1_image').val('');
+      $('#edit_banner1_image').siblings('.custom-file-label').html('Choose new file');
+      
+      $('#editBanner1Modal').modal('show');
+    }
+
+    // Edit Text1
+    function editText1(id, heading, content, isActive) {
+      document.getElementById('editText1Form').action = "{% url 'aboutus_text1_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_text1_heading').value = heading;
+      document.getElementById('edit_text1_content').value = content;
+      document.getElementById('edit_text1_is_active').checked = isActive;
+      $('#editText1Modal').modal('show');
+    }
+
+    // Edit Mission with icon preview
+    function editMission(id, title, missionText, isActive, currentIcon) {
+      document.getElementById('editMissionForm').action = "{% url 'aboutus_mission_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_mission_title').value = title;
+      document.getElementById('edit_mission_text').value = missionText;
+      document.getElementById('edit_mission_is_active').checked = isActive;
+      
+      // Show current icon if exists
+      if (currentIcon) {
+        document.getElementById('edit_mission_current_icon').src = currentIcon;
+        document.getElementById('edit_mission_current_icon_container').style.display = 'block';
+      } else {
+        document.getElementById('edit_mission_current_icon_container').style.display = 'none';
+      }
+      
+      // Reset file input
+      $('#edit_mission_icon').val('');
+      $('#edit_mission_icon').siblings('.custom-file-label').html('Choose new file');
+      
+      $('#editMissionModal').modal('show');
+    }
+
+    // Edit Text2
+    function editText2(id, heading, content, isActive) {
+      document.getElementById('editText2Form').action = "{% url 'aboutus_text2_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_text2_heading').value = heading;
+      document.getElementById('edit_text2_content').value = content;
+      document.getElementById('edit_text2_is_active').checked = isActive;
+      $('#editText2Modal').modal('show');
+    }
+
+    // Delete function
+    function deleteItem(url, itemType) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to delete this " + itemType + "?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = url;
+        }
+      });
+    }
+
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+      $('.alert').fadeOut('slow');
+    }, 5000);
+  </script>
+
+{% endblock %}
