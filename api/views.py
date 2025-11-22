@@ -364,3 +364,64 @@ class ContactDigitalMarketingListView(APIView):
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+
+
+
+# subscribe ----------------
+
+from django.core.mail import send_mail
+from django.conf import settings
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+
+@api_view(['POST'])
+def subscribe(request):
+    """
+    API endpoint to handle email subscription
+    Expects JSON: {"email": "user@example.com"}
+    """
+    email = request.data.get('email')
+    
+    if not email:
+        return Response(
+            {'error': 'Email is required'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    # Validate email format
+    try:
+        validate_email(email)
+    except ValidationError:
+        return Response(
+            {'error': 'Invalid email format'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    # Send email to company email
+    try:
+        subject = 'New Subscription'
+        message = f'New subscription from: {email}'
+        from_email = settings.EMAIL_HOST_USER
+        recipient_list = ['hello@diginext.ae']  # Company email
+        
+        send_mail(
+            subject,
+            message,
+            from_email,
+            recipient_list,
+            fail_silently=False,
+        )
+        
+        return Response(
+            {'message': 'Subscription successful! Email sent.'},
+            status=status.HTTP_200_OK
+        )
+    
+    except Exception as e:
+        return Response(
+            {'error': f'Failed to send email: {str(e)}'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )

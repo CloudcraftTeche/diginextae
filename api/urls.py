@@ -8,7 +8,8 @@ from .views import (
     HomeAboutUsListView, HomeQuestionsListView, FooterListView,
     HomeDigitalMarketingListView,
 
-    ContactSAListView, LeadsListCreateView, ContactDigitalMarketingListView
+    ContactSAListView, LeadsListCreateView, ContactDigitalMarketingListView,
+    subscribe
 )
 
 urlpatterns = [
@@ -35,4 +36,8 @@ urlpatterns = [
      path('contact/sa/', ContactSAListView.as_view(), name='contact-sa'),
     path('contact/leads/', LeadsListCreateView.as_view(), name='contact-leads'),
     path('contact/digital-marketing/', ContactDigitalMarketingListView.as_view(), name='contact-digital-marketing'),
+
+    # subscribe 
+
+    path('api/subscribe/', subscribe, name='subscribe'),
 ]
