@@ -96,11 +96,11 @@ SWAGGER_SETTINGS = {
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp-mail.outlook.com'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'hello@diginext.ae'  # Your company email
-EMAIL_HOST_PASSWORD = 'Myhope0310@#'  # Your Outlook password or app password
+EMAIL_HOST_USER = 'diginextmail@gmail.com'
+EMAIL_HOST_PASSWORD = 'kewr zemy ozgr kcef'
 
 
 # CORS Settings (Optional - for frontend development)

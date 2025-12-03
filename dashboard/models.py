@@ -218,10 +218,10 @@ class ContactSA(models.Model):
 class Leads(models.Model):
     fullname = models.CharField(max_length=255)
     email = models.EmailField()
+    phone_number = models.CharField(max_length=20, null=True, blank=True)
+    company_name = models.CharField(max_length=255, null=True, blank=True)
+    solution = models.CharField(max_length=255, null=True, blank=True)
     message = models.TextField()
-
-    def __str__(self):
-        return self.fullname
     
 
 class ContactDigitalMarketing(models.Model):

@@ -300,50 +300,6 @@ class ContactSAListView(APIView):
             )
 
 
-class LeadsListCreateView(APIView):
-    """
-    GET: Retrieve all leads
-    POST: Create a new lead
-    """
-    def get(self, request):
-        try:
-            leads = Leads.objects.all()
-            serializer = LeadsSerializer(leads, many=True)
-            return custom_response(
-                success=True,
-                message="Leads retrieved successfully",
-                data=serializer.data
-            )
-        except Exception as e:
-            return custom_response(
-                success=False,
-                message=f"Error retrieving leads: {str(e)}",
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-    
-    def post(self, request):
-        try:
-            serializer = LeadsSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return custom_response(
-                    success=True,
-                    message="Lead created successfully",
-                    data=serializer.data,
-                    status_code=status.HTTP_201_CREATED
-                )
-            return custom_response(
-                success=False,
-                message="Validation error",
-                data=serializer.errors,
-                status_code=status.HTTP_400_BAD_REQUEST
-            )
-        except Exception as e:
-            return custom_response(
-                success=False,
-                message=f"Error creating lead: {str(e)}",
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
 
 
 class ContactDigitalMarketingListView(APIView):
@@ -367,15 +323,24 @@ class ContactDigitalMarketingListView(APIView):
 
 
 
-# subscribe ----------------
 
-from django.core.mail import send_mail
+# ===================================================
+# views.py
+
+from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
+from .utils.email_templates import (
+    get_subscription_email_template, 
+    get_subscription_confirmation_email_template,
+    get_lead_notification_email_template,
+    get_lead_confirmation_email_template
+)
 
 @api_view(['POST'])
 def subscribe(request):
@@ -400,23 +365,36 @@ def subscribe(request):
             status=status.HTTP_400_BAD_REQUEST
         )
     
-    # Send email to company email
+    # Send emails
     try:
-        subject = 'New Subscription'
-        message = f'New subscription from: {email}'
         from_email = settings.EMAIL_HOST_USER
-        recipient_list = ['hello@diginext.ae']  # Company email
         
-        send_mail(
-            subject,
-            message,
+        # 1. Send notification to company
+        subject_company, text_company, html_company = get_subscription_email_template(email)
+        
+        email_to_company = EmailMultiAlternatives(
+            subject_company,
+            text_company,
             from_email,
-            recipient_list,
-            fail_silently=False,
+            ['hello@diginext.ae']
         )
+        email_to_company.attach_alternative(html_company, "text/html")
+        email_to_company.send(fail_silently=False)
+        
+        # 2. Send confirmation to subscriber
+        subject_subscriber, text_subscriber, html_subscriber = get_subscription_confirmation_email_template(email)
+        
+        email_to_subscriber = EmailMultiAlternatives(
+            subject_subscriber,
+            text_subscriber,
+            from_email,
+            [email]
+        )
+        email_to_subscriber.attach_alternative(html_subscriber, "text/html")
+        email_to_subscriber.send(fail_silently=False)
         
         return Response(
-            {'message': 'Subscription successful! Email sent.'},
+            {'message': 'Subscription successful! Confirmation email sent.'},
             status=status.HTTP_200_OK
         )
     
@@ -425,3 +403,94 @@ def subscribe(request):
             {'error': f'Failed to send email: {str(e)}'},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+
+class LeadsListCreateView(APIView):
+    """
+    GET: Retrieve all leads
+    POST: Create a new lead and send email notification
+    """
+    def get(self, request):
+        try:
+            leads = Leads.objects.all()
+            serializer = LeadsSerializer(leads, many=True)
+            return custom_response(
+                success=True,
+                message="Leads retrieved successfully",
+                data=serializer.data
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving leads: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+    
+    def post(self, request):
+        try:
+            serializer = LeadsSerializer(data=request.data)
+            if serializer.is_valid():
+                # Save the lead
+                lead = serializer.save()
+                
+                # Send emails
+                try:
+                    from_email = settings.EMAIL_HOST_USER
+                    
+                    # 1. Send notification to company
+                    subject_company, text_company, html_company = get_lead_notification_email_template(
+                        fullname=lead.fullname,
+                        email=lead.email,
+                        phone_number=lead.phone_number,
+                        company_name=lead.company_name,
+                        solution=lead.solution,
+                        message=lead.message
+                    )
+                    
+                    email_to_company = EmailMultiAlternatives(
+                        subject_company,
+                        text_company,
+                        from_email,
+                        ['hello@diginext.ae']
+                    )
+                    email_to_company.attach_alternative(html_company, "text/html")
+                    email_to_company.send(fail_silently=False)
+                    
+                    # 2. Send confirmation to lead sender
+                    subject_lead, text_lead, html_lead = get_lead_confirmation_email_template(
+                        fullname=lead.fullname,
+                        solution=lead.solution
+                    )
+                    
+                    email_to_lead = EmailMultiAlternatives(
+                        subject_lead,
+                        text_lead,
+                        from_email,
+                        [lead.email]
+                    )
+                    email_to_lead.attach_alternative(html_lead, "text/html")
+                    email_to_lead.send(fail_silently=False)
+                    
+                except Exception as email_error:
+                    # Log the email error but don't fail the request
+                    print(f"Email notification failed: {str(email_error)}")
+                
+                return custom_response(
+                    success=True,
+                    message="Lead created successfully",
+                    data=serializer.data,
+                    status_code=status.HTTP_201_CREATED
+                )
+            
+            return custom_response(
+                success=False,
+                message="Validation error",
+                data=serializer.errors,
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error creating lead: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
