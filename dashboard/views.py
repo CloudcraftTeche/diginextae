@@ -1114,6 +1114,8 @@ def service_management(request):
     """Main service management page"""
     services = Service.objects.all()
     service_names = ServiceName.objects.all().prefetch_related('subservices')
+    digital_marketing_list = ServiceDigitalMarketing.objects.order_by('-created_at').all()
+    digital_marketing_count = digital_marketing_list.count()
     
     # Count statistics
     service_count = services.count()
@@ -1126,6 +1128,8 @@ def service_management(request):
         'service_count': service_count,
         'service_name_count': service_name_count,
         'subservice_count': subservice_count,
+        'digital_marketing_list': digital_marketing_list,
+        'digital_marketing_count': digital_marketing_count,
     }
     return render(request, 'service_management.html', context)
 
@@ -1259,4 +1263,54 @@ def subservice_delete(request, pk):
     subservice = get_object_or_404(Subservice, pk=pk)
     subservice.delete()
     messages.success(request, 'Subservice deleted successfully!')
+    return redirect('service_management')
+
+
+@login_required
+def digital_marketing_create(request):
+    if request.method == 'POST':
+        meta_title = request.POST.get('meta_title')
+        meta_description = request.POST.get('meta_description')
+        meta_keywords = request.POST.get('meta_keywords')
+        banner_image = request.FILES.get('banner_image')
+        is_active = request.POST.get('is_active') == "on"
+
+        ServiceDigitalMarketing.objects.create(
+            meta_title=meta_title,
+            meta_description=meta_description,
+            meta_keywords=meta_keywords,
+            banner_image=banner_image,
+            is_active=is_active
+        )
+        messages.success(request, "Digital Marketing section created!")
+        return redirect('service_management')
+
+    return redirect('service_management')
+
+@login_required
+def digital_marketing_edit(request, pk):
+    dm = get_object_or_404(ServiceDigitalMarketing, pk=pk)
+
+    if request.method == 'POST':
+        dm.meta_title = request.POST.get('meta_title')
+        dm.meta_description = request.POST.get('meta_description')
+        dm.meta_keywords = request.POST.get('meta_keywords')
+        dm.is_active = request.POST.get('is_active') == "on"
+
+        if request.FILES.get('banner_image'):
+            dm.banner_image = request.FILES.get('banner_image')
+
+        dm.save()
+        messages.success(request, "Digital Marketing section updated!")
+        return redirect('service_management')
+
+    return redirect('service_management')
+
+
+
+@login_required
+def digital_marketing_delete(request, pk):
+    dm = get_object_or_404(ServiceDigitalMarketing, pk=pk)
+    dm.delete()
+    messages.success(request, "Digital Marketing section deleted!")
     return redirect('service_management')

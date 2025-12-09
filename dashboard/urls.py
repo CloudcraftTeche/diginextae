@@ -158,4 +158,8 @@ urlpatterns = [
     path('subservice/create/', views.subservice_create, name='subservice_create'),
     path('subservice/edit/<int:pk>/', views.subservice_edit, name='subservice_edit'),
     path('subservice/delete/<int:pk>/', views.subservice_delete, name='subservice_delete'),
+
+      path('digital-marketing/create/', views.digital_marketing_create, name='digital_marketing_create'),
+    path('digital-marketing/edit/<int:pk>/', views.digital_marketing_edit, name='digital_marketing_edit'),
+    path('digital-marketing/delete/<int:pk>/', views.digital_marketing_delete, name='digital_marketing_delete'),
 ]

@@ -7,7 +7,7 @@ from dashboard.models import (
     HomeDigitalMarketing,  ContactSA, Leads, ContactDigitalMarketing,
     #  SERVICES
 
-    Service, ServiceName, Subservice
+    Service, ServiceName, Subservice, ServiceDigitalMarketing
 )
 
 
@@ -155,3 +155,9 @@ class ServiceNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceName
         fields = ('id', 'service_name', 'service_description', 'service_image', 'subservices')
+
+class ServiceDigitalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceDigitalMarketing
+        fields = '__all__'
+

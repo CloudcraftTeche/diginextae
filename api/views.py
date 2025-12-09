@@ -12,7 +12,7 @@ from dashboard.models import (
     HomeDigitalMarketing, ContactSA, Leads, ContactDigitalMarketing,
     #  services 
 
-    Service, ServiceName, Subservice
+    Service, ServiceName, Subservice, ServiceDigitalMarketing
 )
 from .serializers import (
     HomeBannerSerializer, HomeText1Serializer, HomeBanner2Serializer,
@@ -28,7 +28,7 @@ from .serializers import (
 
     # SERVICES
 
-    ServiceSerializer, ServiceNameSerializer, SubserviceSerializer
+    ServiceSerializer, ServiceNameSerializer, SubserviceSerializer, ServiceDigitalSerializer
 )
 
 
@@ -584,3 +584,57 @@ class SubserviceDetailView(APIView):
                 message=f"Error retrieving subservice: {str(e)}",
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+        
+
+
+class NavbarServiceListView(APIView):
+    """GET: Retrieve all services with their subservices for navbar"""
+
+    def get(self, request):
+        try:
+            services = ServiceName.objects.all().prefetch_related('subservices')
+            serializer = ServiceNameSerializer(services, many=True)
+
+            return custom_response(
+                success=True,
+                message="Navbar services with subservices retrieved successfully",
+                data=serializer.data
+            )
+
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving navbar services: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+
+
+class serviceDigitalMarket(APIView):
+
+
+    def get(self, request):
+        try:
+            subservicedigital = ServiceDigitalMarketing.objects.first()
+            serializerDigital = ServiceDigitalSerializer(subservicedigital)
+
+            return custom_response(
+                success=True,
+                message="service Digital market retrieved successfully",
+                data=serializerDigital.data
+            )
+        
+        except Subservice.DoesNotExist:
+            return custom_response(
+                success=False,
+                message="Subservice not found",
+                status_code=status.HTTP_404_NOT_FOUND
+            )
+        
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving subservice: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
