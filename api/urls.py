@@ -12,7 +12,10 @@ from .views import (
     subscribe,
     # service 
 
-    ServiceListView, ServiceNameListView, SubserviceDetailView, NavbarServiceListView, serviceDigitalMarket
+    ServiceListView, ServiceNameListView, SubserviceDetailView, NavbarServiceListView, serviceDigitalMarket,
+
+    # sotion
+    SolutionsListView, SolutionsNameListView, SubsolutionsDetailView, solutionDigitalMarket_view
 )
 
 urlpatterns = [
@@ -44,13 +47,23 @@ urlpatterns = [
 # ============= services ==============>
 
     path('services/', ServiceListView.as_view(), name='service-list'),
-    path('service-names/', ServiceNameListView.as_view(), name='service-name-list'),
-    path('subservice/<int:pk>/', SubserviceDetailView.as_view(), name='subservice-detail'),
+    path('services/service-names/', ServiceNameListView.as_view(), name='service-name-list'),
+    path('services/subservice/<int:pk>/', SubserviceDetailView.as_view(), name='subservice-detail'),
 
-    path('navbar-services/', NavbarServiceListView.as_view(), name='navbar-services'),
+ 
     
     path('services/serviceDigitalMarket', serviceDigitalMarket.as_view(), name='service-DigitalMarket'),
 
+
+    #  solution===================
+
+    path('solutions/', SolutionsListView.as_view(), name='solutions-list'),
+    path('solutions/solutions-names/', SolutionsNameListView.as_view(), name='solutions-names-list'),
+    path('solutions/subsolutions/<int:pk>/', SubsolutionsDetailView.as_view(), name='subsolution-detail'),
+    path('solutions/solutioinDigitalMarket', solutionDigitalMarket_view.as_view(), name='solution-DigitalMarket'),
+
+    # navbar 
+       path('navbar-data/', NavbarServiceListView.as_view(), name='navbar-services'),
 
     # subscribe 
 

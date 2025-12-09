@@ -357,6 +357,53 @@ class ServiceDigitalMarketing(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
+
+# ===================== solution ===========================>
+
+
+class Solutions(models.Model):
+
+    banner_description_title = models.CharField(max_length=255, blank=True, null=True)
+    banner_description = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to='Solutions/', blank=True, null=True)
+
+    def __str__(self):
+        return self.banner_description_title
+
+
+class SolutionsName(models.Model):
+    solutions_name = models.CharField(max_length=255)
+    solutions_description = models.TextField()
+    solutions_image = models.ImageField(upload_to='SolutionsName/')
+
+    def __str__(self):
+        return self.solutions_name
+
+        
+
+
+
+class Subsolutions(models.Model):
+    solutions_heading = models.ForeignKey(SolutionsName, on_delete=models.CASCADE, related_name='solutions')
+    solutions_name = models.CharField(max_length=255)
+    solutions_description = models.TextField(blank=True, null=True)
+    solutions_image =models.ImageField(upload_to='Subsolutions/')
+
+
+    def __str__(self):
+        return self.solutions_name
+    
+    
+class solutionsDigitalMarketing(models.Model):
+    meta_title = models.CharField(max_length=200, blank=True, null=True)
+    meta_description = models.TextField(blank=True, null=True)
+    meta_keywords = models.CharField(max_length=500, blank=True, null=True)
+    banner_image = models.ImageField(upload_to='solution_digital_marketing/', blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
    
 
     

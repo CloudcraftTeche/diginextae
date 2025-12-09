@@ -7,7 +7,10 @@ from dashboard.models import (
     HomeDigitalMarketing,  ContactSA, Leads, ContactDigitalMarketing,
     #  SERVICES
 
-    Service, ServiceName, Subservice, ServiceDigitalMarketing
+    Service, ServiceName, Subservice, ServiceDigitalMarketing,
+
+    # solution
+    Solutions, Subsolutions, SolutionsName, solutionsDigitalMarketing
 )
 
 
@@ -161,3 +164,49 @@ class ServiceDigitalSerializer(serializers.ModelSerializer):
         model = ServiceDigitalMarketing
         fields = '__all__'
 
+
+
+# SOLUTIONS =======================
+
+class SolutionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Solutions
+        fields = '__all__'
+
+
+class SubsolutionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subsolutions
+        fields = ('id', 'solutions_name', 'solutions_description', 'solutions_image')
+
+
+class SolutionsNameSerializer(serializers.ModelSerializer):
+    # include nested subsolutions
+    solutions = SubsolutionsSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = SolutionsName
+        fields = ('id', 'solutions_name', 'solutions_description', 'solutions_image', 'solutions')
+
+
+class SolutionsDigitalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = solutionsDigitalMarketing
+        fields = '__all__'
+
+
+
+# navbar  =================
+
+class SubsolutionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subsolutions
+        fields = "__all__"
+
+
+class SolutionsNameSerializer(serializers.ModelSerializer):
+    solutions = SubsolutionsSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = SolutionsName
+        fields = "__all__"

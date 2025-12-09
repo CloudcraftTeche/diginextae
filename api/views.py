@@ -12,7 +12,9 @@ from dashboard.models import (
     HomeDigitalMarketing, ContactSA, Leads, ContactDigitalMarketing,
     #  services 
 
-    Service, ServiceName, Subservice, ServiceDigitalMarketing
+    Service, ServiceName, Subservice, ServiceDigitalMarketing,
+    #  solution 
+    Subsolutions, Solutions, SolutionsName, solutionsDigitalMarketing
 )
 from .serializers import (
     HomeBannerSerializer, HomeText1Serializer, HomeBanner2Serializer,
@@ -28,7 +30,10 @@ from .serializers import (
 
     # SERVICES
 
-    ServiceSerializer, ServiceNameSerializer, SubserviceSerializer, ServiceDigitalSerializer
+    ServiceSerializer, ServiceNameSerializer, SubserviceSerializer, ServiceDigitalSerializer,
+
+    # solution 
+    SubsolutionsSerializer, SolutionsSerializer, SolutionsNameSerializer, SolutionsDigitalSerializer
 )
 
 
@@ -586,29 +591,37 @@ class SubserviceDetailView(APIView):
             )
         
 
-
 class NavbarServiceListView(APIView):
-    """GET: Retrieve all services with their subservices for navbar"""
+    """GET: Retrieve all services & solutions with their nested items for navbar"""
 
     def get(self, request):
         try:
+            # Get all services + nested subservices
             services = ServiceName.objects.all().prefetch_related('subservices')
-            serializer = ServiceNameSerializer(services, many=True)
+            service_serializer = ServiceNameSerializer(services, many=True)
+
+            # Get all solutions + nested subsolutions
+            solutions = SolutionsName.objects.all().prefetch_related('solutions')
+            solution_serializer = SolutionsNameSerializer(solutions, many=True)
+
+            # Combined response
+            response_data = {
+                "services": service_serializer.data,
+                "solutions": solution_serializer.data
+            }
 
             return custom_response(
                 success=True,
-                message="Navbar services with subservices retrieved successfully",
-                data=serializer.data
+                message="Navbar services & solutions retrieved successfully",
+                data=response_data
             )
 
         except Exception as e:
             return custom_response(
                 success=False,
-                message=f"Error retrieving navbar services: {str(e)}",
+                message=f"Error retrieving navbar navbar data: {str(e)}",
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-        
-
 
 class serviceDigitalMarket(APIView):
 
@@ -617,6 +630,114 @@ class serviceDigitalMarket(APIView):
         try:
             subservicedigital = ServiceDigitalMarketing.objects.first()
             serializerDigital = ServiceDigitalSerializer(subservicedigital)
+
+            return custom_response(
+                success=True,
+                message="service Digital market retrieved successfully",
+                data=serializerDigital.data
+            )
+        
+        except Subservice.DoesNotExist:
+            return custom_response(
+                success=False,
+                message="Subservice not found",
+                status_code=status.HTTP_404_NOT_FOUND
+            )
+        
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving subservice: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+
+
+# ----------------- solution --------------->
+
+class SolutionsListView(APIView):
+    """GET: Retrieve all Solutions records"""
+
+    def get(self, request):
+        try:
+            solutions = Solutions.objects.all()
+            serializer = SolutionsSerializer(solutions, many=True)
+            
+            return custom_response(
+                success=True,
+                message="Solutions retrieved successfully",
+                data=serializer.data
+            )
+
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving solutions: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+# ================== names under the solutions ========
+class SolutionsNameListView(APIView):
+    """GET: Retrieve all SolutionsName records, each with its subsolutions"""
+
+    def get(self, request):
+        try:
+            solutions = SolutionsName.objects.all().prefetch_related('solutions')
+            serializer = SolutionsNameSerializer(solutions, many=True)
+
+            return custom_response(
+                success=True,
+                message="Solution names and their subsolutions retrieved successfully",
+                data=serializer.data
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving solution names: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+# =================== single subsolution get ================>
+
+
+class SubsolutionsDetailView(APIView):
+    """GET: Retrieve a single Subsolution by ID"""
+
+    def get(self, request, pk):
+        try:
+            subsolution = Subsolutions.objects.get(pk=pk)
+            serializer = SubsolutionsSerializer(subsolution)
+
+            return custom_response(
+                success=True,
+                message="Subsolution retrieved successfully",
+                data=serializer.data
+            )
+        
+        except Subsolutions.DoesNotExist:
+            return custom_response(
+                success=False,
+                message="Subsolution not found",
+                status_code=status.HTTP_404_NOT_FOUND
+            )
+        
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving subsolution: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+
+class solutionDigitalMarket_view(APIView):
+
+
+    def get(self, request):
+        try:
+            subservicedigital = solutionsDigitalMarketing.objects.first()
+            serializerDigital = SolutionsDigitalSerializer(subservicedigital)
 
             return custom_response(
                 success=True,

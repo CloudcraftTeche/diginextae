@@ -159,7 +159,40 @@ urlpatterns = [
     path('subservice/edit/<int:pk>/', views.subservice_edit, name='subservice_edit'),
     path('subservice/delete/<int:pk>/', views.subservice_delete, name='subservice_delete'),
 
-      path('digital-marketing/create/', views.digital_marketing_create, name='digital_marketing_create'),
-    path('digital-marketing/edit/<int:pk>/', views.digital_marketing_edit, name='digital_marketing_edit'),
-    path('digital-marketing/delete/<int:pk>/', views.digital_marketing_delete, name='digital_marketing_delete'),
+      path('digital-marketing/create/', views.service_digital_marketing_create, name='digital_marketing_create'),
+    path('digital-marketing/edit/<int:pk>/', views.service_digital_marketing_edit, name='digital_marketing_edit'),
+    path('digital-marketing/delete/<int:pk>/', views.service_digital_marketing_delete, name='digital_marketing_delete'),
+
+
+
+    # solutions ==========================
+
+      path('solutions-management/', views.solutions_management, name='solutions_management'),
+    
+    # Solutions Banner CRUD
+    path('solutions/create/', views.solutions_create, name='solutions_create'),
+    path('solutions/edit/<int:pk>/', views.solutions_edit, name='solutions_edit'),
+    path('solutions/delete/<int:pk>/', views.solutions_delete, name='solutions_delete'),
+    
+    # Solutions Name CRUD
+    path('solutions-name/create/', views.solutions_name_create, name='solutions_name_create'),
+    path('solutions-name/edit/<int:pk>/', views.solutions_name_edit, name='solutions_name_edit'),
+    path('solutions-name/delete/<int:pk>/', views.solutions_name_delete, name='solutions_name_delete'),
+    
+    # Subsolutions CRUD
+    path('subsolutions/create/', views.subsolutions_create, name='subsolutions_create'),
+    path('subsolutions/edit/<int:pk>/', views.subsolutions_edit, name='subsolutions_edit'),
+    path('subsolutions/delete/<int:pk>/', views.subsolutions_delete, name='subsolutions_delete'),
+    
+    # Solutions Digital Marketing CRUD
+    path('solutions-digital-marketing/create/', views.solutions_digital_marketing_create, name='solutions_digital_marketing_create'),
+    path('solutions-digital-marketing/edit/<int:pk>/', views.solutions_digital_marketing_edit, name='solutions_digital_marketing_edit'),
+    path('solutions-digital-marketing/delete/<int:pk>/', views.solutions_digital_marketing_delete, name='solutions_digital_marketing_delete'),
+
+
+
+
+
+
+
 ]

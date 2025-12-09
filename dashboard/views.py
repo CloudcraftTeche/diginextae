@@ -1267,7 +1267,7 @@ def subservice_delete(request, pk):
 
 
 @login_required
-def digital_marketing_create(request):
+def service_digital_marketing_create(request):
     if request.method == 'POST':
         meta_title = request.POST.get('meta_title')
         meta_description = request.POST.get('meta_description')
@@ -1288,7 +1288,7 @@ def digital_marketing_create(request):
     return redirect('service_management')
 
 @login_required
-def digital_marketing_edit(request, pk):
+def service_digital_marketing_edit(request, pk):
     dm = get_object_or_404(ServiceDigitalMarketing, pk=pk)
 
     if request.method == 'POST':
@@ -1309,8 +1309,228 @@ def digital_marketing_edit(request, pk):
 
 
 @login_required
-def digital_marketing_delete(request, pk):
+def service_digital_marketing_delete(request, pk):
     dm = get_object_or_404(ServiceDigitalMarketing, pk=pk)
     dm.delete()
     messages.success(request, "Digital Marketing section deleted!")
     return redirect('service_management')
+
+
+
+# ==================== solution =======================>
+
+@login_required
+def solutions_management(request):
+    """Main solutions management page"""
+    solutions = Solutions.objects.all()
+    solutions_names = SolutionsName.objects.all().prefetch_related('solutions')
+    digital_marketing_list = solutionsDigitalMarketing.objects.order_by('-created_at').all()
+    digital_marketing_count = digital_marketing_list.count()
+    
+    # Count statistics
+    solutions_count = solutions.count()
+    solutions_name_count = solutions_names.count()
+    subsolutions_count = Subsolutions.objects.all().count()
+    
+    context = {
+        'solutions': solutions,
+        'solutions_names': solutions_names,
+        'solutions_count': solutions_count,
+        'solutions_name_count': solutions_name_count,
+        'subsolutions_count': subsolutions_count,
+        'digital_marketing_list': digital_marketing_list,
+        'digital_marketing_count': digital_marketing_count,
+    }
+    return render(request, 'solutions_management.html', context)
+
+
+# ============= SOLUTIONS BANNER CRUD =============
+@login_required
+def solutions_create(request):
+    """Create solutions banner"""
+    if request.method == 'POST':
+        banner_description_title = request.POST.get('banner_description_title')
+        banner_description = request.POST.get('banner_description')
+        image = request.FILES.get('image')
+        
+        Solutions.objects.create(
+            banner_description_title=banner_description_title,
+            banner_description=banner_description,
+            image=image
+        )
+        messages.success(request, 'Solutions banner created successfully!')
+        return redirect('solutions_management')
+    return redirect('solutions_management')
+
+
+@login_required
+def solutions_edit(request, pk):
+    """Edit solutions banner"""
+    solution = get_object_or_404(Solutions, pk=pk)
+    if request.method == 'POST':
+        solution.banner_description_title = request.POST.get('banner_description_title')
+        solution.banner_description = request.POST.get('banner_description')
+        
+        if request.FILES.get('image'):
+            solution.image = request.FILES.get('image')
+        
+        solution.save()
+        messages.success(request, 'Solutions banner updated successfully!')
+        return redirect('solutions_management')
+    return redirect('solutions_management')
+
+
+@login_required
+def solutions_delete(request, pk):
+    """Delete solutions banner"""
+    solution = get_object_or_404(Solutions, pk=pk)
+    solution.delete()
+    messages.success(request, 'Solutions banner deleted successfully!')
+    return redirect('solutions_management')
+
+
+# ============= SOLUTIONS NAME CRUD =============
+@login_required
+def solutions_name_create(request):
+    """Create solutions name"""
+    if request.method == 'POST':
+        solutions_name = request.POST.get('solutions_name')
+        solutions_description = request.POST.get('solutions_description')
+        solutions_image = request.FILES.get('solutions_image')
+        
+        SolutionsName.objects.create(
+            solutions_name=solutions_name,
+            solutions_description=solutions_description,
+            solutions_image=solutions_image
+        )
+        messages.success(request, 'Solution created successfully!')
+        return redirect('solutions_management')
+    return redirect('solutions_management')
+
+
+@login_required
+def solutions_name_edit(request, pk):
+    """Edit solutions name"""
+    solutions_name = get_object_or_404(SolutionsName, pk=pk)
+    if request.method == 'POST':
+        solutions_name.solutions_name = request.POST.get('solutions_name')
+        solutions_name.solutions_description = request.POST.get('solutions_description')
+        
+        if request.FILES.get('solutions_image'):
+            solutions_name.solutions_image = request.FILES.get('solutions_image')
+        
+        solutions_name.save()
+        messages.success(request, 'Solution updated successfully!')
+        return redirect('solutions_management')
+    return redirect('solutions_management')
+
+
+@login_required
+def solutions_name_delete(request, pk):
+    """Delete solutions name"""
+    solutions_name = get_object_or_404(SolutionsName, pk=pk)
+    solutions_name.delete()
+    messages.success(request, 'Solution deleted successfully!')
+    return redirect('solutions_management')
+
+
+# ============= SUBSOLUTIONS CRUD =============
+@login_required
+def subsolutions_create(request):
+    """Create subsolution"""
+    if request.method == 'POST':
+        solutions_heading_id = request.POST.get('solutions_heading')
+        solutions_name = request.POST.get('solutions_name')
+        solutions_description = request.POST.get('solutions_description')
+        solutions_image = request.FILES.get('solutions_image')
+        
+        solutions_heading = get_object_or_404(SolutionsName, pk=solutions_heading_id)
+        
+        Subsolutions.objects.create(
+            solutions_heading=solutions_heading,
+            solutions_name=solutions_name,
+            solutions_description=solutions_description,
+            solutions_image=solutions_image
+        )
+        messages.success(request, 'Subsolution created successfully!')
+        return redirect('solutions_management')
+    return redirect('solutions_management')
+
+
+@login_required
+def subsolutions_edit(request, pk):
+    """Edit subsolution"""
+    subsolution = get_object_or_404(Subsolutions, pk=pk)
+    if request.method == 'POST':
+        solutions_heading_id = request.POST.get('solutions_heading')
+        subsolution.solutions_heading = get_object_or_404(SolutionsName, pk=solutions_heading_id)
+        subsolution.solutions_name = request.POST.get('solutions_name')
+        subsolution.solutions_description = request.POST.get('solutions_description')
+        
+        if request.FILES.get('solutions_image'):
+            subsolution.solutions_image = request.FILES.get('solutions_image')
+        
+        subsolution.save()
+        messages.success(request, 'Subsolution updated successfully!')
+        return redirect('solutions_management')
+    return redirect('solutions_management')
+
+
+@login_required
+def subsolutions_delete(request, pk):
+    """Delete subsolution"""
+    subsolution = get_object_or_404(Subsolutions, pk=pk)
+    subsolution.delete()
+    messages.success(request, 'Subsolution deleted successfully!')
+    return redirect('solutions_management')
+
+
+# ============= SOLUTIONS DIGITAL MARKETING CRUD =============
+@login_required
+def solutions_digital_marketing_create(request):
+    if request.method == 'POST':
+        meta_title = request.POST.get('meta_title')
+        meta_description = request.POST.get('meta_description')
+        meta_keywords = request.POST.get('meta_keywords')
+        banner_image = request.FILES.get('banner_image')
+        is_active = request.POST.get('is_active') == "on"
+
+        solutionsDigitalMarketing.objects.create(
+            meta_title=meta_title,
+            meta_description=meta_description,
+            meta_keywords=meta_keywords,
+            banner_image=banner_image,
+            is_active=is_active
+        )
+        messages.success(request, "Solutions Digital Marketing section created!")
+        return redirect('solutions_management')
+
+    return redirect('solutions_management')
+
+
+@login_required
+def solutions_digital_marketing_edit(request, pk):
+    dm = get_object_or_404(solutionsDigitalMarketing, pk=pk)
+
+    if request.method == 'POST':
+        dm.meta_title = request.POST.get('meta_title')
+        dm.meta_description = request.POST.get('meta_description')
+        dm.meta_keywords = request.POST.get('meta_keywords')
+        dm.is_active = request.POST.get('is_active') == "on"
+
+        if request.FILES.get('banner_image'):
+            dm.banner_image = request.FILES.get('banner_image')
+
+        dm.save()
+        messages.success(request, "Solutions Digital Marketing section updated!")
+        return redirect('solutions_management')
+
+    return redirect('solutions_management')
+
+
+@login_required
+def solutions_digital_marketing_delete(request, pk):
+    dm = get_object_or_404(solutionsDigitalMarketing, pk=pk)
+    dm.delete()
+    messages.success(request, "Solutions Digital Marketing section deleted!")
+    return redirect('solutions_management')
