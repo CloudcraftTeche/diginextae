@@ -136,4 +136,26 @@ urlpatterns = [
     
     # About Us Digital Marketing
     path('aboutus/digital-marketing/update/', views.aboutus_digital_marketing_update, name='aboutus_digital_marketing_update'),
+
+
+
+
+        # ============= SERVICE MANAGEMENT =============
+    # Service Management Main Page
+    path('service-management/', views.service_management, name='service_management'),
+    
+    # Service Banner URLs
+    path('service-banner/create/', views.service_create, name='service_create'),
+    path('service-banner/edit/<int:pk>/', views.service_edit, name='service_edit'),
+    path('service-banner/delete/<int:pk>/', views.service_delete, name='service_delete'),
+    
+    # Service Name (Category) URLs
+    path('service-category/create/', views.service_name_create, name='service_name_create'),
+    path('service-category/edit/<int:pk>/', views.service_name_edit, name='service_name_edit'),
+    path('service-category/delete/<int:pk>/', views.service_name_delete, name='service_name_delete'),
+    
+    # Subservice URLs
+    path('subservice/create/', views.subservice_create, name='subservice_create'),
+    path('subservice/edit/<int:pk>/', views.subservice_edit, name='subservice_edit'),
+    path('subservice/delete/<int:pk>/', views.subservice_delete, name='subservice_delete'),
 ]

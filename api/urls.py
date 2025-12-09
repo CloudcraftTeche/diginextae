@@ -9,7 +9,10 @@ from .views import (
     HomeDigitalMarketingListView,
 
     ContactSAListView, LeadsListCreateView, ContactDigitalMarketingListView,
-    subscribe
+    subscribe,
+    # service 
+
+    ServiceListView, ServiceNameListView, SubserviceDetailView
 )
 
 urlpatterns = [
@@ -36,6 +39,13 @@ urlpatterns = [
      path('contact/sa/', ContactSAListView.as_view(), name='contact-sa'),
     path('contact/leads/', LeadsListCreateView.as_view(), name='contact-leads'),
     path('contact/digital-marketing/', ContactDigitalMarketingListView.as_view(), name='contact-digital-marketing'),
+
+
+# ============= services ==============>
+
+    path('services/', ServiceListView.as_view(), name='service-list'),
+    path('service-names/', ServiceNameListView.as_view(), name='service-name-list'),
+    path('subservice/<int:pk>/', SubserviceDetailView.as_view(), name='subservice-detail'),
 
     # subscribe 
 

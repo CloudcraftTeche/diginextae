@@ -4,7 +4,10 @@ from dashboard.models import (
     HomeBanner, HomeText1, HomeBanner2, HomeText2, Conncepts,
     HomeBanner3, HomeText3, HomeAvailableWorks, HomeBanner4,
     Contents, HomeAboutUs, HomeQuestions, Question, Footer,
-    HomeDigitalMarketing,  ContactSA, Leads, ContactDigitalMarketing
+    HomeDigitalMarketing,  ContactSA, Leads, ContactDigitalMarketing,
+    #  SERVICES
+
+    Service, ServiceName, Subservice
 )
 
 
@@ -128,3 +131,27 @@ class ContactDigitalMarketingSerializer(serializers.ModelSerializer):
         model = ContactDigitalMarketing
         fields = '__all__'
 
+
+
+
+# SERVICES =======================
+
+class ServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = '__all__'
+
+
+class SubserviceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subservice
+        fields = ('id', 'subservice_name', 'subservice_description', 'sub_service_image')
+        # optionally: read_only_fields = ('id',)
+
+class ServiceNameSerializer(serializers.ModelSerializer):
+    # include nested subservices
+    subservices = SubserviceSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ServiceName
+        fields = ('id', 'service_name', 'service_description', 'service_image', 'subservices')

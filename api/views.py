@@ -9,7 +9,10 @@ from dashboard.models import (
     Contents, HomeAboutUs, HomeQuestions, Question, Footer,
     
     # contacts
-    HomeDigitalMarketing, ContactSA, Leads, ContactDigitalMarketing
+    HomeDigitalMarketing, ContactSA, Leads, ContactDigitalMarketing,
+    #  services 
+
+    Service, ServiceName, Subservice
 )
 from .serializers import (
     HomeBannerSerializer, HomeText1Serializer, HomeBanner2Serializer,
@@ -21,7 +24,11 @@ from .serializers import (
 
       ContactSASerializer, 
     LeadsSerializer, 
-    ContactDigitalMarketingSerializer
+    ContactDigitalMarketingSerializer,
+
+    # SERVICES
+
+    ServiceSerializer, ServiceNameSerializer, SubserviceSerializer
 )
 
 
@@ -492,5 +499,88 @@ class LeadsListCreateView(APIView):
             return custom_response(
                 success=False,
                 message=f"Error creating lead: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+
+
+# ===================== services ========================>
+
+
+class ServiceListView(APIView):
+    """GET: Retrieve all Service records"""
+
+    def get(self, request):
+        try:
+            services = Service.objects.all()   # or filter(is_active=True) if needed
+            serializer = ServiceSerializer(services, many=True)
+            
+            return custom_response(
+                success=True,
+                message="Services retrieved successfully",
+                data=serializer.data
+            )
+
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving services: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+
+
+
+# ================== names under the services like for   branding  ========
+class ServiceNameListView(APIView):
+    """GET: Retrieve all ServiceName records, each with its subservices"""
+
+    def get(self, request):
+        try:
+            services = ServiceName.objects.all().prefetch_related('subservices')
+            serializer = ServiceNameSerializer(services, many=True)
+
+            return custom_response(
+                success=True,
+                message="Service names and their subservices retrieved successfully",
+                data=serializer.data
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving service names: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+
+
+# =================== single subservice get ================>
+
+class SubserviceDetailView(APIView):
+    """GET: Retrieve a single Subservice by ID"""
+
+    def get(self, request, pk):
+        try:
+            subservice = Subservice.objects.get(pk=pk)
+            serializer = SubserviceSerializer(subservice)
+
+            return custom_response(
+                success=True,
+                message="Subservice retrieved successfully",
+                data=serializer.data
+            )
+        
+        except Subservice.DoesNotExist:
+            return custom_response(
+                success=False,
+                message="Subservice not found",
+                status_code=status.HTTP_404_NOT_FOUND
+            )
+        
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving subservice: {str(e)}",
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )

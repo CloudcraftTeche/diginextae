@@ -318,35 +318,45 @@ class AboutUsDigitalMarketing(models.Model):
 
 
 class Service(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
 
     banner_description_title = models.CharField(max_length=255, blank=True, null=True)
     banner_description = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='service_images/', blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.banner_description_title
 
 
-class SubService(models.Model):
-    description_title = models.CharField(max_length=255, blank=True, null=True)
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='subservice_images/', blank=True, null=True)
-    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='subservices')
-    image = models.ImageField(upload_to='subservice_images/', blank=True, null=True)
+class ServiceName(models.Model):
+    service_name = models.CharField(max_length=255)
+    service_description = models.TextField()
+    service_image = models.ImageField(upload_to='service_images/')
 
     def __str__(self):
-        return self.name
+        return self.service_name
 
 
-class Feature(models.Model):
-    description_title = models.CharField(max_length=255, blank=True, null=True)
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='feature_images/', blank=True, null=True)
-    subservice = models.ForeignKey(SubService, on_delete=models.CASCADE, related_name='features')
+
+class Subservice(models.Model):
+    service_heading = models.ForeignKey(ServiceName, on_delete=models.CASCADE, related_name='subservices')
+    subservice_name = models.CharField(max_length=255)
+    subservice_description = models.TextField(blank=True, null=True)
+    sub_service_image =models.ImageField(upload_to='sub_service_images/')
+
 
     def __str__(self):
-        return self.name
+        return self.subservice_name
+    
+    
+class ServiceDigitalMarketing(models.Model):
+    meta_title = models.CharField(max_length=200, blank=True, null=True)
+    meta_description = models.TextField(blank=True, null=True)
+    meta_keywords = models.CharField(max_length=500, blank=True, null=True)
+    banner_image = models.ImageField(upload_to='home_digital_marketing/', blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+   
+
+    

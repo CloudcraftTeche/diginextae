@@ -155,6 +155,12 @@
         <p>About us</p>
       </a>
     </li>
+     <li class="nav-item">
+      <a href="{% url 'service_management' %}" class="nav-link {% if request.resolver_match.url_name == 'service_management' %}active{% endif %}">
+        <i class="nav-icon fas fa-tachometer-alt"></i>
+        <p>Service</p>
+      </a>
+    </li>
 
   </ul>
 </nav>

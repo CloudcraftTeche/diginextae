@@ -1104,3 +1104,159 @@ def aboutus_digital_marketing_update(request):
         
         return redirect('aboutus_page')
     return redirect('aboutus_page')
+
+
+
+# ------------------- services-------------------------->
+
+@login_required
+def service_management(request):
+    """Main service management page"""
+    services = Service.objects.all()
+    service_names = ServiceName.objects.all().prefetch_related('subservices')
+    
+    # Count statistics
+    service_count = services.count()
+    service_name_count = service_names.count()
+    subservice_count = Subservice.objects.all().count()
+    
+    context = {
+        'services': services,
+        'service_names': service_names,
+        'service_count': service_count,
+        'service_name_count': service_name_count,
+        'subservice_count': subservice_count,
+    }
+    return render(request, 'service_management.html', context)
+
+# ============= SERVICE BANNER CRUD =============
+@login_required
+def service_create(request):
+    """Create service banner"""
+    if request.method == 'POST':
+        banner_description_title = request.POST.get('banner_description_title')
+        banner_description = request.POST.get('banner_description')
+        image = request.FILES.get('image')
+        
+        Service.objects.create(
+            banner_description_title=banner_description_title,
+            banner_description=banner_description,
+            image=image
+        )
+        messages.success(request, 'Service banner created successfully!')
+        return redirect('service_management')
+    return redirect('service_management')
+
+@login_required
+def service_edit(request, pk):
+    """Edit service banner"""
+    service = get_object_or_404(Service, pk=pk)
+    if request.method == 'POST':
+        service.banner_description_title = request.POST.get('banner_description_title')
+        service.banner_description = request.POST.get('banner_description')
+        
+        if request.FILES.get('image'):
+            service.image = request.FILES.get('image')
+        
+        service.save()
+        messages.success(request, 'Service banner updated successfully!')
+        return redirect('service_management')
+    return redirect('service_management')
+
+@login_required
+def service_delete(request, pk):
+    """Delete service banner"""
+    service = get_object_or_404(Service, pk=pk)
+    service.delete()
+    messages.success(request, 'Service banner deleted successfully!')
+    return redirect('service_management')
+
+# ============= SERVICE NAME CRUD =============
+@login_required
+def service_name_create(request):
+    """Create service name"""
+    if request.method == 'POST':
+        service_name = request.POST.get('service_name')
+        service_description = request.POST.get('service_description')
+        service_image = request.FILES.get('service_image')
+        
+        ServiceName.objects.create(
+            service_name=service_name,
+            service_description=service_description,
+            service_image=service_image
+        )
+        messages.success(request, 'Service created successfully!')
+        return redirect('service_management')
+    return redirect('service_management')
+
+@login_required
+def service_name_edit(request, pk):
+    """Edit service name"""
+    service_name = get_object_or_404(ServiceName, pk=pk)
+    if request.method == 'POST':
+        service_name.service_name = request.POST.get('service_name')
+        service_name.service_description = request.POST.get('service_description')
+        
+        if request.FILES.get('service_image'):
+            service_name.service_image = request.FILES.get('service_image')
+        
+        service_name.save()
+        messages.success(request, 'Service updated successfully!')
+        return redirect('service_management')
+    return redirect('service_management')
+
+@login_required
+def service_name_delete(request, pk):
+    """Delete service name"""
+    service_name = get_object_or_404(ServiceName, pk=pk)
+    service_name.delete()
+    messages.success(request, 'Service deleted successfully!')
+    return redirect('service_management')
+
+# ============= SUBSERVICE CRUD =============
+@login_required
+def subservice_create(request):
+    """Create subservice"""
+    if request.method == 'POST':
+        service_heading_id = request.POST.get('service_heading')
+        subservice_name = request.POST.get('subservice_name')
+        subservice_description = request.POST.get('subservice_description')
+        sub_service_image = request.FILES.get('sub_service_image')
+        
+        service_heading = get_object_or_404(ServiceName, pk=service_heading_id)
+        
+        Subservice.objects.create(
+            service_heading=service_heading,
+            subservice_name=subservice_name,
+            subservice_description=subservice_description,
+            sub_service_image=sub_service_image
+        )
+        messages.success(request, 'Subservice created successfully!')
+        return redirect('service_management')
+    return redirect('service_management')
+
+@login_required
+def subservice_edit(request, pk):
+    """Edit subservice"""
+    subservice = get_object_or_404(Subservice, pk=pk)
+    if request.method == 'POST':
+        service_heading_id = request.POST.get('service_heading')
+        subservice.service_heading = get_object_or_404(ServiceName, pk=service_heading_id)
+        subservice.subservice_name = request.POST.get('subservice_name')
+        subservice.subservice_description = request.POST.get('subservice_description')
+        
+        if request.FILES.get('sub_service_image'):
+            subservice.sub_service_image = request.FILES.get('sub_service_image')
+        
+        subservice.save()
+        messages.success(request, 'Subservice updated successfully!')
+        return redirect('service_management')
+    return redirect('service_management')
+
+@login_required
+def subservice_delete(request, pk):
+    """Delete subservice"""
+    subservice = get_object_or_404(Subservice, pk=pk)
+    subservice.delete()
+    messages.success(request, 'Subservice deleted successfully!')
+    return redirect('service_management')

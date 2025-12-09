@@ -1,0 +1,628 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Service Management - Diginext{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0"><i class="fas fa-concierge-bell"></i> Service Management</h1>
+            <p class="text-muted">Manage your services, service categories and subservices</p>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+              <li class="breadcrumb-item active">Services</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Display Messages -->
+    {% if messages %}
+    <div class="container-fluid">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i> {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+          <div class="col-lg-4 col-md-6 col-sm-6 mb-3">
+            <div class="small-box bg-info elevation-2">
+              <div class="inner">
+                <h3>{{ service_count }}</h3>
+                <p>Service Banners</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-image"></i>
+              </div>
+              <a href="#banner" class="small-box-footer" onclick="$('#banner-tab').click()">
+                View Details <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 col-sm-6 mb-3">
+            <div class="small-box bg-success elevation-2">
+              <div class="inner">
+                <h3>{{ service_name_count }}</h3>
+                <p>Service Categories</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-list"></i>
+              </div>
+              <a href="#servicename" class="small-box-footer" onclick="$('#servicename-tab').click()">
+                View Details <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 col-sm-6 mb-3">
+            <div class="small-box bg-warning elevation-2">
+              <div class="inner">
+                <h3>{{ subservice_count }}</h3>
+                <p>Subservices</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-sitemap"></i>
+              </div>
+              <a href="#subservice" class="small-box-footer" onclick="$('#subservice-tab').click()">
+                View Details <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="card card-primary card-outline card-outline-tabs elevation-2">
+          <div class="card-header p-0 border-bottom-0">
+            <ul class="nav nav-tabs" id="serviceTabs" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="banner-tab" data-toggle="pill" href="#banner" role="tab">
+                  <i class="fas fa-image"></i> Service Banner
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="servicename-tab" data-toggle="pill" href="#servicename" role="tab">
+                  <i class="fas fa-list"></i> Service Categories
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="subservice-tab" data-toggle="pill" href="#subservice" role="tab">
+                  <i class="fas fa-sitemap"></i> Subservices
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="card-body">
+            <div class="tab-content" id="serviceTabsContent">
+              
+              <!-- Service Banner Tab -->
+              <div class="tab-pane fade show active" id="banner" role="tabpanel">
+                <div class="mb-3">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createServiceModal">
+                    <i class="fas fa-plus-circle"></i> Add Service Banner
+                  </button>
+                </div>
+                
+                {% if services %}
+                <div class="row">
+                  {% for service in services %}
+                  <div class="col-lg-6 col-md-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                      {% if service.image %}
+                      <img src="{{ service.image.url }}" class="card-img-top" alt="{{ service.banner_description_title }}" style="height: 250px; object-fit: cover;">
+                      {% else %}
+                      <div class="bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                        <span class="text-muted"><i class="fas fa-image fa-5x"></i></span>
+                      </div>
+                      {% endif %}
+                      <div class="card-body">
+                        <h5 class="card-title font-weight-bold">{{ service.banner_description_title|default:"No Title" }}</h5>
+                        <p class="card-text text-muted">{{ service.banner_description|truncatewords:25|default:"<em>No description</em>" }}</p>
+                      </div>
+                      <div class="card-footer bg-white border-top">
+                        <div class="d-flex justify-content-end">
+                          <button class="btn btn-sm btn-warning mr-1" onclick="editService({{ service.pk }}, '{{ service.banner_description_title|escapejs }}', '{{ service.banner_description|escapejs }}', '{% if service.image %}{{ service.image.url }}{% endif %}')">
+                            <i class="fas fa-edit"></i> Edit
+                          </button>
+                          <button class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'service_delete' service.pk %}', 'service banner')">
+                            <i class="fas fa-trash-alt"></i> Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No service banners added yet. Click the button above to add your first service banner.
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Service Name Tab -->
+              <div class="tab-pane fade" id="servicename" role="tabpanel">
+                <div class="mb-3">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createServiceNameModal">
+                    <i class="fas fa-plus-circle"></i> Add Service Category
+                  </button>
+                </div>
+                
+                {% if service_names %}
+                <div class="row">
+                  {% for sn in service_names %}
+                  <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                      {% if sn.service_image %}
+                      <img src="{{ sn.service_image.url }}" class="card-img-top" alt="{{ sn.service_name }}" style="height: 200px; object-fit: cover;">
+                      {% else %}
+                      <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <span class="text-muted"><i class="fas fa-image fa-4x"></i></span>
+                      </div>
+                      {% endif %}
+                      <div class="card-body">
+                        <h5 class="card-title font-weight-bold">{{ sn.service_name }}</h5>
+                        <p class="card-text text-muted">{{ sn.service_description|truncatewords:20 }}</p>
+                        <span class="badge badge-info">{{ sn.subservices.count }} Subservice(s)</span>
+                      </div>
+                      <div class="card-footer bg-white border-top">
+                        <div class="d-flex justify-content-end">
+                          <button class="btn btn-sm btn-warning mr-1" onclick="editServiceName({{ sn.pk }}, '{{ sn.service_name|escapejs }}', '{{ sn.service_description|escapejs }}', '{% if sn.service_image %}{{ sn.service_image.url }}{% endif %}')">
+                            <i class="fas fa-edit"></i> Edit
+                          </button>
+                          <button class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'service_name_delete' sn.pk %}', 'service category')">
+                            <i class="fas fa-trash-alt"></i> Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No service categories added yet. Click the button above to add your first service category.
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Subservice Tab -->
+              <div class="tab-pane fade" id="subservice" role="tabpanel">
+                <div class="mb-3">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createSubserviceModal">
+                    <i class="fas fa-plus-circle"></i> Add Subservice
+                  </button>
+                </div>
+                
+                {% if service_names %}
+                  {% for sn in service_names %}
+                    {% if sn.subservices.all %}
+                    <div class="card mb-4">
+                      <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-folder-open"></i> {{ sn.service_name }}</h5>
+                      </div>
+                      <div class="card-body">
+                        <div class="row">
+                          {% for sub in sn.subservices.all %}
+                          <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="card shadow-sm h-100">
+                              {% if sub.sub_service_image %}
+                              <img src="{{ sub.sub_service_image.url }}" class="card-img-top" alt="{{ sub.subservice_name }}" style="height: 150px; object-fit: cover;">
+                              {% else %}
+                              <div class="bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                                <span class="text-muted"><i class="fas fa-image fa-3x"></i></span>
+                              </div>
+                              {% endif %}
+                              <div class="card-body">
+                                <h6 class="card-title font-weight-bold">{{ sub.subservice_name }}</h6>
+                                <p class="card-text text-muted small">{{ sub.subservice_description|truncatewords:15|default:"<em>No description</em>" }}</p>
+                              </div>
+                              <div class="card-footer bg-white border-top">
+                                <div class="d-flex justify-content-end">
+                                  <button class="btn btn-sm btn-warning mr-1" onclick="editSubservice({{ sub.pk }}, {{ sub.service_heading.pk }}, '{{ sub.subservice_name|escapejs }}', '{{ sub.subservice_description|escapejs }}', '{% if sub.sub_service_image %}{{ sub.sub_service_image.url }}{% endif %}')">
+                                    <i class="fas fa-edit"></i>
+                                  </button>
+                                  <button class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'subservice_delete' sub.pk %}', 'subservice')">
+                                    <i class="fas fa-trash-alt"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                  {% endfor %}
+                  
+                  {% if subservice_count == 0 %}
+                  <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No subservices added yet. Click the button above to add your first subservice.
+                  </div>
+                  {% endif %}
+                {% else %}
+                <div class="alert alert-warning">
+                  <i class="fas fa-exclamation-triangle"></i> Please create service categories first before adding subservices.
+                </div>
+                {% endif %}
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <!-- ===================== MODALS ===================== -->
+
+  <!-- Create Service Modal -->
+  <div class="modal fade" id="createServiceModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'service_create' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Service Banner</h5>
+            <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Banner Title</label>
+              <input type="text" class="form-control" name="banner_description_title" placeholder="Enter banner title">
+            </div>
+            <div class="form-group">
+              <label>Banner Description</label>
+              <textarea class="form-control" name="banner_description" rows="4" placeholder="Enter banner description"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Banner Image</label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" name="image" id="create_service_image" accept="image/*">
+                <label class="custom-file-label" for="create_service_image">Choose file</label>
+              </div>
+              <small class="form-text text-muted">Recommended size: 1920x600px</small>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Service Modal -->
+  <div class="modal fade" id="editServiceModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" id="editServiceForm" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Service Banner</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Banner Title</label>
+              <input type="text" class="form-control" id="edit_service_title" name="banner_description_title">
+            </div>
+            <div class="form-group">
+              <label>Banner Description</label>
+              <textarea class="form-control" id="edit_service_description" name="banner_description" rows="4"></textarea>
+            </div>
+            
+            <div id="edit_service_current_image_container" class="form-group" style="display:none;">
+              <label>Current Image</label>
+              <div class="border p-2 text-center bg-light">
+                <img id="edit_service_current_image" src="" alt="Current Image" class="img-thumbnail" style="max-height: 150px;">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Change Image <small class="text-muted">(leave empty to keep current)</small></label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" name="image" id="edit_service_image" accept="image/*">
+                <label class="custom-file-label" for="edit_service_image">Choose new file</label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Service Name Modal -->
+  <div class="modal fade" id="createServiceNameModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'service_name_create' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Service Category</h5>
+            <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Service Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="service_name" placeholder="Enter service name" required>
+            </div>
+            <div class="form-group">
+              <label>Service Description <span class="text-danger">*</span></label>
+              <textarea class="form-control" name="service_description" rows="4" placeholder="Enter service description" required></textarea>
+            </div>
+            <div class="form-group">
+              <label>Service Image <span class="text-danger">*</span></label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" name="service_image" id="create_servicename_image" accept="image/*" required>
+                <label class="custom-file-label" for="create_servicename_image">Choose file</label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Service Name Modal -->
+  <div class="modal fade" id="editServiceNameModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" id="editServiceNameForm" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Service Category</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Service Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="edit_servicename_name" name="service_name" required>
+            </div>
+            <div class="form-group">
+              <label>Service Description <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="edit_servicename_description" name="service_description" rows="4" required></textarea>
+            </div>
+            
+            <div id="edit_servicename_current_image_container" class="form-group" style="display:none;">
+              <label>Current Image</label>
+              <div class="border p-2 text-center bg-light">
+                <img id="edit_servicename_current_image" src="" alt="Current Image" class="img-thumbnail" style="max-height: 150px;">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Change Image <small class="text-muted">(leave empty to keep current)</small></label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" name="service_image" id="edit_servicename_image" accept="image/*">
+                <label class="custom-file-label" for="edit_servicename_image">Choose new file</label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Subservice Modal -->
+  <div class="modal fade" id="createSubserviceModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'subservice_create' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Subservice</h5>
+            <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Service Category <span class="text-danger">*</span></label>
+              <select class="form-control" name="service_heading" required>
+                <option value="">Select Service Category</option>
+                {% for sn in service_names %}
+                <option value="{{ sn.pk }}">{{ sn.service_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Subservice Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="subservice_name" placeholder="Enter subservice name" required>
+            </div>
+            <div class="form-group">
+              <label>Subservice Description</label>
+              <textarea class="form-control" name="subservice_description" rows="4" placeholder="Enter subservice description"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Subservice Image <span class="text-danger">*</span></label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" name="sub_service_image" id="create_subservice_image" accept="image/*" required>
+                <label class="custom-file-label" for="create_subservice_image">Choose file</label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Subservice Modal -->
+  <div class="modal fade" id="editSubserviceModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" id="editSubserviceForm" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Subservice</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Service Category <span class="text-danger">*</span></label>
+              <select class="form-control" id="edit_subservice_heading" name="service_heading" required>
+                {% for sn in service_names %}
+                <option value="{{ sn.pk }}">{{ sn.service_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Subservice Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="edit_subservice_name" name="subservice_name" required>
+            </div>
+            <div class="form-group">
+              <label>Subservice Description</label>
+              <textarea class="form-control" id="edit_subservice_description" name="subservice_description" rows="4"></textarea>
+            </div>
+            
+            <div id="edit_subservice_current_image_container" class="form-group" style="display:none;">
+              <label>Current Image</label>
+              <div class="border p-2 text-center bg-light">
+                <img id="edit_subservice_current_image" src="" alt="Current Image" class="img-thumbnail" style="max-height: 150px;">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Change Image <small class="text-muted">(leave empty to keep current)</small></label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" name="sub_service_image" id="edit_subservice_image" accept="image/*">
+                <label class="custom-file-label" for="edit_subservice_image">Choose new file</label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Functions -->
+  <script>
+    // File input label update
+    $('.custom-file-input').on('change', function() {
+      var fileName = $(this).val().split('\\').pop();
+      $(this).siblings('.custom-file-label').addClass('selected').html(fileName);
+    });
+
+    // Edit Service
+    function editService(id, title, description, currentImage) {
+      document.getElementById('editServiceForm').action = "{% url 'service_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_service_title').value = title;
+      document.getElementById('edit_service_description').value = description;
+      
+      if (currentImage) {
+        document.getElementById('edit_service_current_image').src = currentImage;
+        document.getElementById('edit_service_current_image_container').style.display = 'block';
+      } else {
+        document.getElementById('edit_service_current_image_container').style.display = 'none';
+      }
+      
+      $('#edit_service_image').val('');
+      $('#edit_service_image').siblings('.custom-file-label').html('Choose new file');
+      
+      $('#editServiceModal').modal('show');
+    }
+
+    // Edit Service Name
+    function editServiceName(id, name, description, currentImage) {
+      document.getElementById('editServiceNameForm').action = "{% url 'service_name_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_servicename_name').value = name;
+      document.getElementById('edit_servicename_description').value = description;
+      
+      if (currentImage) {
+        document.getElementById('edit_servicename_current_image').src = currentImage;
+        document.getElementById('edit_servicename_current_image_container').style.display = 'block';
+      } else {
+        document.getElementById('edit_servicename_current_image_container').style.display = 'none';
+      }
+      
+      $('#edit_servicename_image').val('');
+      $('#edit_servicename_image').siblings('.custom-file-label').html('Choose new file');
+      
+      $('#editServiceNameModal').modal('show');
+    }
+
+    // Edit Subservice
+    function editSubservice(id, headingId, name, description, currentImage) {
+      document.getElementById('editSubserviceForm').action = "{% url 'subservice_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_subservice_heading').value = headingId;
+      document.getElementById('edit_subservice_name').value = name;
+      document.getElementById('edit_subservice_description').value = description;
+      
+      if (currentImage) {
+        document.getElementById('edit_subservice_current_image').src = currentImage;
+        document.getElementById('edit_subservice_current_image_container').style.display = 'block';
+      } else {
+        document.getElementById('edit_subservice_current_image_container').style.display = 'none';
+      }
+      
+      $('#edit_subservice_image').val('');
+      $('#edit_subservice_image').siblings('.custom-file-label').html('Choose new file');
+      
+      $('#editSubserviceModal').modal('show');
+    }
+
+    // Delete function
+    function deleteItem(url, itemType) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to delete this " + itemType + "?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = url;
+        }
+      });
+    }
+
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+      $('.alert').fadeOut('slow');
+    }, 5000);
+  </script>
+
+{% endblock %}
