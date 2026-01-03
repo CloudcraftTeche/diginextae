@@ -169,7 +169,7 @@ WSGI_APPLICATION = 'diginext.wsgi.application'
 
 ENVIRONMENT = os.getenv('DJANGO_ENV', 'local')
 
-if ENVIRONMENT == 'live':
+if ENVIRONMENT == 'livee':
     from env_file import live as constant
 else:
     from env_file import local as constant
