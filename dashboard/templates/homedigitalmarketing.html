@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}SEO/Digital Marketing Management - Diginext{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">SEO / Digital Marketing Settings</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+              <li class="breadcrumb-item active">SEO/Digital Marketing</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Display Messages -->
+    {% if messages %}
+    <div class="container-fluid">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        
+        <!-- Statistics Card -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{% if digital_marketing %}Configured{% else %}Not Set{% endif %}</h3>
+                <p>SEO Settings Status</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-search"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEO/Digital Marketing Section -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">SEO / Digital Marketing Settings</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#digitalMarketingModal">
+                    <i class="fas fa-cog"></i> {% if digital_marketing %}Update{% else %}Configure{% endif %}
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if digital_marketing %}
+                <div class="row">
+                  <div class="col-md-8">
+                    <table class="table table-bordered">
+                      <tr>
+                        <th width="200">Meta Title</th>
+                        <td>{{ digital_marketing.meta_title|default:"Not set" }}</td>
+                      </tr>
+                      <tr>
+                        <th>Meta Description</th>
+                        <td>{{ digital_marketing.meta_description|default:"Not set" }}</td>
+                      </tr>
+                      <tr>
+                        <th>Meta Keywords</th>
+                        <td>{{ digital_marketing.meta_keywords|default:"Not set" }}</td>
+                      </tr>
+                      <tr>
+                        <th>Status</th>
+                        <td>
+                          {% if digital_marketing.is_active %}
+                          <span class="badge badge-success">Active</span>
+                          {% else %}
+                          <span class="badge badge-secondary">Inactive</span>
+                          {% endif %}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Created Date</th>
+                        <td>{{ digital_marketing.created_at|date:"M d, Y H:i" }}</td>
+                      </tr>
+                      <tr>
+                        <th>Last Updated</th>
+                        <td>{{ digital_marketing.updated_at|date:"M d, Y H:i" }}</td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div class="col-md-4">
+                    {% if digital_marketing.banner_image %}
+                    <label class="d-block mb-2"><strong>Banner Image:</strong></label>
+                    <img src="{{ digital_marketing.banner_image.url }}" alt="Banner" class="img-fluid img-thumbnail">
+                    {% else %}
+                    <div class="alert alert-warning">
+                      <i class="fas fa-exclamation-triangle"></i> No banner image set
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No SEO settings configured. Click "Configure" to set up.
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEO Best Practices Info -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card card-outline card-primary">
+              <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-lightbulb"></i> SEO Best Practices</h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-4">
+                    <h5><i class="fas fa-heading text-primary"></i> Meta Title</h5>
+                    <ul>
+                      <li>Keep it between 50-60 characters</li>
+                      <li>Include primary keywords</li>
+                      <li>Make it compelling and descriptive</li>
+                      <li>Be unique for each page</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-4">
+                    <h5><i class="fas fa-align-left text-success"></i> Meta Description</h5>
+                    <ul>
+                      <li>Keep it between 150-160 characters</li>
+                      <li>Summarize page content accurately</li>
+                      <li>Include a call-to-action</li>
+                      <li>Use natural language</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-4">
+                    <h5><i class="fas fa-tags text-warning"></i> Meta Keywords</h5>
+                    <ul>
+                      <li>Use relevant, specific keywords</li>
+                      <li>Separate with commas</li>
+                      <li>Avoid keyword stuffing</li>
+                      <li>Focus on 5-10 keywords</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- ===================== MODALS ===================== -->
+
+  <!-- Digital Marketing Modal -->
+  <div class="modal fade" id="digitalMarketingModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'home_digital_marketing_update' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">SEO / Digital Marketing Settings</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="dm_meta_title">Meta Title <span class="text-muted">(50-60 characters recommended)</span></label>
+              <input type="text" class="form-control" id="dm_meta_title" name="meta_title" 
+                     placeholder="Enter meta title" maxlength="60"
+                     value="{% if digital_marketing %}{{ digital_marketing.meta_title }}{% endif %}" required>
+              <small class="form-text text-muted">Character count: <span id="title_count">0</span>/60</small>
+            </div>
+            <div class="form-group">
+              <label for="dm_meta_description">Meta Description <span class="text-muted">(150-160 characters recommended)</span></label>
+              <textarea class="form-control" id="dm_meta_description" name="meta_description" rows="3" 
+                        placeholder="Enter meta description" maxlength="160" required>{% if digital_marketing %}{{ digital_marketing.meta_description }}{% endif %}</textarea>
+              <small class="form-text text-muted">Character count: <span id="description_count">0</span>/160</small>
+            </div>
+            <div class="form-group">
+              <label for="dm_meta_keywords">Meta Keywords <span class="text-muted">(comma separated)</span></label>
+              <input type="text" class="form-control" id="dm_meta_keywords" name="meta_keywords" 
+                     placeholder="Enter meta keywords (comma separated)" 
+                     value="{% if digital_marketing %}{{ digital_marketing.meta_keywords }}{% endif %}">
+              <small class="form-text text-muted">Example: web design, digital marketing, SEO services</small>
+            </div>
+            <div class="form-group">
+              {% if digital_marketing.banner_image %}
+              <div class="mb-3">
+                <label class="d-block mb-2"><strong>Current Banner Image:</strong></label>
+                <img src="{{ digital_marketing.banner_image.url }}" alt="Banner" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+              </div>
+              {% endif %}
+              <label for="dm_banner_image">Banner Image (leave empty to keep current)</label>
+              <input type="file" class="form-control" id="dm_banner_image" name="banner_image" accept="image/*">
+              <small class="form-text text-muted">Recommended size: 1200x630 pixels for optimal social media sharing</small>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="dm_is_active" name="is_active" 
+                     {% if digital_marketing %}{% if digital_marketing.is_active %}checked{% endif %}{% else %}checked{% endif %}>
+              <label class="form-check-label" for="dm_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">{% if digital_marketing %}Update{% else %}Create{% endif %} Settings</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Functions -->
+  <script>
+    // Character counter for meta title
+    document.getElementById('dm_meta_title').addEventListener('input', function() {
+      document.getElementById('title_count').textContent = this.value.length;
+    });
+
+    // Character counter for meta description
+    document.getElementById('dm_meta_description').addEventListener('input', function() {
+      document.getElementById('description_count').textContent = this.value.length;
+    });
+
+    // Initialize character counters on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const titleField = document.getElementById('dm_meta_title');
+      const descField = document.getElementById('dm_meta_description');
+      
+      if (titleField.value) {
+        document.getElementById('title_count').textContent = titleField.value.length;
+      }
+      
+      if (descField.value) {
+        document.getElementById('description_count').textContent = descField.value.length;
+      }
+    });
+
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+      $('.alert').fadeOut('slow');
+    }, 5000);
+  </script>
+
+{% endblock %}

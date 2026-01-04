@@ -1,164 +1,115 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Diginext | Dashboard</title>
 
-    <!-- Google Font: Source Sans Pro -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
-    />
-    <!-- Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="{% static 'plugins/fontawesome-free/css/all.min.css' %}"
-    />
-    <!-- Ionicons -->
-    <link
-      rel="stylesheet"
-      href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"
-    />
-    <!-- Tempusdominus Bootstrap 4 -->
-    <link
-      rel="stylesheet"
-      href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}"
-    />
-    <!-- iCheck -->
-    <link
-      rel="stylesheet"
-      href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}"
-    />
-    <!-- JQVMap -->
-    <link
-      rel="stylesheet"
-      href="{% static 'plugins/jqvmap/jqvmap.min.css' %}"
-    />
-    <!-- Theme style -->
-    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}" />
-    <!-- overlayScrollbars -->
-    <link
-      rel="stylesheet"
-      href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}"
-    />
-    <!-- Daterange picker -->
-    <link
-      rel="stylesheet"
-      href="{% static 'plugins/daterangepicker/daterangepicker.css' %}"
-    />
-    <!-- summernote -->
-    <link
-      rel="stylesheet"
-      href="{% static 'plugins/summernote/summernote-bs4.min.css' %}"
-    />
-  </head>
-  <body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
-      <!-- Preloader -->
-      <div
-        class="preloader flex-column justify-content-center align-items-center"
-      >
-        <img
-          class="animation__shake"
-          src="{% static 'dist/img/AdminLTELogo.png' %}"
-          alt="AdminLTELogo"
-          height="60"
-          width="60"
-        />
-      </div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Diginext | Dashboard</title>
 
-      <!-- Navbar -->
-      <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-        <!-- Left navbar links -->
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" data-widget="pushmenu" href="#" role="button"
-              ><i class="fas fa-bars"></i
-            ></a>
-          </li>
-          <li class="nav-item d-none d-sm-inline-block">
-            <a href="{% url 'home' %}" class="nav-link">Home</a>
-          </li>
-          <li class="nav-item d-none d-sm-inline-block">
-            <a href="#" class="nav-link">Contact</a>
-          </li>
-        </ul>
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}" />
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet"
+    href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}" />
+  <!-- iCheck -->
+  <link rel="stylesheet" href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}" />
+  <!-- JQVMap -->
+  <link rel="stylesheet" href="{% static 'plugins/jqvmap/jqvmap.min.css' %}" />
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}" />
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="{% static 'plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}" />
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}" />
+  <!-- summernote -->
+  <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %}" />
+</head>
 
-        <!-- Right navbar links -->
-        <ul class="navbar-nav ml-auto">
-          <!-- Navbar Search -->
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              data-widget="navbar-search"
-              href="#"
-              role="button"
-            >
-              <i class="fas fa-search"></i>
-            </a>
-            <div class="navbar-search-block">
-              <form class="form-inline">
-                <div class="input-group input-group-sm">
-                  <input
-                    class="form-control form-control-navbar"
-                    type="search"
-                    placeholder="Search"
-                    aria-label="Search"
-                  />
-                  <div class="input-group-append">
-                    <button class="btn btn-navbar" type="submit">
-                      <i class="fas fa-search"></i>
-                    </button>
-                    <button
-                      class="btn btn-navbar"
-                      type="button"
-                      data-widget="navbar-search"
-                    >
-                      <i class="fas fa-times"></i>
-                    </button>
-                  </div>
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+    <!-- Preloader -->
+    <div class="preloader flex-column justify-content-center align-items-center">
+      <img class="animation__shake" src="{% static 'dist/img/AdminLTELogo.png' %}" alt="AdminLTELogo" height="60"
+        width="60" />
+    </div>
+
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+      <!-- Left navbar links -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="{% url 'home' %}" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+          <a href="#" class="nav-link">Contact</a>
+        </li>
+      </ul>
+
+      <!-- Right navbar links -->
+      <ul class="navbar-nav ml-auto">
+        <!-- Navbar Search -->
+        <li class="nav-item">
+          <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+            <i class="fas fa-search"></i>
+          </a>
+          <div class="navbar-search-block">
+            <form class="form-inline">
+              <div class="input-group input-group-sm">
+                <input class="form-control form-control-navbar" type="search" placeholder="Search"
+                  aria-label="Search" />
+                <div class="input-group-append">
+                  <button class="btn btn-navbar" type="submit">
+                    <i class="fas fa-search"></i>
+                  </button>
+                  <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                    <i class="fas fa-times"></i>
+                  </button>
                 </div>
-              </form>
-            </div>
-          </li>
+              </div>
+            </form>
+          </div>
+        </li>
 
-          <!-- Fullscreen -->
-          <li class="nav-item">
-            <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-              <i class="fas fa-expand-arrows-alt"></i>
-            </a>
-          </li>
+        <!-- Fullscreen -->
+        <li class="nav-item">
+          <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+            <i class="fas fa-expand-arrows-alt"></i>
+          </a>
+        </li>
 
-          <!-- Logout -->
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'logout' %}" role="button">
-              <i class="fas fa-sign-out-alt"></i>
-              <span class="d-none d-sm-inline-block ml-1">Logout</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-      <!-- /.navbar -->
+        <!-- Logout -->
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}" role="button">
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="d-none d-sm-inline-block ml-1">Logout</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <!-- /.navbar -->
 
-      <!-- Main Sidebar Container -->
-      <aside class="main-sidebar sidebar-dark-primary elevation-4">
-        <!-- Brand Logo -->
-        <a href="{% url 'dashboard' %}" class="brand-link">
-          <img
-            src="{% static 'dist/img/AdminLTELogo.png' %}"
-            alt="AdminLTE Logo"
-            class="brand-image img-circle elevation-3"
-            style="opacity: 0.8"
-          />
-          <span class="brand-text font-weight-light">DigiNext</span>
-        </a>
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <!-- Brand Logo -->
+      <a href="{% url 'dashboard' %}" class="brand-link">
+        <img src="{% static 'dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo"
+          class="brand-image img-circle elevation-3" style="opacity: 0.8" />
+        <span class="brand-text font-weight-light">DigiNext</span>
+      </a>
 
-        <!-- Sidebar -->
-        <div class="sidebar">
-          <!-- Sidebar user panel (optional) -->
-          <!-- <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <!-- <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
           <img src="{% static 'dist/img/user2-160x160.jpg' %}" class="img-circle elevation-2" alt="User Image">
         </div>
@@ -167,166 +118,244 @@
         </div>
       </div> -->
 
-          <!-- SidebarSearch Form -->
-          <div class="form-inline">
-            <div class="input-group" data-widget="sidebar-search">
-              <input
-                class="form-control form-control-sidebar"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <div class="input-group-append">
-                <button class="btn btn-sidebar">
-                  <i class="fas fa-search fa-fw"></i>
-                </button>
-              </div>
+        <!-- SidebarSearch Form -->
+        <div class="form-inline">
+          <div class="input-group" data-widget="sidebar-search">
+            <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search" />
+            <div class="input-group-append">
+              <button class="btn btn-sidebar">
+                <i class="fas fa-search fa-fw"></i>
+              </button>
             </div>
           </div>
-
-          <!-- Sidebar Menu -->
-          <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-              <!-- Dashboard treeview -->
-              <li class="nav-item {% if request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'dashboard_v1' or request.resolver_match.url_name == 'dashboard_v2' or request.resolver_match.url_name == 'dashboard_v3' %}menu-open{% endif %}">
-                <a href="#" class="nav-link {% if request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'dashboard_v1' or request.resolver_match.url_name == 'dashboard_v2' or request.resolver_match.url_name == 'dashboard_v3' %}active{% endif %}">
-                  <i class="nav-icon fas fa-tachometer-alt"></i>
-                  <p>
-                    Dashboard
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Dashboard Home</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./index2.html" class="nav-link {% if request.resolver_match.url_name == 'dashboard_v2' %}active{% endif %}">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Dashboard v2</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./index3.html" class="nav-link {% if request.resolver_match.url_name == 'dashboard_v3' %}active{% endif %}">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Dashboard v3</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-
-              <li class="nav-item">
-                <a
-                  href="{% url 'home' %}"
-                  class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
-                >
-                  <i class="nav-icon fas fa-home"></i>
-                  <p>Home</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a
-                  href="{% url 'contacts_page' %}"
-                  class="nav-link {% if request.resolver_match.url_name == 'contacts_page' %}active{% endif %}"
-                >
-                  <i class="nav-icon fas fa-phone"></i>
-                  <p>Contacts</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a
-                  href="{% url 'aboutus_page' %}"
-                  class="nav-link {% if request.resolver_match.url_name == 'aboutus_page' %}active{% endif %}"
-                >
-                  <i class="nav-icon fas fa-info-circle"></i>
-                  <p>About us</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a
-                  href="{% url 'service_management' %}"
-                  class="nav-link {% if request.resolver_match.url_name == 'service_management' %}active{% endif %}"
-                >
-                  <i class="nav-icon fas fa-cogs"></i>
-                  <p>Service</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a
-                  href="{% url 'solutions_management' %}"
-                  class="nav-link {% if request.resolver_match.url_name == 'solutions_management' %}active{% endif %}"
-                >
-                  <i class="nav-icon fas fa-lightbulb"></i>
-                  <p>Solutions</p>
-                </a>
-              </li>
-            </ul>
-          </nav>
-          <!-- /.sidebar-menu -->
-          <!-- /.sidebar-menu -->
         </div>
-        <!-- /.sidebar -->
-      </aside>
 
-      <!-- Content Wrapper. Contains page content -->
-      <!-- ----------------------------------------------content of pae    -->
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <!-- Dashboard treeview -->
+            <li
+              class="nav-item {% if request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'dashboard_v1' or request.resolver_match.url_name == 'dashboard_v2' or request.resolver_match.url_name == 'dashboard_v3' %}menu-open{% endif %}">
+              <a href="#"
+                class="nav-link {% if request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'dashboard_v1' or request.resolver_match.url_name == 'dashboard_v2' or request.resolver_match.url_name == 'dashboard_v3' %}active{% endif %}">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  Dashboard
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'dashboard' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Dashboard Home</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="./index2.html"
+                    class="nav-link {% if request.resolver_match.url_name == 'dashboard_v2' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Dashboard v2</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="./index3.html"
+                    class="nav-link {% if request.resolver_match.url_name == 'dashboard_v3' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Dashboard v3</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'home_banner' or request.resolver_match.url_name == 'home_text1' or request.resolver_match.url_name == 'home_banner2' or request.resolver_match.url_name == 'home_text2' or request.resolver_match.url_name == 'home_concepts' or request.resolver_match.url_name == 'home_banner3_page' or request.resolver_match.url_name == 'home_text3_page' or request.resolver_match.url_name == 'home_available_works_page' or request.resolver_match.url_name == 'home_banner4_page' or request.resolver_match.url_name == 'home_about_us_page' or request.resolver_match.url_name == 'home_faq_page' or request.resolver_match.url_name == 'home_footer_page' or request.resolver_match.url_name == 'home_digital_marketing_page' %}menu-open{% endif %}">
+              <a href="#" class="nav-link {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'home_banner' or request.resolver_match.url_name == 'home_text1' or request.resolver_match.url_name == 'home_banner2' or request.resolver_match.url_name == 'home_text2' or request.resolver_match.url_name == 'home_concepts' or request.resolver_match.url_name == 'home_banner3_page' or request.resolver_match.url_name == 'home_text3_page' or request.resolver_match.url_name == 'home_available_works_page' or request.resolver_match.url_name == 'home_banner4_page' or request.resolver_match.url_name == 'home_about_us_page' or request.resolver_match.url_name == 'home_faq_page' or request.resolver_match.url_name == 'home_footer_page' or request.resolver_match.url_name == 'home_digital_marketing_page' %}active{% endif %}">
+                <i class="nav-icon fas fa-home"></i>
+                <p>
+                  Home Management
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>All Sections</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'home_banner' %}" class="nav-link {% if request.resolver_match.url_name == 'home_banner' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Banners</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'home_text1' %}" class="nav-link {% if request.resolver_match.url_name == 'home_text1' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Text Section 1</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'home_banner2' %}" class="nav-link {% if request.resolver_match.url_name == 'home_banner2' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Secondary Banners</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'home_text2' %}" class="nav-link {% if request.resolver_match.url_name == 'home_text2' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Text Section 2</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'home_concepts' %}" class="nav-link {% if request.resolver_match.url_name == 'home_concepts' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Concepts</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'home_banner3_page' %}" class="nav-link {% if request.resolver_match.url_name == 'home_banner3_page' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Home Banner 3</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'home_text3_page' %}" class="nav-link {% if request.resolver_match.url_name == 'home_text3_page' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Text Section 3</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'home_available_works_page' %}" class="nav-link {% if request.resolver_match.url_name == 'home_available_works_page' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Available Works</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'home_banner4_page' %}" class="nav-link {% if request.resolver_match.url_name == 'home_banner4_page' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Home Banner 4</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'home_about_us_page' %}" class="nav-link {% if request.resolver_match.url_name == 'home_about_us_page' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>About Us</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'home_faq_page' %}" class="nav-link {% if request.resolver_match.url_name == 'home_faq_page' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>FAQ</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'home_footer_page' %}" class="nav-link {% if request.resolver_match.url_name == 'home_footer_page' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Footer</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'home_digital_marketing_page' %}" class="nav-link {% if request.resolver_match.url_name == 'home_digital_marketing_page' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>SEO/Digital Marketing</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'contacts_page' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'contacts_page' %}active{% endif %}">
+                <i class="nav-icon fas fa-phone"></i>
+                <p>Contacts</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'aboutus_page' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'aboutus_page' %}active{% endif %}">
+                <i class="nav-icon fas fa-info-circle"></i>
+                <p>About us</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'service_management' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'service_management' %}active{% endif %}">
+                <i class="nav-icon fas fa-cogs"></i>
+                <p>Service</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'solutions_management' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'solutions_management' %}active{% endif %}">
+                <i class="nav-icon fas fa-lightbulb"></i>
+                <p>Solutions</p>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+        <!-- /.sidebar-menu -->
+      </div>
+      <!-- /.sidebar -->
+    </aside>
 
-      {% block content %} {% endblock %}
+    <!-- Content Wrapper. Contains page content -->
+    <!-- ----------------------------------------------content of pae    -->
 
-      <!-- ---------------------------------------end content of page ----------------->
+    {% block content %} {% endblock %}
 
-      <footer class="main-footer">
-        <strong>Copyright &copy; 2025- <a href="#">DigiNext</a>.</strong>
-        All rights reserved.
-        <div class="float-right d-none d-sm-inline-block">
-          <b>Version</b> 3.1.0
-        </div>
-      </footer>
+    <!-- ---------------------------------------end content of page ----------------->
 
-      <!-- Control Sidebar -->
-      <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
-      </aside>
-      <!-- /.control-sidebar -->
-    </div>
-    <!-- ./wrapper -->
+    <footer class="main-footer">
+      <strong>Copyright &copy; 2025- <a href="#">DigiNext</a>.</strong>
+      All rights reserved.
+      <div class="float-right d-none d-sm-inline-block">
+        <b>Version</b> 3.1.0
+      </div>
+    </footer>
 
-    <!-- jQuery -->
-    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
-    <!-- jQuery UI 1.11.4 -->
-    <script src="{% static 'plugins/jquery-ui/jquery-ui.min.js' %}"></script>
-    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-    <script>
-      $.widget.bridge("uibutton", $.ui.button);
-    </script>
-    <!-- Bootstrap 4 -->
-    <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-    <!-- ChartJS -->
-    <script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
-    <!-- Sparkline -->
-    <script src="{% static 'plugins/sparklines/sparkline.js' %}"></script>
-    <!-- JQVMap -->
-    <script src="{% static 'plugins/jqvmap/jquery.vmap.min.js' %}"></script>
-    <script src="{% static 'plugins/jqvmap/maps/jquery.vmap.usa.js' %}"></script>
-    <!-- jQuery Knob Chart -->
-    <script src="{% static 'plugins/jquery-knob/jquery.knob.min.js' %}"></script>
-    <!-- daterangepicker -->
-    <script src="{% static 'plugins/moment/moment.min.js' %}"></script>
-    <script src="{% static 'plugins/daterangepicker/daterangepicker.js' %}"></script>
-    <!-- Tempusdominus Bootstrap 4 -->
-    <script src="{% static 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
-    <!-- Summernote -->
-    <script src="{% static 'plugins/summernote/summernote-bs4.min.js' %}"></script>
-    <!-- overlayScrollbars -->
-    <script src="{% static 'plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
-    <!-- AdminLTE App -->
-    <script src="{% static 'dist/js/adminlte.js' %}"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="{% static 'dist/js/demo.js' %}"></script>
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="{% static 'dist/js/pages/dashboard.js' %}"></script>
-  </body>
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+  </div>
+  <!-- ./wrapper -->
+
+  <!-- jQuery -->
+  <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+  <!-- jQuery UI 1.11.4 -->
+  <script src="{% static 'plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+  <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+  <script>
+    $.widget.bridge("uibutton", $.ui.button);
+  </script>
+  <!-- Bootstrap 4 -->
+  <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <!-- ChartJS -->
+  <script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
+  <!-- Sparkline -->
+  <script src="{% static 'plugins/sparklines/sparkline.js' %}"></script>
+  <!-- JQVMap -->
+  <script src="{% static 'plugins/jqvmap/jquery.vmap.min.js' %}"></script>
+  <script src="{% static 'plugins/jqvmap/maps/jquery.vmap.usa.js' %}"></script>
+  <!-- jQuery Knob Chart -->
+  <script src="{% static 'plugins/jquery-knob/jquery.knob.min.js' %}"></script>
+  <!-- daterangepicker -->
+  <script src="{% static 'plugins/moment/moment.min.js' %}"></script>
+  <script src="{% static 'plugins/daterangepicker/daterangepicker.js' %}"></script>
+  <!-- Tempusdominus Bootstrap 4 -->
+  <script src="{% static 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+  <!-- Summernote -->
+  <script src="{% static 'plugins/summernote/summernote-bs4.min.js' %}"></script>
+  <!-- overlayScrollbars -->
+  <script src="{% static 'plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
+  <!-- AdminLTE App -->
+  <script src="{% static 'dist/js/adminlte.js' %}"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="{% static 'dist/js/demo.js' %}"></script>
+  <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+  <script src="{% static 'dist/js/pages/dashboard.js' %}"></script>
+</body>
+
 </html>

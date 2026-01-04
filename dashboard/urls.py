@@ -11,46 +11,55 @@ urlpatterns = [
   path('home/', views.home, name='home'),
 
     # ==================== HOME BANNER CRUD ====================
+    path('home/banner/', views.home_banner, name='home_banner'),
     path('home/banner/create/', views.home_banner_create, name='home_banner_create'),
     path('home/banner/<int:pk>/edit/', views.home_banner_edit, name='home_banner_edit'),
     path('home/banner/<int:pk>/delete/', views.home_banner_delete, name='home_banner_delete'),
     
     # ==================== HOME TEXT 1 CRUD ====================
+    path('home/text1/', views.home_text1, name='home_text1'),
     path('home/text1/create/', views.home_text1_create, name='home_text1_create'),
     path('home/text1/<int:pk>/edit/', views.home_text1_edit, name='home_text1_edit'),
     path('home/text1/<int:pk>/delete/', views.home_text1_delete, name='home_text1_delete'),
     
     # ==================== HOME BANNER 2 CRUD ====================
+    path('home/banner2/', views.home_banner2, name='home_banner2'),
     path('home/banner2/create/', views.home_banner2_create, name='home_banner2_create'),
     path('home/banner2/<int:pk>/edit/', views.home_banner2_edit, name='home_banner2_edit'),
     path('home/banner2/<int:pk>/delete/', views.home_banner2_delete, name='home_banner2_delete'),
     
     # ==================== HOME TEXT 2 CRUD ====================
+    path('home/text2/', views.home_text2, name='home_text2'),
     path('home/text2/create/', views.home_text2_create, name='home_text2_create'),
     path('home/text2/<int:pk>/edit/', views.home_text2_edit, name='home_text2_edit'),
     path('home/text2/<int:pk>/delete/', views.home_text2_delete, name='home_text2_delete'),
     
     # ==================== CONCEPTS CRUD ====================
+    path('home/concepts/', views.home_concepts, name='home_concepts'),
     path('home/concepts/create/', views.concepts_create, name='concepts_create'),
     path('home/concepts/<int:pk>/edit/', views.concepts_edit, name='concepts_edit'),
     path('home/concepts/<int:pk>/delete/', views.concepts_delete, name='concepts_delete'),
 
     # ==================== HOME BANNER 3 CRUD ====================
+    path('home/banner3/', views.home_banner3_page, name='home_banner3_page'),
     path('home/banner3/create/', views.home_banner3_create, name='home_banner3_create'),
     path('home/banner3/<int:pk>/edit/', views.home_banner3_edit, name='home_banner3_edit'),
     path('home/banner3/<int:pk>/delete/', views.home_banner3_delete, name='home_banner3_delete'),
 
     # ==================== HOME TEXT 3 CRUD ====================
+    path('home/text3/', views.home_text3_page, name='home_text3_page'),
     path('home/text3/create/', views.home_text3_create, name='home_text3_create'),
     path('home/text3/<int:pk>/edit/', views.home_text3_edit, name='home_text3_edit'),
     path('home/text3/<int:pk>/delete/', views.home_text3_delete, name='home_text3_delete'),
 
     # ==================== HOME AVAILABLE WORKS CRUD ====================
+    path('home/available-works/', views.home_available_works_page, name='home_available_works_page'),
     path('home/available-works/create/', views.home_available_works_create, name='home_available_works_create'),
     path('home/available-works/<int:pk>/edit/', views.home_available_works_edit, name='home_available_works_edit'),
     path('home/available-works/<int:pk>/delete/', views.home_available_works_delete, name='home_available_works_delete'),
 
     # ==================== HOME BANNER 4 CRUD ====================
+    path('home/banner4/', views.home_banner4_page, name='home_banner4_page'),
     path('home/banner4/create/', views.home_banner4_create, name='home_banner4_create'),
     path('home/banner4/<int:pk>/edit/', views.home_banner4_edit, name='home_banner4_edit'),
     path('home/banner4/<int:pk>/delete/', views.home_banner4_delete, name='home_banner4_delete'),
@@ -61,11 +70,13 @@ urlpatterns = [
     path('home/contents/<int:pk>/delete/', views.contents_delete, name='contents_delete'),
 
     # ==================== HOME ABOUT US CRUD ====================
+    path('home/about-us/', views.home_about_us_page, name='home_about_us_page'),
     path('home/about-us/create/', views.home_about_us_create, name='home_about_us_create'),
     path('home/about-us/<int:pk>/edit/', views.home_about_us_edit, name='home_about_us_edit'),
     path('home/about-us/<int:pk>/delete/', views.home_about_us_delete, name='home_about_us_delete'),
 
     # ==================== HOME QUESTIONS CRUD ====================
+    path('home/faq/', views.home_faq_page, name='home_faq_page'),
     path('home/questions/create/', views.home_questions_create, name='home_questions_create'),
     path('home/questions/<int:pk>/edit/', views.home_questions_edit, name='home_questions_edit'),
     path('home/questions/<int:pk>/delete/', views.home_questions_delete, name='home_questions_delete'),
@@ -76,11 +87,13 @@ urlpatterns = [
     path('home/question/<int:pk>/delete/', views.question_delete, name='question_delete'),
 
     # ==================== FOOTER CRUD ====================
+    path('home/footer/', views.home_footer_page, name='home_footer_page'),
     path('home/footer/create/', views.footer_create, name='footer_create'),
     path('home/footer/<int:pk>/edit/', views.footer_edit, name='footer_edit'),
     path('home/footer/<int:pk>/delete/', views.footer_delete, name='footer_delete'),
 
     # ==================== HOME DIGITAL MARKETING ====================
+    path('home/digital-marketing/', views.home_digital_marketing_page, name='home_digital_marketing_page'),
     path('home/digital-marketing/update/', views.home_digital_marketing_update, name='home_digital_marketing_update'),
 
 

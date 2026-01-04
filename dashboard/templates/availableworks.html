@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Available Works Management - Diginext{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Available Works Management</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+              <li class="breadcrumb-item active">Available Works</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Display Messages -->
+    {% if messages %}
+    <div class="container-fluid">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        
+        <!-- Statistics Card -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{ works_count }}</h3>
+                <p>Total Available Works</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-briefcase"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Available Works Section -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">All Available Works</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#createWorkModal">
+                    <i class="fas fa-plus"></i> Add New Work
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if works %}
+                <div class="row">
+                  {% for work in works %}
+                  <div class="col-md-4 col-sm-6">
+                    <div class="card card-widget widget-user-2">
+                      <div class="widget-user-header bg-gradient-info">
+                        <h3 class="widget-user-username">{{ work.title }}</h3>
+                        <h5 class="widget-user-desc">
+                          {% if work.is_active %}
+                          <span class="badge badge-success">Active</span>
+                          {% else %}
+                          <span class="badge badge-secondary">Inactive</span>
+                          {% endif %}
+                        </h5>
+                      </div>
+                      <div class="card-footer p-0">
+                        {% if work.image %}
+                        <img src="{{ work.image.url }}" alt="{{ work.title }}" class="img-fluid" style="max-height: 200px; width: 100%; object-fit: cover;">
+                        {% endif %}
+                        <div class="p-3">
+                          <p>{{ work.description|truncatewords:15 }}</p>
+                          <small class="text-muted">Created: {{ work.created_at|date:"M d, Y" }}</small>
+                        </div>
+                        <div class="p-2 text-center">
+                          <button type="button" class="btn btn-sm btn-info mr-1" onclick="editWork({{ work.pk }}, '{{ work.title|escapejs }}', '{{ work.description|escapejs }}', {{ work.is_active|lower }}, '{% if work.image %}{{ work.image.url }}{% endif %}')">
+                            <i class="fas fa-edit"></i> Edit
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger" onclick="deleteWork('{% url 'home_available_works_delete' work.pk %}')">
+                            <i class="fas fa-trash"></i> Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No available works found. Click "Add New Work" to create one.
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- ===================== MODALS ===================== -->
+
+  <!-- Create Work Modal -->
+  <div class="modal fade" id="createWorkModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'home_available_works_create' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Create Available Work</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="work_title">Title</label>
+              <input type="text" class="form-control" id="work_title" name="title" placeholder="Enter work title" required>
+            </div>
+            <div class="form-group">
+              <label for="work_description">Description</label>
+              <textarea class="form-control" id="work_description" name="description" rows="4" placeholder="Enter work description"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="work_image">Image</label>
+              <input type="file" class="form-control" id="work_image" name="image" accept="image/*" required>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="work_is_active" name="is_active" checked>
+              <label class="form-check-label" for="work_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Create Work</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Work Modal -->
+  <div class="modal fade" id="editWorkModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" id="editWorkForm" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Edit Available Work</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="edit_work_title">Title</label>
+              <input type="text" class="form-control" id="edit_work_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="edit_work_description">Description</label>
+              <textarea class="form-control" id="edit_work_description" name="description" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+              <div id="edit_work_image_preview"></div>
+              <label for="edit_work_image">Image (leave empty to keep current)</label>
+              <input type="file" class="form-control" id="edit_work_image" name="image" accept="image/*">
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="edit_work_is_active" name="is_active">
+              <label class="form-check-label" for="edit_work_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Update Work</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Functions -->
+  <script>
+    // Edit Work
+    function editWork(id, title, description, isActive, imageUrl) {
+      document.getElementById('editWorkForm').action = "{% url 'home_available_works_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_work_title').value = title;
+      document.getElementById('edit_work_description').value = description;
+      document.getElementById('edit_work_is_active').checked = isActive;
+      
+      const imagePreview = document.getElementById('edit_work_image_preview');
+      if (imageUrl) {
+        imagePreview.innerHTML = `
+          <div class="mb-3">
+            <label class="d-block mb-2"><strong>Current Image:</strong></label>
+            <img src="${imageUrl}" alt="Current image" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+          </div>
+        `;
+      } else {
+        imagePreview.innerHTML = '<p class="text-muted mb-2">No image uploaded</p>';
+      }
+      
+      $('#editWorkModal').modal('show');
+    }
+
+    // Delete Work
+    function deleteWork(url) {
+      if (confirm('Are you sure you want to delete this available work?')) {
+        window.location.href = url;
+      }
+    }
+
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+      $('.alert').fadeOut('slow');
+    }, 5000);
+  </script>
+
+{% endblock %}

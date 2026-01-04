@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}FAQ Section Management - Diginext{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">FAQ Section Management</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+              <li class="breadcrumb-item active">FAQ</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Display Messages -->
+    {% if messages %}
+    <div class="container-fluid">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        
+        <!-- Statistics Card -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>{{ faqs_count }}</h3>
+                <p>Total FAQ Sections</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-question-circle"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Sections -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">All FAQ Sections</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#createFAQModal">
+                    <i class="fas fa-plus"></i> Add FAQ Section
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if faqs %}
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th width="80">Status</th>
+                        <th width="100">Created</th>
+                        <th width="150">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for faq in faqs %}
+                      <tr>
+                        <td>{{ faq.title }}</td>
+                        <td>{{ faq.description|truncatewords:20 }}</td>
+                        <td>
+                          {% if faq.is_active %}
+                          <span class="badge badge-success">Active</span>
+                          {% else %}
+                          <span class="badge badge-secondary">Inactive</span>
+                          {% endif %}
+                        </td>
+                        <td>{{ faq.created_at|date:"M d, Y" }}</td>
+                        <td>
+                          <button type="button" class="btn btn-sm btn-info" onclick="editFAQ({{ faq.pk }}, '{{ faq.title|escapejs }}', '{{ faq.description|escapejs }}', {{ faq.is_active|lower }})">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger" onclick="deleteFAQ('{% url 'home_questions_delete' faq.pk %}')">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No FAQ sections found. Click "Add FAQ Section" to create one.
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- ===================== MODALS ===================== -->
+
+  <!-- Create FAQ Modal -->
+  <div class="modal fade" id="createFAQModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'home_questions_create' %}">
+          {% csrf_token %}
+          <div class="modal-header bg-success">
+            <h5 class="modal-title">Create FAQ Section</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="faq_title">Title</label>
+              <input type="text" class="form-control" id="faq_title" name="title" placeholder="Enter FAQ section title" required>
+            </div>
+            <div class="form-group">
+              <label for="faq_description">Description</label>
+              <textarea class="form-control" id="faq_description" name="description" rows="4" placeholder="Enter FAQ section description"></textarea>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="faq_is_active" name="is_active" checked>
+              <label class="form-check-label" for="faq_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-success">Create FAQ</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit FAQ Modal -->
+  <div class="modal fade" id="editFAQModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" id="editFAQForm">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Edit FAQ Section</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="edit_faq_title">Title</label>
+              <input type="text" class="form-control" id="edit_faq_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="edit_faq_description">Description</label>
+              <textarea class="form-control" id="edit_faq_description" name="description" rows="4"></textarea>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="edit_faq_is_active" name="is_active">
+              <label class="form-check-label" for="edit_faq_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Update FAQ</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Functions -->
+  <script>
+    // Edit FAQ
+    function editFAQ(id, title, description, isActive) {
+      document.getElementById('editFAQForm').action = "{% url 'home_questions_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_faq_title').value = title;
+      document.getElementById('edit_faq_description').value = description;
+      document.getElementById('edit_faq_is_active').checked = isActive;
+      $('#editFAQModal').modal('show');
+    }
+
+    // Delete FAQ
+    function deleteFAQ(url) {
+      if (confirm('Are you sure you want to delete this FAQ section?')) {
+        window.location.href = url;
+      }
+    }
+
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+      $('.alert').fadeOut('slow');
+    }, 5000);
+  </script>
+
+{% endblock %}

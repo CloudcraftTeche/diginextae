@@ -109,6 +109,19 @@ def home(request):
 
 # ==================== HOME BANNER CRUD ====================
 @login_required
+def home_banner(request):
+    """Banner Management Page"""
+    banners = HomeBanner.objects.all().order_by('-created_at')
+    banners_count = banners.count()
+    
+    context = {
+        'banners': banners,
+        'banners_count': banners_count,
+    }
+    return render(request, 'banner.html', context)
+
+
+@login_required
 def home_banner_create(request):
     if request.method == 'POST':
         form = HomeBannerForm(request.POST, request.FILES)
@@ -162,13 +175,26 @@ def home_banner_delete(request, pk):
 
 # ==================== HOME TEXT 1 CRUD ====================
 @login_required
+def home_text1(request):
+    """Text Section 1 Management Page"""
+    text_sections = HomeText1.objects.all().order_by('-created_at')
+    text_count = text_sections.count()
+    
+    context = {
+        'text_sections': text_sections,
+        'text_count': text_count,
+    }
+    return render(request, 'text1.html', context)
+
+
+@login_required
 def home_text1_create(request):
     if request.method == 'POST':
         form = HomeText1Form(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, 'Text section created successfully!')
-            return redirect('home')
+            return redirect('home_text1')
     else:
         form = HomeText1Form()
     return render(request, 'home_text_form.html', {'form': form, 'action': 'Create', 'section': 'Text Section 1'})
@@ -182,7 +208,7 @@ def home_text1_edit(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Text section updated successfully!')
-            return redirect('home')
+            return redirect('home_text1')
     else:
         form = HomeText1Form(instance=text)
     return render(request, 'home_text_form.html', {'form': form, 'action': 'Edit', 'section': 'Text Section 1'})
@@ -193,10 +219,22 @@ def home_text1_delete(request, pk):
     text = get_object_or_404(HomeText1, pk=pk)
     text.delete()
     messages.success(request, 'Text section deleted successfully!')
-    return redirect('home')
+    return redirect('home_text1')
 
 
 # ==================== HOME BANNER 2 CRUD ====================
+@login_required
+def home_banner2(request):
+    """Secondary Banner Management Page"""
+    banners = HomeBanner2.objects.all().order_by('-created_at')
+    banners_count = banners.count()
+    
+    context = {
+        'banners': banners,
+        'banners_count': banners_count,
+    }
+    return render(request, 'secondarybanner.html', context)
+
 @login_required
 def home_banner2_create(request):
     if request.method == 'POST':
@@ -204,7 +242,7 @@ def home_banner2_create(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Secondary banner created successfully!')
-            return redirect('home')
+            return redirect('home_banner2') 
     else:
         form = HomeBanner2Form()
     return render(request, 'home_banner_form.html', {'form': form, 'action': 'Create', 'banner_type': 'Secondary'})
@@ -227,7 +265,7 @@ def home_banner2_edit(request, pk):
             
             form.save()
             messages.success(request, 'Secondary banner updated successfully!')
-            return redirect('home')
+            return redirect('home_banner2') 
     else:
         form = HomeBanner2Form(instance=banner)
     return render(request, 'home_banner_form.html', {'form': form, 'action': 'Edit', 'banner_type': 'Secondary'})
@@ -246,10 +284,23 @@ def home_banner2_delete(request, pk):
     
     banner.delete()
     messages.success(request, 'Secondary banner deleted successfully!')
-    return redirect('home')
+    return redirect('home_banner2') 
 
 
 # ==================== HOME TEXT 2 CRUD ====================
+@login_required
+def home_text2(request):
+    """Text Section 2 Management Page"""
+    text_sections = HomeText2.objects.all().order_by('-created_at')
+    text_count = text_sections.count()
+    
+    context = {
+        'text_sections': text_sections,
+        'text_count': text_count,
+    }
+    return render(request, 'text2.html', context)
+
+
 @login_required
 def home_text2_create(request):
     if request.method == 'POST':
@@ -257,7 +308,7 @@ def home_text2_create(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Text section 2 created successfully!')
-            return redirect('home')
+            return redirect('home_text2')
     else:
         form = HomeText2Form()
     return render(request, 'home_text_form.html', {'form': form, 'action': 'Create', 'section': 'Text Section 2'})
@@ -271,7 +322,7 @@ def home_text2_edit(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Text section 2 updated successfully!')
-            return redirect('home')
+            return redirect('home_text2')
     else:
         form = HomeText2Form(instance=text)
     return render(request, 'home_text_form.html', {'form': form, 'action': 'Edit', 'section': 'Text Section 2'})
@@ -282,10 +333,23 @@ def home_text2_delete(request, pk):
     text = get_object_or_404(HomeText2, pk=pk)
     text.delete()
     messages.success(request, 'Text section 2 deleted successfully!')
-    return redirect('home')
+    return redirect('home_text2')
 
 
 # ==================== CONCEPTS CRUD ====================
+@login_required
+def home_concepts(request):
+    """Concepts Management Page"""
+    concepts = Conncepts.objects.all().order_by('-created_at')
+    concepts_count = concepts.count()
+    
+    context = {
+        'concepts': concepts,
+        'concepts_count': concepts_count,
+    }
+    return render(request, 'concepts.html', context)
+
+
 @login_required
 def concepts_create(request):
     if request.method == 'POST':
@@ -293,7 +357,7 @@ def concepts_create(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Concept created successfully!')
-            return redirect('home')
+            return redirect('home_concepts')
     else:
         form = ConnceptsForm()
     return render(request, 'concepts_form.html', {'form': form, 'action': 'Create'})
@@ -316,7 +380,7 @@ def concepts_edit(request, pk):
             
             form.save()
             messages.success(request, 'Concept updated successfully!')
-            return redirect('home')
+            return redirect('home_concepts')
     else:
         form = ConnceptsForm(instance=concept)
     return render(request, 'concepts_form.html', {'form': form, 'action': 'Edit'})
@@ -335,10 +399,23 @@ def concepts_delete(request, pk):
     
     concept.delete()
     messages.success(request, 'Concept deleted successfully!')
-    return redirect('home')
+    return redirect('home_concepts')
 
 
 # ==================== HOME BANNER 3 CRUD ====================
+@login_required
+def home_banner3_page(request):
+    """Home Banner 3 Management Page"""
+    banners = HomeBanner3.objects.all().order_by('-created_at')
+    banners_count = banners.count()
+    
+    context = {
+        'banners': banners,
+        'banners_count': banners_count,
+    }
+    return render(request, 'homebanner3.html', context)
+
+
 @login_required
 def home_banner3_create(request):
     if request.method == 'POST':
@@ -346,8 +423,8 @@ def home_banner3_create(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Home banner 3 created successfully!')
-            return redirect('home')
-    return redirect('home')
+            return redirect('home_banner3_page')
+    return redirect('home_banner3_page')
 
 
 @login_required
@@ -367,8 +444,8 @@ def home_banner3_edit(request, pk):
             
             form.save()
             messages.success(request, 'Home banner 3 updated successfully!')
-            return redirect('home')
-    return redirect('home')
+            return redirect('home_banner3_page')
+    return redirect('home_banner3_page')
 
 
 @login_required
@@ -384,10 +461,23 @@ def home_banner3_delete(request, pk):
     
     banner.delete()
     messages.success(request, 'Home banner 3 deleted successfully!')
-    return redirect('home')
+    return redirect('home_banner3_page')
 
 
 # ==================== HOME TEXT 3 CRUD ====================
+@login_required
+def home_text3_page(request):
+    """Text Section 3 Management Page"""
+    text_sections = HomeText3.objects.all().order_by('-created_at')
+    text_count = text_sections.count()
+    
+    context = {
+        'text_sections': text_sections,
+        'text_count': text_count,
+    }
+    return render(request, 'text3.html', context)
+
+
 @login_required
 def home_text3_create(request):
     if request.method == 'POST':
@@ -395,8 +485,8 @@ def home_text3_create(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Text section 3 created successfully!')
-            return redirect('home')
-    return redirect('home')
+            return redirect('home_text3_page')
+    return redirect('home_text3_page')
 
 
 @login_required
@@ -407,8 +497,8 @@ def home_text3_edit(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Text section 3 updated successfully!')
-            return redirect('home')
-    return redirect('home')
+            return redirect('home_text3_page')
+    return redirect('home_text3_page')
 
 
 @login_required
@@ -416,10 +506,23 @@ def home_text3_delete(request, pk):
     text = get_object_or_404(HomeText3, pk=pk)
     text.delete()
     messages.success(request, 'Text section 3 deleted successfully!')
-    return redirect('home')
+    return redirect('home_text3_page')
 
 
 # ==================== HOME AVAILABLE WORKS CRUD ====================
+@login_required
+def home_available_works_page(request):
+    """Available Works Management Page"""
+    works = HomeAvailableWorks.objects.all().order_by('-created_at')
+    works_count = works.count()
+    
+    context = {
+        'works': works,
+        'works_count': works_count,
+    }
+    return render(request, 'availableworks.html', context)
+
+
 @login_required
 def home_available_works_create(request):
     if request.method == 'POST':
@@ -427,8 +530,8 @@ def home_available_works_create(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Available work created successfully!')
-            return redirect('home')
-    return redirect('home')
+            return redirect('home_available_works_page')
+    return redirect('home_available_works_page')
 
 
 @login_required
@@ -448,8 +551,8 @@ def home_available_works_edit(request, pk):
             
             form.save()
             messages.success(request, 'Available work updated successfully!')
-            return redirect('home')
-    return redirect('home')
+            return redirect('home_available_works_page')
+    return redirect('home_available_works_page')
 
 
 @login_required
@@ -465,10 +568,23 @@ def home_available_works_delete(request, pk):
     
     work.delete()
     messages.success(request, 'Available work deleted successfully!')
-    return redirect('home')
+    return redirect('home_available_works_page')
 
 
 # ==================== HOME BANNER 4 CRUD ====================
+@login_required
+def home_banner4_page(request):
+    """Home Banner 4 Management Page"""
+    banners = HomeBanner4.objects.all().order_by('-created_at')
+    banners_count = banners.count()
+    
+    context = {
+        'banners': banners,
+        'banners_count': banners_count,
+    }
+    return render(request, 'homebanner4.html', context)
+
+
 @login_required
 def home_banner4_create(request):
     if request.method == 'POST':
@@ -476,8 +592,8 @@ def home_banner4_create(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Home banner 4 created successfully!')
-            return redirect('home')
-    return redirect('home')
+            return redirect('home_banner4_page')
+    return redirect('home_banner4_page')
 
 
 @login_required
@@ -497,8 +613,8 @@ def home_banner4_edit(request, pk):
             
             form.save()
             messages.success(request, 'Home banner 4 updated successfully!')
-            return redirect('home')
-    return redirect('home')
+            return redirect('home_banner4_page')
+    return redirect('home_banner4_page')
 
 
 @login_required
@@ -514,7 +630,7 @@ def home_banner4_delete(request, pk):
     
     banner.delete()
     messages.success(request, 'Home banner 4 deleted successfully!')
-    return redirect('home')
+    return redirect('home_banner4_page')
 
 
 # ==================== CONTENTS CRUD ====================
@@ -551,14 +667,27 @@ def contents_delete(request, pk):
 
 # ==================== HOME ABOUT US CRUD ====================
 @login_required
+def home_about_us_page(request):
+    """About Us Section Management Page"""
+    about_us_items = HomeAboutUs.objects.all().order_by('-created_at')
+    about_us_count = about_us_items.count()
+    
+    context = {
+        'about_us_items': about_us_items,
+        'about_us_count': about_us_count,
+    }
+    return render(request, 'homeaboutus.html', context)
+
+
+@login_required
 def home_about_us_create(request):
     if request.method == 'POST':
         form = HomeAboutUsForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request, 'About Us section created successfully!')
-            return redirect('home')
-    return redirect('home')
+            return redirect('home_about_us_page')
+    return redirect('home_about_us_page')
 
 
 @login_required
@@ -578,8 +707,8 @@ def home_about_us_edit(request, pk):
             
             form.save()
             messages.success(request, 'About Us section updated successfully!')
-            return redirect('home')
-    return redirect('home')
+            return redirect('home_about_us_page')
+    return redirect('home_about_us_page')
 
 
 @login_required
@@ -595,10 +724,23 @@ def home_about_us_delete(request, pk):
     
     about_us.delete()
     messages.success(request, 'About Us section deleted successfully!')
-    return redirect('home')
+    return redirect('home_about_us_page')
 
 
 # ==================== HOME QUESTIONS CRUD ====================
+@login_required
+def home_faq_page(request):
+    """FAQ Section Management Page"""
+    faqs = HomeQuestions.objects.all().order_by('-created_at')
+    faqs_count = faqs.count()
+    
+    context = {
+        'faqs': faqs,
+        'faqs_count': faqs_count,
+    }
+    return render(request, 'homefaq.html', context)
+
+    
 @login_required
 def home_questions_create(request):
     if request.method == 'POST':
@@ -606,8 +748,8 @@ def home_questions_create(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'FAQ section created successfully!')
-            return redirect('home')
-    return redirect('home')
+            return redirect('home_faq_page')
+    return redirect('home_faq_page')
 
 
 @login_required
@@ -618,8 +760,8 @@ def home_questions_edit(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'FAQ section updated successfully!')
-            return redirect('home')
-    return redirect('home')
+            return redirect('home_faq_page')
+    return redirect('home_faq_page')
 
 
 @login_required
@@ -627,7 +769,7 @@ def home_questions_delete(request, pk):
     questions = get_object_or_404(HomeQuestions, pk=pk)
     questions.delete()
     messages.success(request, 'FAQ section deleted successfully!')
-    return redirect('home')
+    return redirect('home_faq_page')
 
 
 # ==================== QUESTION CRUD ====================
@@ -664,14 +806,27 @@ def question_delete(request, pk):
 
 # ==================== FOOTER CRUD ====================
 @login_required
+def home_footer_page(request):
+    """Footer Section Management Page"""
+    footers = Footer.objects.all().order_by('-created_at')
+    footers_count = footers.count()
+    
+    context = {
+        'footers': footers,
+        'footers_count': footers_count,
+    }
+    return render(request, 'homefooter.html', context)
+
+
+@login_required
 def footer_create(request):
     if request.method == 'POST':
         form = FooterForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, 'Footer created successfully!')
-            return redirect('home')
-    return redirect('home')
+            return redirect('home_footer_page')
+    return redirect('home_footer_page')
 
 
 @login_required
@@ -682,8 +837,8 @@ def footer_edit(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Footer updated successfully!')
-            return redirect('home')
-    return redirect('home')
+            return redirect('home_footer_page')
+    return redirect('home_footer_page')
 
 
 @login_required
@@ -691,10 +846,21 @@ def footer_delete(request, pk):
     footer = get_object_or_404(Footer, pk=pk)
     footer.delete()
     messages.success(request, 'Footer deleted successfully!')
-    return redirect('home')
+    return redirect('home_footer_page')
 
 
 # ==================== HOME DIGITAL MARKETING ====================
+@login_required
+def home_digital_marketing_page(request):
+    """SEO/Digital Marketing Section Management Page"""
+    digital_marketing = HomeDigitalMarketing.objects.first()
+    
+    context = {
+        'digital_marketing': digital_marketing,
+    }
+    return render(request, 'homedigitalmarketing.html', context)
+
+
 @login_required
 def home_digital_marketing_update(request):
     marketing = HomeDigitalMarketing.objects.first()
@@ -717,9 +883,9 @@ def home_digital_marketing_update(request):
             
             form.save()
             messages.success(request, 'SEO / Digital Marketing settings updated successfully!')
-            return redirect('home')
+            return redirect('home_digital_marketing_page')
     
-    return redirect('home')
+    return redirect('home_digital_marketing_page')
 
 
 
@@ -1534,3 +1700,6 @@ def solutions_digital_marketing_delete(request, pk):
     dm.delete()
     messages.success(request, "Solutions Digital Marketing section deleted!")
     return redirect('solutions_management')
+
+
+

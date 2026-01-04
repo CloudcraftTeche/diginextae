@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Banner Management - Diginext{% endblock %}
+{% block title %}Home Banner 3 Management - Diginext{% endblock %}
 
 {% block content %}
 
@@ -11,12 +11,13 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Banner Management</h1>
+            <h1 class="m-0">Home Banner 3 Management</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
               <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-              <li class="breadcrumb-item active">Banners</li>
+              <li class="breadcrumb-item active">Home Banner 3</li>
             </ol>
           </div>
         </div>
@@ -45,10 +46,10 @@
         <!-- Statistics Card -->
         <div class="row">
           <div class="col-lg-12">
-            <div class="small-box bg-info">
+            <div class="small-box bg-primary">
               <div class="inner">
                 <h3>{{ banners_count }}</h3>
-                <p>Total Banners</p>
+                <p>Total Home Banner 3</p>
               </div>
               <div class="icon">
                 <i class="fas fa-image"></i>
@@ -57,12 +58,12 @@
           </div>
         </div>
 
-        <!-- Banners Section -->
+        <!-- Home Banner 3 Section -->
         <div class="row">
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">All Banners</h3>
+                <h3 class="card-title">All Home Banner 3</h3>
                 <div class="card-tools">
                   <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createBannerModal">
                     <i class="fas fa-plus"></i> Add New Banner
@@ -107,7 +108,7 @@
                           <button type="button" class="btn btn-sm btn-info" onclick="editBanner({{ banner.pk }}, '{{ banner.title|escapejs }}', '{{ banner.description|escapejs }}', {{ banner.is_active|lower }}, '{% if banner.image %}{{ banner.image.url }}{% endif %}')">
                             <i class="fas fa-edit"></i>
                           </button>
-                          <button type="button" class="btn btn-sm btn-danger" onclick="deleteBanner('{% url 'home_banner_delete' banner.pk %}')">
+                          <button type="button" class="btn btn-sm btn-danger" onclick="deleteBanner('{% url 'home_banner3_delete' banner.pk %}')">
                             <i class="fas fa-trash"></i>
                           </button>
                         </td>
@@ -118,7 +119,7 @@
                 </div>
                 {% else %}
                 <div class="alert alert-info">
-                  <i class="fas fa-info-circle"></i> No banners found. Click "Add New Banner" to create one.
+                  <i class="fas fa-info-circle"></i> No banner 3 found. Click "Add New Banner" to create one.
                 </div>
                 {% endif %}
               </div>
@@ -138,10 +139,10 @@
   <div class="modal fade" id="createBannerModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <form method="POST" action="{% url 'home_banner_create' %}" enctype="multipart/form-data">
+        <form method="POST" action="{% url 'home_banner3_create' %}" enctype="multipart/form-data">
           {% csrf_token %}
           <div class="modal-header bg-primary">
-            <h5 class="modal-title">Create Banner</h5>
+            <h5 class="modal-title">Create Home Banner 3</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -180,7 +181,7 @@
         <form method="POST" id="editBannerForm" enctype="multipart/form-data">
           {% csrf_token %}
           <div class="modal-header bg-info">
-            <h5 class="modal-title">Edit Banner</h5>
+            <h5 class="modal-title">Edit Home Banner 3</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -217,7 +218,7 @@
   <script>
     // Edit Banner
     function editBanner(id, title, description, isActive, imageUrl) {
-      document.getElementById('editBannerForm').action = "{% url 'home_banner_edit' 0 %}".replace('0', id);
+      document.getElementById('editBannerForm').action = "{% url 'home_banner3_edit' 0 %}".replace('0', id);
       document.getElementById('edit_banner_title').value = title;
       document.getElementById('edit_banner_description').value = description;
       document.getElementById('edit_banner_is_active').checked = isActive;
