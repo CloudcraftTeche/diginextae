@@ -5,6 +5,8 @@ from dashboard.models import (
     HomeBanner3, HomeText3, HomeAvailableWorks, HomeBanner4,
     Contents, HomeAboutUs, HomeQuestions, Question, Footer,
     HomeDigitalMarketing,  ContactSA, Leads, ContactDigitalMarketing,
+    HomeVision,
+    
     #  SERVICES
 
     Service, ServiceName, Subservice, ServiceDigitalMarketing,
@@ -107,6 +109,10 @@ class HomeDigitalMarketingSerializer(serializers.ModelSerializer):
         model = HomeDigitalMarketing
         fields = '__all__'
 
+class HomeVisionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HomeVision
+        fields = '__all__'
 
 
 

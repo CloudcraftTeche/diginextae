@@ -97,7 +97,11 @@ urlpatterns = [
     path('home/digital-marketing/update/', views.home_digital_marketing_update, name='home_digital_marketing_update'),
 
 
-
+   #===================== Vision Section =======================
+    path('home/vision/', views.home_vision_list, name='home_vision_list'),
+    path('home/vision/create/', views.home_vision_add, name='home_vision_add'),
+    path('home/vision/<int:pk>/edit/', views.home_vision_edit, name='home_vision_edit'),
+    path('home/vision/<int:pk>/delete/', views.home_vision_delete, name='home_vision_delete'),
 
 
    # ==================== CONTACTS SECTION ====================

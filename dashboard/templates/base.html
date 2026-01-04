@@ -168,8 +168,8 @@
                 </li>
               </ul>
             </li>
-            <li class="nav-item {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'home_banner' or request.resolver_match.url_name == 'home_text1' or request.resolver_match.url_name == 'home_banner2' or request.resolver_match.url_name == 'home_text2' or request.resolver_match.url_name == 'home_concepts' or request.resolver_match.url_name == 'home_banner3_page' or request.resolver_match.url_name == 'home_text3_page' or request.resolver_match.url_name == 'home_available_works_page' or request.resolver_match.url_name == 'home_banner4_page' or request.resolver_match.url_name == 'home_about_us_page' or request.resolver_match.url_name == 'home_faq_page' or request.resolver_match.url_name == 'home_footer_page' or request.resolver_match.url_name == 'home_digital_marketing_page' %}menu-open{% endif %}">
-              <a href="#" class="nav-link {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'home_banner' or request.resolver_match.url_name == 'home_text1' or request.resolver_match.url_name == 'home_banner2' or request.resolver_match.url_name == 'home_text2' or request.resolver_match.url_name == 'home_concepts' or request.resolver_match.url_name == 'home_banner3_page' or request.resolver_match.url_name == 'home_text3_page' or request.resolver_match.url_name == 'home_available_works_page' or request.resolver_match.url_name == 'home_banner4_page' or request.resolver_match.url_name == 'home_about_us_page' or request.resolver_match.url_name == 'home_faq_page' or request.resolver_match.url_name == 'home_footer_page' or request.resolver_match.url_name == 'home_digital_marketing_page' %}active{% endif %}">
+            <li class="nav-item {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'home_banner' or request.resolver_match.url_name == 'home_text1' or request.resolver_match.url_name == 'home_banner2' or request.resolver_match.url_name == 'home_text2' or request.resolver_match.url_name == 'home_concepts' or request.resolver_match.url_name == 'home_banner3_page' or request.resolver_match.url_name == 'home_text3_page' or request.resolver_match.url_name == 'home_available_works_page' or request.resolver_match.url_name == 'home_banner4_page' or request.resolver_match.url_name == 'home_about_us_page' or request.resolver_match.url_name == 'home_faq_page' or request.resolver_match.url_name == 'home_footer_page' or request.resolver_match.url_name == 'home_digital_marketing_page' or request.resolver_match.url_name == 'home_vision_list' %}menu-open{% endif %}">
+              <a href="#" class="nav-link {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'home_banner' or request.resolver_match.url_name == 'home_text1' or request.resolver_match.url_name == 'home_banner2' or request.resolver_match.url_name == 'home_text2' or request.resolver_match.url_name == 'home_concepts' or request.resolver_match.url_name == 'home_banner3_page' or request.resolver_match.url_name == 'home_text3_page' or request.resolver_match.url_name == 'home_available_works_page' or request.resolver_match.url_name == 'home_banner4_page' or request.resolver_match.url_name == 'home_about_us_page' or request.resolver_match.url_name == 'home_faq_page' or request.resolver_match.url_name == 'home_footer_page' or request.resolver_match.url_name == 'home_digital_marketing_page' or request.resolver_match.url_name == 'home_vision_list' %}active{% endif %}">
                 <i class="nav-icon fas fa-home"></i>
                 <p>
                   Home Management
@@ -259,6 +259,12 @@
                   <a href="{% url 'home_digital_marketing_page' %}" class="nav-link {% if request.resolver_match.url_name == 'home_digital_marketing_page' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>SEO/Digital Marketing</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'home_vision_list' %}" class="nav-link {% if request.resolver_match.url_name == 'home_vision_list' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Vision</p>
                   </a>
                 </li>
               </ul>

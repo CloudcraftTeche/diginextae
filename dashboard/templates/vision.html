@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Vision Section Management - Diginext{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Vision Section Management</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+              <li class="breadcrumb-item active">Vision</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Display Messages -->
+    {% if messages %}
+    <div class="container-fluid">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        
+        <!-- Statistics Card -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="small-box bg-primary">
+              <div class="inner">
+                <h3>{{ visions_count }}</h3>
+                <p>Total Vision Sections</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-eye"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vision Sections -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">All Vision Sections</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createVisionModal">
+                    <i class="fas fa-plus"></i> Add Vision
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if visions %}
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th width="80">Status</th>
+                        <th width="100">Created</th>
+                        <th width="150">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for vision in visions %}
+                      <tr>
+                        <td>{{ vision.title }}</td>
+                        <td>{{ vision.description|truncatewords:20 }}</td>
+                        <td>
+                          {% if vision.is_active %}
+                          <span class="badge badge-success">Active</span>
+                          {% else %}
+                          <span class="badge badge-secondary">Inactive</span>
+                          {% endif %}
+                        </td>
+                        <td>{{ vision.created_at|date:"M d, Y" }}</td>
+                        <td>
+                          <button type="button" class="btn btn-sm btn-info" onclick="editVision({{ vision.pk }}, '{{ vision.title|escapejs }}', '{{ vision.description|escapejs }}', {{ vision.is_active|lower }})">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger" onclick="deleteVision('{% url 'home_vision_delete' vision.pk %}')">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No vision sections found. Click "Add Vision" to create one.
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- ===================== MODALS ===================== -->
+
+  <!-- Create Vision Modal -->
+  <div class="modal fade" id="createVisionModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'home_vision_add' %}">
+          {% csrf_token %}
+          <div class="modal-header bg-primary">
+            <h5 class="modal-title">Create Vision</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="vision_title">Title</label>
+              <input type="text" class="form-control" id="vision_title" name="title" placeholder="Enter vision title" required>
+            </div>
+            <div class="form-group">
+              <label for="vision_description">Description</label>
+              <textarea class="form-control" id="vision_description" name="description" rows="5" placeholder="Enter vision description" required></textarea>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="vision_is_active" name="is_active" checked>
+              <label class="form-check-label" for="vision_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Create Vision</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Vision Modal -->
+  <div class="modal fade" id="editVisionModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form method="POST" id="editVisionForm">
+          {% csrf_token %}
+          <div class="modal-header bg-info">
+            <h5 class="modal-title">Edit Vision</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="edit_vision_title">Title</label>
+              <input type="text" class="form-control" id="edit_vision_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="edit_vision_description">Description</label>
+              <textarea class="form-control" id="edit_vision_description" name="description" rows="5" required></textarea>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="edit_vision_is_active" name="is_active">
+              <label class="form-check-label" for="edit_vision_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-info">Update Vision</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Functions -->
+  <script>
+    // Edit Vision
+    function editVision(id, title, description, isActive) {
+      document.getElementById('editVisionForm').action = "{% url 'home_vision_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_vision_title').value = title;
+      document.getElementById('edit_vision_description').value = description;
+      document.getElementById('edit_vision_is_active').checked = isActive;
+      $('#editVisionModal').modal('show');
+    }
+
+    // Delete Vision
+    function deleteVision(url) {
+      if (confirm('Are you sure you want to delete this vision?')) {
+        window.location.href = url;
+      }
+    }
+
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+      $('.alert').fadeOut('slow');
+    }, 5000);
+  </script>
+
+{% endblock %}

@@ -3,7 +3,7 @@ from .models import (
     HomeBanner, HomeText1, HomeBanner2, HomeText2, Conncepts,
     HomeBanner3, HomeText3, HomeAvailableWorks, HomeBanner4, 
     Contents, HomeAboutUs, HomeQuestions, Question, Footer,
-    HomeDigitalMarketing
+    HomeDigitalMarketing,  HomeVision
 )
 
 
@@ -341,3 +341,13 @@ class HomeDigitalMarketingForm(forms.ModelForm):
                 'class': 'form-check-input'
             })
         }
+
+class HomeVisionForm(forms.ModelForm):
+    class Meta:
+        model = HomeVision
+        fields = ['title', 'description', 'is_active']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter vision title'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Enter vision description'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }       

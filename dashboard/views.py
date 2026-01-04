@@ -888,6 +888,59 @@ def home_digital_marketing_update(request):
     return redirect('home_digital_marketing_page')
 
 
+# ==================== HOME VISION ====================
+@login_required
+def home_vision_list(request):
+    """Vision Section Management Page"""
+    visions = HomeVision.objects.all().order_by('-created_at')
+    visions_count = visions.count()
+    
+    context = {
+        'visions': visions,
+        'visions_count': visions_count,
+    }
+    return render(request, 'vision.html', context)
+
+@login_required
+def home_vision_add(request):
+    """Create new Vision"""
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        is_active = request.POST.get('is_active') == 'on'
+        
+        HomeVision.objects.create(
+            title=title,
+            description=description,
+            is_active=is_active
+        )
+        messages.success(request, 'Vision created successfully!')
+        return redirect('home_vision_list')
+    return redirect('home_vision_list')
+
+@login_required
+def home_vision_edit(request, pk):
+    """Edit existing Vision"""
+    vision = get_object_or_404(HomeVision, pk=pk)
+    
+    if request.method == 'POST':
+        vision.title = request.POST.get('title')
+        vision.description = request.POST.get('description')
+        vision.is_active = request.POST.get('is_active') == 'on'
+        vision.save()
+        
+        messages.success(request, 'Vision updated successfully!')
+        return redirect('home_vision_list')
+    return redirect('home_vision_list')
+
+@login_required
+def home_vision_delete(request, pk):
+    """Delete Vision"""
+    vision = get_object_or_404(HomeVision, pk=pk)
+    vision.delete()
+    messages.success(request, 'Vision deleted successfully!')
+    return redirect('home_vision_list')
+
 
 
 
