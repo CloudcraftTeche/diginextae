@@ -3,7 +3,7 @@ from .models import (
     HomeBanner, HomeText1, HomeBanner2, HomeText2, Conncepts,
     HomeBanner3, HomeText3, HomeAvailableWorks, HomeBanner4, 
     Contents, HomeAboutUs, HomeQuestions, Question, Footer,
-    HomeDigitalMarketing,  HomeVision,Insights,
+    HomeDigitalMarketing,  HomeVision,Insights,InsightsDigitalMarketing,OurWorksDigitalMarketing,
 )
 
 
@@ -360,5 +360,27 @@ class InsightsForm(forms.ModelForm):
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter title'}),
             'subtitle': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter subtitle'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Enter description'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }        
+
+class InsightsDigitalMarketingForm(forms.ModelForm):
+    class Meta:
+        model = InsightsDigitalMarketing
+        fields = ['meta_title', 'meta_description', 'meta_keywords', 'banner_image', 'is_active']
+        widgets = {
+            'meta_title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter meta title'}),
+            'meta_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter meta description'}),
+            'meta_keywords': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter meta keywords (comma separated)'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }        
+
+class OurWorksDigitalMarketingForm(forms.ModelForm):
+    class Meta:
+        model = OurWorksDigitalMarketing
+        fields = ['meta_title', 'meta_description', 'meta_keywords', 'banner_image', 'is_active']
+        widgets = {
+            'meta_title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter meta title'}),
+            'meta_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter meta description'}),
+            'meta_keywords': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter meta keywords (comma separated)'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }        

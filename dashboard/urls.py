@@ -222,6 +222,10 @@ path('ourworks/create/', views.ourwork_create, name='ourwork_create'),
 path('ourworks/<int:pk>/edit/', views.ourwork_edit, name='ourwork_edit'),
 path('ourworks/<int:pk>/delete/', views.ourwork_delete, name='ourwork_delete'),
 
+# Our Works Digital Marketing
+path('ourworks/digital-marketing/', views.ourworks_digital_marketing_page, name='ourworks_digital_marketing_page'),
+path('ourworks/digital-marketing/update/', views.ourworks_digital_marketing_update, name='ourworks_digital_marketing_update'),
+
 # Industries Management
 path('ourworks/industry/create/', views.industry_create, name='industry_create'),
 path('ourworks/industry/<int:pk>/edit/', views.industry_edit, name='industry_edit'),
@@ -237,6 +241,10 @@ path('insights/', views.insights_page, name='insights_page'),
 path('insights/create/', views.insights_create, name='insights_create'),
 path('insights/<int:pk>/edit/', views.insights_edit, name='insights_edit'),
 path('insights/<int:pk>/delete/', views.insights_delete, name='insights_delete'),
+
+# ==================== INSIGHTS DIGITAL MARKETING ====================
+path('insights/digital-marketing/', views.insights_digital_marketing_page, name='insights_digital_marketing_page'),
+path('insights/digital-marketing/update/', views.insights_digital_marketing_update, name='insights_digital_marketing_update'),
 
 
 ]

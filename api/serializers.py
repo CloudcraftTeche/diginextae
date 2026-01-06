@@ -17,6 +17,7 @@ from dashboard.models import (
     Industry,
     Expertise,
     OurWorks,
+    OurWorksDigitalMarketing,
 
     # INSIGHTS
     Insights,
@@ -252,7 +253,13 @@ class OurWorksSerializer(serializers.ModelSerializer):
         model = OurWorks
         fields = '__all__'    
 
+class OurWorksDigitalMarketingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OurWorksDigitalMarketing
+        fields = '__all__'        
+
 class InsightsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Insights
         fields = '__all__'            
+

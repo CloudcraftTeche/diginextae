@@ -314,19 +314,59 @@
                 <p>Solutions</p>
               </a>
             </li>
-            <li class="nav-item">
-              <a href="{% url 'ourwork_page' %}"
-                class="nav-link {% if request.resolver_match.url_name == 'ourwork_page' %}active{% endif %}">
+            <li
+              class="nav-item {% if request.resolver_match.url_name == 'ourwork_page' or request.resolver_match.url_name == 'ourworks_digital_marketing_page' %}menu-open{% endif %}">
+              <a href="#"
+                class="nav-link {% if request.resolver_match.url_name == 'ourwork_page' or request.resolver_match.url_name == 'ourworks_digital_marketing_page' %}active{% endif %}">
                 <i class="nav-icon fas fa-briefcase"></i>
-                <p>Our Works</p>
+                <p>
+                  Our Works
+                  <i class="right fas fa-angle-left"></i>
+                </p>
               </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'ourwork_page' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'ourwork_page' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>All Our Works</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'ourworks_digital_marketing_page' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'ourworks_digital_marketing_page' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>SEO/Digital Marketing</p>
+                  </a>
+                </li>
+              </ul>
             </li>
-            <li class="nav-item">
-              <a href="{% url 'insights_page' %}"
-                class="nav-link {% if request.resolver_match.url_name == 'insights_page' %}active{% endif %}">
+            <li
+              class="nav-item {% if request.resolver_match.url_name == 'insights_page' or request.resolver_match.url_name == 'insights_digital_marketing_page' %}menu-open{% endif %}">
+              <a href="#"
+                class="nav-link {% if request.resolver_match.url_name == 'insights_page' or request.resolver_match.url_name == 'insights_digital_marketing_page' %}active{% endif %}">
                 <i class="nav-icon fas fa-lightbulb"></i>
-                <p>Insights</p>
+                <p>
+                  Insights
+                  <i class="right fas fa-angle-left"></i>
+                </p>
               </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'insights_page' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'insights_page' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>All Insights</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'insights_digital_marketing_page' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'insights_digital_marketing_page' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>SEO/Digital Marketing</p>
+                  </a>
+                </li>
+              </ul>
             </li>
             <li class="nav-item">
               <a href="{% url 'contacts_page' %}"

@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Insights SEO/Digital Marketing - Diginext{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Insights - SEO / Digital Marketing</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'insights_page' %}">Insights</a></li>
+                        <li class="breadcrumb-item active">SEO/Digital Marketing</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if messages %}
+    <div class="container-fluid">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">SEO Settings for Insights Page</h3>
+                        </div>
+                        <form method="POST" action="{% url 'insights_digital_marketing_update' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="card-body">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle"></i>
+                                    <strong>SEO Best Practices:</strong>
+                                    <ul class="mb-0 mt-2">
+                                        <li>Meta Title: Keep it under 60 characters</li>
+                                        <li>Meta Description: Keep it between 150-160 characters</li>
+                                        <li>Use relevant keywords that match your content</li>
+                                    </ul>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="meta_title">Meta Title</label>
+                                    <input type="text" class="form-control" id="meta_title" name="meta_title" 
+                                           value="{% if digital_marketing %}{{ digital_marketing.meta_title }}{% endif %}"
+                                           placeholder="Enter meta title (max 60 characters)" maxlength="200">
+                                    <small class="form-text text-muted">
+                                        <span id="title-count">0</span>/60 characters
+                                    </small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="meta_description">Meta Description</label>
+                                    <textarea class="form-control" id="meta_description" name="meta_description" rows="3"
+                                              placeholder="Enter meta description (max 160 characters)" maxlength="500">{% if digital_marketing %}{{ digital_marketing.meta_description }}{% endif %}</textarea>
+                                    <small class="form-text text-muted">
+                                        <span id="description-count">0</span>/160 characters
+                                    </small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="meta_keywords">Meta Keywords</label>
+                                    <input type="text" class="form-control" id="meta_keywords" name="meta_keywords" 
+                                           value="{% if digital_marketing %}{{ digital_marketing.meta_keywords }}{% endif %}"
+                                           placeholder="Enter keywords separated by commas">
+                                    <small class="form-text text-muted">Example: insights, blog, articles, technology</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="banner_image">Banner Image</label>
+                                    {% if digital_marketing and digital_marketing.banner_image %}
+                                    <div class="mb-2">
+                                        <img src="{{ digital_marketing.banner_image.url }}" alt="Current Banner" class="img-thumbnail" style="max-width: 300px;">
+                                    </div>
+                                    {% endif %}
+                                    <input type="file" class="form-control-file" id="banner_image" name="banner_image" accept="image/*">
+                                    <small class="form-text text-muted">Recommended size: 1200x630px for social media sharing</small>
+                                </div>
+
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="is_active" name="is_active" 
+                                           {% if digital_marketing and digital_marketing.is_active %}checked{% elif not digital_marketing %}checked{% endif %}>
+                                    <label class="form-check-label" for="is_active">
+                                        Active
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-info">
+                                    <i class="fas fa-save"></i> Save Settings
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+// Character counters
+const metaTitle = document.getElementById('meta_title');
+const metaDescription = document.getElementById('meta_description');
+const titleCount = document.getElementById('title-count');
+const descriptionCount = document.getElementById('description-count');
+
+function updateCount(element, counter) {
+    counter.textContent = element.value.length;
+    if (element === metaTitle && element.value.length > 60) {
+        counter.style.color = 'red';
+    } else if (element === metaDescription && element.value.length > 160) {
+        counter.style.color = 'red';
+    } else {
+        counter.style.color = '';
+    }
+}
+
+if (metaTitle) {
+    updateCount(metaTitle, titleCount);
+    metaTitle.addEventListener('input', () => updateCount(metaTitle, titleCount));
+}
+
+if (metaDescription) {
+    updateCount(metaDescription, descriptionCount);
+    metaDescription.addEventListener('input', () => updateCount(metaDescription, descriptionCount));
+}
+
+// Auto-hide alerts
+setTimeout(function() {
+    $('.alert-success, .alert-error').fadeOut('slow');
+}, 5000);
+</script>
+
+{% endblock %}

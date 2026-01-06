@@ -1957,6 +1957,46 @@ def ourwork_delete(request, pk):
     return redirect('ourwork_page')
 
 
+
+# ==================== OUR WORKS DIGITAL MARKETING ====================
+@login_required
+def ourworks_digital_marketing_page(request):
+    """Our Works SEO/Digital Marketing Section Management Page"""
+    digital_marketing = OurWorksDigitalMarketing.objects.first()
+    
+    context = {
+        'digital_marketing': digital_marketing,
+    }
+    return render(request, 'ourworksdigitalmarketing.html', context)
+
+
+@login_required
+def ourworks_digital_marketing_update(request):
+    marketing = OurWorksDigitalMarketing.objects.first()
+    
+    if request.method == 'POST':
+        if marketing:
+            old_image = marketing.banner_image
+            form = OurWorksDigitalMarketingForm(request.POST, request.FILES, instance=marketing)
+        else:
+            old_image = None
+            form = OurWorksDigitalMarketingForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            if 'banner_image' in request.FILES and old_image:
+                if os.path.isfile(old_image.path):
+                    try:
+                        os.remove(old_image.path)
+                    except Exception as e:
+                        print(f"Error deleting old image: {e}")
+            
+            form.save()
+            messages.success(request, 'Our Works SEO / Digital Marketing settings updated successfully!')
+            return redirect('ourworks_digital_marketing_page')
+    
+    return redirect('ourworks_digital_marketing_page')
+
+    
 # ============= INDUSTRY CRUD =============
 @login_required
 def industry_create(request):
@@ -2117,3 +2157,42 @@ def insights_delete(request, pk):
     insight.delete()
     messages.success(request, 'Insight deleted successfully!')
     return redirect('insights_page')    
+
+
+# ==================== INSIGHTS DIGITAL MARKETING ====================
+@login_required
+def insights_digital_marketing_page(request):
+    """Insights SEO/Digital Marketing Section Management Page"""
+    digital_marketing = InsightsDigitalMarketing.objects.first()
+    
+    context = {
+        'digital_marketing': digital_marketing,
+    }
+    return render(request, 'insightsdigitalmarketing.html', context)
+
+
+@login_required
+def insights_digital_marketing_update(request):
+    marketing = InsightsDigitalMarketing.objects.first()
+    
+    if request.method == 'POST':
+        if marketing:
+            old_image = marketing.banner_image
+            form = InsightsDigitalMarketingForm(request.POST, request.FILES, instance=marketing)
+        else:
+            old_image = None
+            form = InsightsDigitalMarketingForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            if 'banner_image' in request.FILES and old_image:
+                if os.path.isfile(old_image.path):
+                    try:
+                        os.remove(old_image.path)
+                    except Exception as e:
+                        print(f"Error deleting old image: {e}")
+            
+            form.save()
+            messages.success(request, 'Insights SEO / Digital Marketing settings updated successfully!')
+            return redirect('insights_digital_marketing_page')
+    
+    return redirect('insights_digital_marketing_page')    
