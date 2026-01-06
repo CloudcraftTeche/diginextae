@@ -12,7 +12,12 @@ from dashboard.models import (
     Service, ServiceName, Subservice, ServiceDigitalMarketing,
 
     # solution
-    Solutions, Subsolutions, SolutionsName, solutionsDigitalMarketing
+    Solutions, Subsolutions, SolutionsName, solutionsDigitalMarketing,
+
+      # OUR WORKS
+    Industry,
+    Expertise,
+    OurWorks,
 )
 
 
@@ -221,3 +226,26 @@ class SolutionsNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = SolutionsName
         fields = "__all__"
+
+
+# ===================== OUR WORKS SERIALIZERS ===========================>
+
+class IndustrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Industry
+        fields = '__all__'
+
+
+class ExpertiseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Expertise
+        fields = '__all__'
+
+
+class OurWorksSerializer(serializers.ModelSerializer):
+    industry_name = serializers.CharField(source='industry.name', read_only=True)
+    expertise_name = serializers.CharField(source='expertise.name', read_only=True)
+    
+    class Meta:
+        model = OurWorks
+        fields = '__all__'        

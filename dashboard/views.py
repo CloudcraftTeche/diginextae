@@ -1860,3 +1860,180 @@ def solutions_digital_marketing_delete(request, pk):
 
 
 
+# ==================== OUR WORKS MANAGEMENT ====================
+@login_required
+def ourwork_page(request):
+    """Our Works Management Page"""
+    ourworks = OurWorks.objects.all().order_by('-created_at')
+    industries = Industry.objects.all().order_by('name')
+    expertise = Expertise.objects.all().order_by('name')
+    
+    context = {
+        'ourworks': ourworks,
+        'ourworks_count': ourworks.count(),
+        'industries': industries,
+        'industries_count': industries.count(),
+        'expertise': expertise,
+        'expertise_count': expertise.count(),
+    }
+    return render(request, 'ourworks.html', context)
+
+
+# ============= OUR WORKS CRUD =============
+@login_required
+def ourwork_create(request):
+    """Create Our Work"""
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        image = request.FILES.get('image')
+        industry_id = request.POST.get('industry')
+        expertise_id = request.POST.get('expertise')
+        is_active = request.POST.get('is_active') == 'on'
+        
+        # Get Industry and Expertise objects
+        industry = get_object_or_404(Industry, pk=industry_id) if industry_id else None
+        expertise_obj = get_object_or_404(Expertise, pk=expertise_id) if expertise_id else None
+        
+        OurWorks.objects.create(
+            title=title,
+            description=description,
+            image=image,
+            industry=industry,
+            expertise=expertise_obj,
+            is_active=is_active
+        )
+        messages.success(request, 'Our Work created successfully!')
+        return redirect('ourwork_page')
+    return redirect('ourwork_page')
+
+
+@login_required
+def ourwork_edit(request, pk):
+    """Edit Our Work"""
+    work = get_object_or_404(OurWorks, pk=pk)
+    old_image = work.image
+    
+    if request.method == 'POST':
+        work.title = request.POST.get('title')
+        work.description = request.POST.get('description')
+        work.is_active = request.POST.get('is_active') == 'on'
+        
+        industry_id = request.POST.get('industry')
+        expertise_id = request.POST.get('expertise')
+        
+        work.industry = get_object_or_404(Industry, pk=industry_id) if industry_id else None
+        work.expertise = get_object_or_404(Expertise, pk=expertise_id) if expertise_id else None
+        
+        if request.FILES.get('image'):
+            if old_image:
+                if os.path.isfile(old_image.path):
+                    try:
+                        os.remove(old_image.path)
+                    except Exception as e:
+                        print(f"Error deleting old image: {e}")
+            work.image = request.FILES.get('image')
+        
+        work.save()
+        messages.success(request, 'Our Work updated successfully!')
+        return redirect('ourwork_page')
+    return redirect('ourwork_page')
+
+
+@login_required
+def ourwork_delete(request, pk):
+    """Delete Our Work"""
+    work = get_object_or_404(OurWorks, pk=pk)
+    
+    if work.image:
+        if os.path.isfile(work.image.path):
+            try:
+                os.remove(work.image.path)
+            except Exception as e:
+                print(f"Error deleting image: {e}")
+    
+    work.delete()
+    messages.success(request, 'Our Work deleted successfully!')
+    return redirect('ourwork_page')
+
+
+# ============= INDUSTRY CRUD =============
+@login_required
+def industry_create(request):
+    """Create Industry"""
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        is_active = request.POST.get('is_active') == 'on'
+        
+        Industry.objects.create(
+            name=name,
+            is_active=is_active
+        )
+        messages.success(request, 'Industry created successfully!')
+        return redirect('ourwork_page')
+    return redirect('ourwork_page')
+
+
+@login_required
+def industry_edit(request, pk):
+    """Edit Industry"""
+    industry = get_object_or_404(Industry, pk=pk)
+    
+    if request.method == 'POST':
+        industry.name = request.POST.get('name')
+        industry.is_active = request.POST.get('is_active') == 'on'
+        industry.save()
+        
+        messages.success(request, 'Industry updated successfully!')
+        return redirect('ourwork_page')
+    return redirect('ourwork_page')
+
+
+@login_required
+def industry_delete(request, pk):
+    """Delete Industry"""
+    industry = get_object_or_404(Industry, pk=pk)
+    industry.delete()
+    messages.success(request, 'Industry deleted successfully!')
+    return redirect('ourwork_page')
+
+
+# ============= EXPERTISE CRUD =============
+@login_required
+def expertise_create(request):
+    """Create Expertise"""
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        is_active = request.POST.get('is_active') == 'on'
+        
+        Expertise.objects.create(
+            name=name,
+            is_active=is_active
+        )
+        messages.success(request, 'Expertise created successfully!')
+        return redirect('ourwork_page')
+    return redirect('ourwork_page')
+
+
+@login_required
+def expertise_edit(request, pk):
+    """Edit Expertise"""
+    expertise = get_object_or_404(Expertise, pk=pk)
+    
+    if request.method == 'POST':
+        expertise.name = request.POST.get('name')
+        expertise.is_active = request.POST.get('is_active') == 'on'
+        expertise.save()
+        
+        messages.success(request, 'Expertise updated successfully!')
+        return redirect('ourwork_page')
+    return redirect('ourwork_page')
+
+
+@login_required
+def expertise_delete(request, pk):
+    """Delete Expertise"""
+    expertise = get_object_or_404(Expertise, pk=pk)
+    expertise.delete()
+    messages.success(request, 'Expertise deleted successfully!')
+    return redirect('ourwork_page')

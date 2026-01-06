@@ -168,8 +168,10 @@
                 </li>
               </ul>
             </li>
-            <li class="nav-item {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'home_banner' or request.resolver_match.url_name == 'home_text1' or request.resolver_match.url_name == 'home_banner2' or request.resolver_match.url_name == 'home_text2' or request.resolver_match.url_name == 'home_concepts' or request.resolver_match.url_name == 'home_banner3_page' or request.resolver_match.url_name == 'home_text3_page' or request.resolver_match.url_name == 'home_available_works_page' or request.resolver_match.url_name == 'home_banner4_page' or request.resolver_match.url_name == 'home_about_us_page' or request.resolver_match.url_name == 'home_faq_page' or request.resolver_match.url_name == 'home_footer_page' or request.resolver_match.url_name == 'home_digital_marketing_page' or request.resolver_match.url_name == 'home_vision_list' or request.resolver_match.url_name == 'home_features_list' %}menu-open{% endif %}">
-              <a href="#" class="nav-link {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'home_banner' or request.resolver_match.url_name == 'home_text1' or request.resolver_match.url_name == 'home_banner2' or request.resolver_match.url_name == 'home_text2' or request.resolver_match.url_name == 'home_concepts' or request.resolver_match.url_name == 'home_banner3_page' or request.resolver_match.url_name == 'home_text3_page' or request.resolver_match.url_name == 'home_available_works_page' or request.resolver_match.url_name == 'home_banner4_page' or request.resolver_match.url_name == 'home_about_us_page' or request.resolver_match.url_name == 'home_faq_page' or request.resolver_match.url_name == 'home_footer_page' or request.resolver_match.url_name == 'home_digital_marketing_page' or request.resolver_match.url_name == 'home_vision_list' or request.resolver_match.url_name == 'home_features_list' %}active{% endif %}">
+            <li
+              class="nav-item {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'home_banner' or request.resolver_match.url_name == 'home_text1' or request.resolver_match.url_name == 'home_banner2' or request.resolver_match.url_name == 'home_text2' or request.resolver_match.url_name == 'home_concepts' or request.resolver_match.url_name == 'home_banner3_page' or request.resolver_match.url_name == 'home_text3_page' or request.resolver_match.url_name == 'home_available_works_page' or request.resolver_match.url_name == 'home_banner4_page' or request.resolver_match.url_name == 'home_about_us_page' or request.resolver_match.url_name == 'home_faq_page' or request.resolver_match.url_name == 'home_footer_page' or request.resolver_match.url_name == 'home_digital_marketing_page' or request.resolver_match.url_name == 'home_vision_list' or request.resolver_match.url_name == 'home_features_list' %}menu-open{% endif %}">
+              <a href="#"
+                class="nav-link {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'home_banner' or request.resolver_match.url_name == 'home_text1' or request.resolver_match.url_name == 'home_banner2' or request.resolver_match.url_name == 'home_text2' or request.resolver_match.url_name == 'home_concepts' or request.resolver_match.url_name == 'home_banner3_page' or request.resolver_match.url_name == 'home_text3_page' or request.resolver_match.url_name == 'home_available_works_page' or request.resolver_match.url_name == 'home_banner4_page' or request.resolver_match.url_name == 'home_about_us_page' or request.resolver_match.url_name == 'home_faq_page' or request.resolver_match.url_name == 'home_footer_page' or request.resolver_match.url_name == 'home_digital_marketing_page' or request.resolver_match.url_name == 'home_vision_list' or request.resolver_match.url_name == 'home_features_list' %}active{% endif %}">
                 <i class="nav-icon fas fa-home"></i>
                 <p>
                   Home Management
@@ -178,97 +180,113 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                  <a href="{% url 'home' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>All Sections</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{% url 'home_banner' %}" class="nav-link {% if request.resolver_match.url_name == 'home_banner' %}active{% endif %}">
+                  <a href="{% url 'home_banner' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home_banner' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Banners</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{% url 'home_text1' %}" class="nav-link {% if request.resolver_match.url_name == 'home_text1' %}active{% endif %}">
+                  <a href="{% url 'home_text1' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home_text1' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Text Section 1</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{% url 'home_banner2' %}" class="nav-link {% if request.resolver_match.url_name == 'home_banner2' %}active{% endif %}">
+                  <a href="{% url 'home_banner2' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home_banner2' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Secondary Banners</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{% url 'home_text2' %}" class="nav-link {% if request.resolver_match.url_name == 'home_text2' %}active{% endif %}">
+                  <a href="{% url 'home_text2' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home_text2' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Text Section 2</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{% url 'home_concepts' %}" class="nav-link {% if request.resolver_match.url_name == 'home_concepts' %}active{% endif %}">
+                  <a href="{% url 'home_concepts' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home_concepts' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Concepts</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{% url 'home_banner3_page' %}" class="nav-link {% if request.resolver_match.url_name == 'home_banner3_page' %}active{% endif %}">
+                  <a href="{% url 'home_banner3_page' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home_banner3_page' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Home Banner 3</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{% url 'home_text3_page' %}" class="nav-link {% if request.resolver_match.url_name == 'home_text3_page' %}active{% endif %}">
+                  <a href="{% url 'home_text3_page' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home_text3_page' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Text Section 3</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{% url 'home_available_works_page' %}" class="nav-link {% if request.resolver_match.url_name == 'home_available_works_page' %}active{% endif %}">
+                  <a href="{% url 'home_available_works_page' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home_available_works_page' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Available Works</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{% url 'home_banner4_page' %}" class="nav-link {% if request.resolver_match.url_name == 'home_banner4_page' %}active{% endif %}">
+                  <a href="{% url 'home_banner4_page' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home_banner4_page' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Home Banner 4</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{% url 'home_about_us_page' %}" class="nav-link {% if request.resolver_match.url_name == 'home_about_us_page' %}active{% endif %}">
+                  <a href="{% url 'home_about_us_page' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home_about_us_page' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>About Us</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{% url 'home_faq_page' %}" class="nav-link {% if request.resolver_match.url_name == 'home_faq_page' %}active{% endif %}">
+                  <a href="{% url 'home_faq_page' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home_faq_page' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>FAQ</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{% url 'home_footer_page' %}" class="nav-link {% if request.resolver_match.url_name == 'home_footer_page' %}active{% endif %}">
+                  <a href="{% url 'home_footer_page' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home_footer_page' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Footer</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{% url 'home_digital_marketing_page' %}" class="nav-link {% if request.resolver_match.url_name == 'home_digital_marketing_page' %}active{% endif %}">
+                  <a href="{% url 'home_digital_marketing_page' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home_digital_marketing_page' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>SEO/Digital Marketing</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{% url 'home_vision_list' %}" class="nav-link {% if request.resolver_match.url_name == 'home_vision_list' %}active{% endif %}">
+                  <a href="{% url 'home_vision_list' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home_vision_list' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Vision</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{% url 'home_features_list' %}" class="nav-link {% if request.resolver_match.url_name == 'home_features_list' %}active{% endif %}">
+                  <a href="{% url 'home_features_list' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home_features_list' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Features</p>
                   </a>
@@ -280,6 +298,13 @@
                 class="nav-link {% if request.resolver_match.url_name == 'contacts_page' %}active{% endif %}">
                 <i class="nav-icon fas fa-phone"></i>
                 <p>Contacts</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'ourwork_page' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'ourwork_page' %}active{% endif %}">
+                <i class="nav-icon fas fa-briefcase"></i>
+                <p>Our Works</p>
               </a>
             </li>
             <li class="nav-item">

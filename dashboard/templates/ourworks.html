@@ -1,0 +1,524 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Works Management - Diginext{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Our Works Management</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Our Works</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Display Messages -->
+    {% if messages %}
+    <div class="container-fluid">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            
+            <!-- Statistics Cards -->
+            <div class="row">
+                <div class="col-lg-4 col-6">
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>{{ ourworks_count }}</h3>
+                            <p>Total Our Works</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-6">
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>{{ industries_count }}</h3>
+                            <p>Industries</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-industry"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-6">
+                    <div class="small-box bg-warning">
+                        <div class="inner">
+                            <h3>{{ expertise_count }}</h3>
+                            <p>Expertise</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Our Works Section -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">All Our Works</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#createWorkModal">
+                                    <i class="fas fa-plus"></i> Add Our Work
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {% if ourworks %}
+                            <div class="row">
+                                {% for work in ourworks %}
+                                <div class="col-md-4 col-sm-6 mb-3">
+                                    <div class="card">
+                                        {% if work.image %}
+                                        <img src="{{ work.image.url }}" class="card-img-top" alt="{{ work.title }}" style="height: 200px; object-fit: cover;">
+                                        {% endif %}
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ work.title }}</h5>
+                                            <p class="card-text">{{ work.description|truncatewords:15 }}</p>
+                                            <p>
+                                                {% if work.industry %}
+                                                <span class="badge badge-primary">{{ work.industry.name }}</span>
+                                                {% endif %}
+                                                {% if work.expertise %}
+                                                <span class="badge badge-success">{{ work.expertise.name }}</span>
+                                                {% endif %}
+                                            </p>
+                                            <p>
+                                                {% if work.is_active %}
+                                                <span class="badge badge-success">Active</span>
+                                                {% else %}
+                                                <span class="badge badge-secondary">Inactive</span>
+                                                {% endif %}
+                                            </p>
+                                            <small class="text-muted">{{ work.created_at|date:"M d, Y" }}</small>
+                                        </div>
+                                        <div class="card-footer text-center">
+                                            <button type="button" class="btn btn-sm btn-info" onclick="editWork({{ work.pk }}, '{{ work.title|escapejs }}', '{{ work.description|escapejs }}', {% if work.industry %}{{ work.industry.pk }}{% else %}null{% endif %}, {% if work.expertise %}{{ work.expertise.pk }}{% else %}null{% endif %}, {{ work.is_active|lower }}, '{% if work.image %}{{ work.image.url }}{% endif %}')">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger" onclick="deleteWork('{% url 'ourwork_delete' work.pk %}')">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> No works found. Click "Add Our Work" to create one.
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Industries & Expertise Section -->
+            <div class="row">
+                <!-- Industries -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Industries</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#createIndustryModal">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                {% for industry in industries %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ industry.name }}
+                                    <div>
+                                        {% if industry.is_active %}
+                                        <span class="badge badge-success mr-2">Active</span>
+                                        {% else %}
+                                        <span class="badge badge-secondary mr-2">Inactive</span>
+                                        {% endif %}
+                                        <button class="btn btn-sm btn-info" onclick="editIndustry({{ industry.pk }}, '{{ industry.name|escapejs }}', {{ industry.is_active|lower }})">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteIndustry('{% url 'industry_delete' industry.pk %}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expertise -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Expertise</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#createExpertiseModal">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                {% for exp in expertise %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ exp.name }}
+                                    <div>
+                                        {% if exp.is_active %}
+                                        <span class="badge badge-success mr-2">Active</span>
+                                        {% else %}
+                                        <span class="badge badge-secondary mr-2">Inactive</span>
+                                        {% endif %}
+                                        <button class="btn btn-sm btn-info" onclick="editExpertise({{ exp.pk }}, '{{ exp.name|escapejs }}', {{ exp.is_active|lower }})">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteExpertise('{% url 'expertise_delete' exp.pk %}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<!-- MODALS -->
+
+<!-- Create Work Modal -->
+<div class="modal fade" id="createWorkModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'ourwork_create' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title">Create Our Work</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="work_title">Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="work_title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="work_description">Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="work_description" name="description" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="work_image">Image <span class="text-danger">*</span></label>
+                        <input type="file" class="form-control" id="work_image" name="image" accept="image/*" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="work_industry">Industry</label>
+                        <select class="form-control" id="work_industry" name="industry">
+                            <option value="">-- Select Industry --</option>
+                            {% for industry in industries %}
+                            <option value="{{ industry.pk }}">{{ industry.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="work_expertise">Expertise</label>
+                        <select class="form-control" id="work_expertise" name="expertise">
+                            <option value="">-- Select Expertise --</option>
+                            {% for exp in expertise %}
+                            <option value="{{ exp.pk }}">{{ exp.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="work_is_active" name="is_active" checked>
+                        <label class="form-check-label" for="work_is_active">Active</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info">Create Work</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Work Modal -->
+<div class="modal fade" id="editWorkModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" id="editWorkForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title">Edit Our Work</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="edit_work_image_preview"></div>
+                    <div class="form-group">
+                        <label for="edit_work_title">Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="edit_work_title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_work_description">Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="edit_work_description" name="description" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_work_image">Image (leave empty to keep current)</label>
+                        <input type="file" class="form-control" id="edit_work_image" name="image" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_work_industry">Industry</label>
+                        <select class="form-control" id="edit_work_industry" name="industry">
+                            <option value="">-- Select Industry --</option>
+                            {% for industry in industries %}
+                            <option value="{{ industry.pk }}">{{ industry.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_work_expertise">Expertise</label>
+                        <select class="form-control" id="edit_work_expertise" name="expertise">
+                            <option value="">-- Select Expertise --</option>
+                            {% for exp in expertise %}
+                            <option value="{{ exp.pk }}">{{ exp.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="edit_work_is_active" name="is_active">
+                        <label class="form-check-label" for="edit_work_is_active">Active</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info">Update Work</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Create Industry Modal -->
+<div class="modal fade" id="createIndustryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'industry_create' %}">
+                {% csrf_token %}
+                <div class="modal-header bg-success">
+                    <h5 class="modal-title">Create Industry</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="industry_name">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="industry_name" name="name" required>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="industry_is_active" name="is_active" checked>
+                        <label class="form-check-label" for="industry_is_active">Active</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Industry Modal -->
+<div class="modal fade" id="editIndustryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" id="editIndustryForm">
+                {% csrf_token %}
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title">Edit Industry</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="edit_industry_name">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="edit_industry_name" name="name" required>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="edit_industry_is_active" name="is_active">
+                        <label class="form-check-label" for="edit_industry_is_active">Active</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Create Expertise Modal -->
+<div class="modal fade" id="createExpertiseModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'expertise_create' %}">
+                {% csrf_token %}
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title">Create Expertise</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="expertise_name">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="expertise_name" name="name" required>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="expertise_is_active" name="is_active" checked>
+                        <label class="form-check-label" for="expertise_is_active">Active</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-warning">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Expertise Modal -->
+<div class="modal fade" id="editExpertiseModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" id="editExpertiseForm">
+                {% csrf_token %}
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title">Edit Expertise</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="edit_expertise_name">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="edit_expertise_name" name="name" required>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="edit_expertise_is_active" name="is_active">
+                        <label class="form-check-label" for="edit_expertise_is_active">Active</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Edit Work
+function editWork(id, title, description, industryId, expertiseId, isActive, imageUrl) {
+    document.getElementById('editWorkForm').action = "{% url 'ourwork_edit' 0 %}".replace('0', id);
+    document.getElementById('edit_work_title').value = title;
+    document.getElementById('edit_work_description').value = description;
+    document.getElementById('edit_work_industry').value = industryId || '';
+    document.getElementById('edit_work_expertise').value = expertiseId || '';
+    document.getElementById('edit_work_is_active').checked = isActive;
+    
+    const imagePreview = document.getElementById('edit_work_image_preview');
+    if (imageUrl) {
+        imagePreview.innerHTML = `<div class="mb-3"><img src="${imageUrl}" class="img-thumbnail" style="max-width: 200px;"></div>`;
+    } else {
+        imagePreview.innerHTML = '';
+    }
+    
+    $('#editWorkModal').modal('show');
+}
+
+function deleteWork(url) {
+    if (confirm('Are you sure you want to delete this work?')) {
+        window.location.href = url;
+    }
+}
+
+// Edit Industry
+function editIndustry(id, name, isActive) {
+    document.getElementById('editIndustryForm').action = "{% url 'industry_edit' 0 %}".replace('0', id);
+    document.getElementById('edit_industry_name').value = name;
+    document.getElementById('edit_industry_is_active').checked = isActive;
+    $('#editIndustryModal').modal('show');
+}
+
+function deleteIndustry(url) {
+    if (confirm('Are you sure you want to delete this industry?')) {
+        window.location.href = url;
+    }
+}
+
+// Edit Expertise
+function editExpertise(id, name, isActive) {
+    document.getElementById('editExpertiseForm').action = "{% url 'expertise_edit' 0 %}".replace('0', id);
+    document.getElementById('edit_expertise_name').value = name;
+    document.getElementById('edit_expertise_is_active').checked = isActive;
+    $('#editExpertiseModal').modal('show');
+}
+
+function deleteExpertise(url) {
+    if (confirm('Are you sure you want to delete this expertise?')) {
+        window.location.href = url;
+    }
+}
+
+// Auto-hide alerts
+setTimeout(function() {
+    $('.alert').fadeOut('slow');
+}, 5000);
+</script>
+
+{% endblock %}

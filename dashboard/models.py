@@ -445,4 +445,55 @@ class solutionsDigitalMarketing(models.Model):
 
    
 
+# ===================== OUR WORKS SECTION ===========================>
+
+class Industry(models.Model):
+    """Industries for Our Works"""
+    name = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Industry"
+        verbose_name_plural = "Industries"
+
+    def __str__(self):
+        return self.name
+
+
+class Expertise(models.Model):
+    """Expertise for Our Works"""
+    name = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Expertise"
+        verbose_name_plural = "Expertise"
+
+    def __str__(self):
+        return self.name
+
+
+class OurWorks(models.Model):
+    """Our Works Portfolio"""
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    image = models.ImageField(upload_to='our_works/')
     
+    # ForeignKey relationships (one industry and one expertise per work)
+    industry = models.ForeignKey(Industry, on_delete=models.SET_NULL, null=True, blank=True, related_name='works')
+    expertise = models.ForeignKey(Expertise, on_delete=models.SET_NULL, null=True, blank=True, related_name='works')
+    
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Our Work"
+        verbose_name_plural = "Our Works"
+
+    def __str__(self):
+        return self.title

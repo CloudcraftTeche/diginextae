@@ -216,7 +216,21 @@ urlpatterns = [
 
 
 
+# ==================== OUR WORKS SECTION ====================
+path('ourworks/', views.ourwork_page, name='ourwork_page'),
+path('ourworks/create/', views.ourwork_create, name='ourwork_create'),
+path('ourworks/<int:pk>/edit/', views.ourwork_edit, name='ourwork_edit'),
+path('ourworks/<int:pk>/delete/', views.ourwork_delete, name='ourwork_delete'),
 
+# Industries Management
+path('ourworks/industry/create/', views.industry_create, name='industry_create'),
+path('ourworks/industry/<int:pk>/edit/', views.industry_edit, name='industry_edit'),
+path('ourworks/industry/<int:pk>/delete/', views.industry_delete, name='industry_delete'),
+
+# Expertise Management
+path('ourworks/expertise/create/', views.expertise_create, name='expertise_create'),
+path('ourworks/expertise/<int:pk>/edit/', views.expertise_edit, name='expertise_edit'),
+path('ourworks/expertise/<int:pk>/delete/', views.expertise_delete, name='expertise_delete'),
 
 
 ]
