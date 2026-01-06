@@ -1,0 +1,428 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home Features Management - Diginext{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Home Features Management</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                        <li class="breadcrumb-item active">Features</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Display Messages -->
+    {% if messages %}
+    <div class="container-fluid">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+
+            <!-- Statistics Card -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>{{ features_count }}</h3>
+                            <p>Total Home Features</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Home Features Section -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">All Home Features</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                                    data-target="#createFeatureModal">
+                                    <i class="fas fa-plus"></i> Add Feature
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {% if features %}
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th width="60">Image</th>
+                                            <th>Main Feature</th>
+                                            <th>Features</th>
+                                            <th width="80">Status</th>
+                                            <th width="100">Created</th>
+                                            <th width="150">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for feature in features %}
+                                        <tr>
+                                            <td>
+                                                {% if feature.image %}
+                                                <img src="{{ feature.image.url }}" alt="Feature" class="img-thumbnail"
+                                                    style="max-width: 50px;">
+                                                {% else %}
+                                                <span class="badge badge-secondary">No Image</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ feature.main_feature|truncatewords:10 }}</td>
+                                            <td>
+                                                {% if feature.text1 %}<span class="badge badge-primary">{{ feature.text1 }}</span>{% endif %}
+                                                {% if feature.text2 %}<span class="badge badge-success">{{ feature.text2 }}</span>{% endif %}
+                                                {% if feature.text3 %}<span class="badge badge-warning">{{ feature.text3 }}</span>{% endif %}
+                                                {% if feature.text4 %}<span class="badge badge-info">{{ feature.text4 }}</span>{% endif %}
+                                                {% if feature.text5 %}<span class="badge badge-danger">{{ feature.text5 }}</span>{% endif %}
+                                                {% if feature.text6 %}<span class="badge badge-dark">{{ feature.text6 }}</span>{% endif %}
+                                            </td>
+                                            <td>
+                                                {% if feature.is_active %}
+                                                <span class="badge badge-success">Active</span>
+                                                {% else %}
+                                                <span class="badge badge-secondary">Inactive</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ feature.created_at|date:"M d, Y" }}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-info"
+                                                    onclick="editFeature({{ feature.pk }}, '{{ feature.main_feature|escapejs }}', '{{ feature.text1|escapejs }}', '{{ feature.text1_description|escapejs }}', '{{ feature.text2|escapejs }}', '{{ feature.text2_description|escapejs }}', '{{ feature.text3|escapejs }}', '{{ feature.text3_description|escapejs }}', '{{ feature.text4|escapejs }}', '{{ feature.text4_description|escapejs }}', '{{ feature.text5|escapejs }}', '{{ feature.text5_description|escapejs }}', '{{ feature.text6|escapejs }}', '{{ feature.text6_description|escapejs }}', {{ feature.is_active|lower }}, '{% if feature.image %}{{ feature.image.url }}{% endif %}')">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-danger"
+                                                    onclick="deleteFeature('{% url 'home_features_delete' feature.pk %}')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> No home features found. Click "Add Feature" to create one.
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<!-- ===================== MODALS ===================== -->
+
+<!-- Create Feature Modal -->
+<div class="modal fade" id="createFeatureModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'home_features_add' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title">Create Home Feature</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="feature_image">Image <span class="text-danger">*</span></label>
+                                <input type="file" class="form-control" id="feature_image" name="image" accept="image/*" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="feature_text1">Feature 1 Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="feature_text1" name="text1" placeholder="Enter feature 1 title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="feature_text1_desc">Feature 1 Description <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="feature_text1_desc" name="text1_description" rows="4" placeholder="Enter feature 1 description" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="feature_text2">Feature 2 Title</label>
+                                <input type="text" class="form-control" id="feature_text2" name="text2" placeholder="Enter feature 2 title">
+                            </div>
+                            <div class="form-group">
+                                <label for="feature_text2_desc">Feature 2 Description</label>
+                                <textarea class="form-control" id="feature_text2_desc" name="text2_description" rows="4" placeholder="Enter feature 2 description"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="feature_text3">Feature 3 Title</label>
+                                <input type="text" class="form-control" id="feature_text3" name="text3" placeholder="Enter feature 3 title">
+                            </div>
+                            <div class="form-group">
+                                <label for="feature_text3_desc">Feature 3 Description</label>
+                                <textarea class="form-control" id="feature_text3_desc" name="text3_description" rows="4" placeholder="Enter feature 3 description"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="feature_text4">Feature 4 Title</label>
+                                <input type="text" class="form-control" id="feature_text4" name="text4" placeholder="Enter feature 4 title">
+                            </div>
+                            <div class="form-group">
+                                <label for="feature_text4_desc">Feature 4 Description</label>
+                                <textarea class="form-control" id="feature_text4_desc" name="text4_description" rows="4" placeholder="Enter feature 4 description"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="feature_main">Main Feature Description <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="feature_main" name="main_feature" rows="4" placeholder="Enter main feature description" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="feature_text5">Feature 5 Title</label>
+                                <input type="text" class="form-control" id="feature_text5" name="text5" placeholder="Enter feature 5 title">
+                            </div>
+                            <div class="form-group">
+                                <label for="feature_text5_desc">Feature 5 Description</label>
+                                <textarea class="form-control" id="feature_text5_desc" name="text5_description" rows="4" placeholder="Enter feature 5 description"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="feature_text6">Feature 6 Title</label>
+                                <input type="text" class="form-control" id="feature_text6" name="text6" placeholder="Enter feature 6 title">
+                            </div>
+                            <div class="form-group">
+                                <label for="feature_text6_desc">Feature 6 Description</label>
+                                <textarea class="form-control" id="feature_text6_desc" name="text6_description" rows="4" placeholder="Enter feature 6 description"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-check mt-4">
+                                <input type="checkbox" class="form-check-input" id="feature_is_active" name="is_active" checked>
+                                <label class="form-check-label" for="feature_is_active">Active</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info">Create Feature</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Feature Modal -->
+<div class="modal fade" id="editFeatureModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <form method="POST" id="editFeatureForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title">Edit Home Feature</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div id="edit_feature_image_preview"></div>
+                                <label for="edit_feature_image">Image (leave empty to keep current)</label>
+                                <input type="file" class="form-control" id="edit_feature_image" name="image" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_feature_text1">Feature 1 Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="edit_feature_text1" name="text1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_feature_text1_desc">Feature 1 Description <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="edit_feature_text1_desc" name="text1_description" rows="4" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_feature_text2">Feature 2 Title</label>
+                                <input type="text" class="form-control" id="edit_feature_text2" name="text2">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_feature_text2_desc">Feature 2 Description</label>
+                                <textarea class="form-control" id="edit_feature_text2_desc" name="text2_description" rows="4"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_feature_text3">Feature 3 Title</label>
+                                <input type="text" class="form-control" id="edit_feature_text3" name="text3">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_feature_text3_desc">Feature 3 Description</label>
+                                <textarea class="form-control" id="edit_feature_text3_desc" name="text3_description" rows="4"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_feature_text4">Feature 4 Title</label>
+                                <input type="text" class="form-control" id="edit_feature_text4" name="text4">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_feature_text4_desc">Feature 4 Description</label>
+                                <textarea class="form-control" id="edit_feature_text4_desc" name="text4_description" rows="4"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_feature_main">Main Feature Description <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="edit_feature_main" name="main_feature" rows="4" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_feature_text5">Feature 5 Title</label>
+                                <input type="text" class="form-control" id="edit_feature_text5" name="text5">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_feature_text5_desc">Feature 5 Description</label>
+                                <textarea class="form-control" id="edit_feature_text5_desc" name="text5_description" rows="4"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_feature_text6">Feature 6 Title</label>
+                                <input type="text" class="form-control" id="edit_feature_text6" name="text6">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_feature_text6_desc">Feature 6 Description</label>
+                                <textarea class="form-control" id="edit_feature_text6_desc" name="text6_description" rows="4"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-check mt-4">
+                                <input type="checkbox" class="form-check-input" id="edit_feature_is_active" name="is_active">
+                                <label class="form-check-label" for="edit_feature_is_active">Active</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info">Update Feature</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript Functions -->
+<script>
+    // Edit Feature
+    function editFeature(id, mainFeature, text1, text1Desc, text2, text2Desc, text3, text3Desc, text4, text4Desc, text5, text5Desc, text6, text6Desc, isActive, imageUrl) {
+        document.getElementById('editFeatureForm').action = "{% url 'home_features_edit' 0 %}".replace('0', id);
+        document.getElementById('edit_feature_main').value = mainFeature;
+        document.getElementById('edit_feature_text1').value = text1;
+        document.getElementById('edit_feature_text1_desc').value = text1Desc;
+        document.getElementById('edit_feature_text2').value = text2;
+        document.getElementById('edit_feature_text2_desc').value = text2Desc;
+        document.getElementById('edit_feature_text3').value = text3;
+        document.getElementById('edit_feature_text3_desc').value = text3Desc;
+        document.getElementById('edit_feature_text4').value = text4;
+        document.getElementById('edit_feature_text4_desc').value = text4Desc;
+        document.getElementById('edit_feature_text5').value = text5;
+        document.getElementById('edit_feature_text5_desc').value = text5Desc;
+        document.getElementById('edit_feature_text6').value = text6;
+        document.getElementById('edit_feature_text6_desc').value = text6Desc;
+        document.getElementById('edit_feature_is_active').checked = isActive;
+
+        const imagePreview = document.getElementById('edit_feature_image_preview');
+        if (imageUrl) {
+            imagePreview.innerHTML = `
+          <div class="mb-3">
+            <label class="d-block mb-2"><strong>Current Image:</strong></label>
+            <img src="${imageUrl}" alt="Current image" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+          </div>
+        `;
+        } else {
+            imagePreview.innerHTML = '<p class="text-muted mb-2">No image uploaded</p>';
+        }
+
+        $('#editFeatureModal').modal('show');
+    }
+
+    // Delete Feature
+    function deleteFeature(url) {
+        if (confirm('Are you sure you want to delete this home feature?')) {
+            window.location.href = url;
+        }
+    }
+
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function () {
+        $('.alert').fadeOut('slow');
+    }, 5000);
+</script>
+
+{% endblock %}

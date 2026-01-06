@@ -212,7 +212,36 @@ class HomeVision(models.Model):
         return self.title
    
 
+class HomeFeatures(models.Model):
+    """Home Features Section"""
+    
+    image = models.ImageField(upload_to='home_features/', blank=True, null=True)
+    main_feature = models.TextField(blank=True, null=True)
+    
+    text1 = models.CharField(max_length=200, blank=True, null=True)
+    text1_description = models.TextField(blank=True, null=True)
+    
+    text2 = models.CharField(max_length=200, blank=True, null=True)
+    text2_description = models.TextField(blank=True, null=True)
+    
+    text3 = models.CharField(max_length=200, blank=True, null=True)
+    text3_description = models.TextField(blank=True, null=True)
+    
+    text4 = models.CharField(max_length=200, blank=True, null=True)
+    text4_description = models.TextField(blank=True, null=True)
+    
+    text5 = models.CharField(max_length=200, blank=True, null=True)
+    text5_description = models.TextField(blank=True, null=True)
+    
+    text6 = models.CharField(max_length=200, blank=True, null=True)
+    text6_description = models.TextField(blank=True, null=True)
+    
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f"Home Features - {self.id}"
 # ==================================  contacts ===============================>
 
 

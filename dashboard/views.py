@@ -941,7 +941,111 @@ def home_vision_delete(request, pk):
     messages.success(request, 'Vision deleted successfully!')
     return redirect('home_vision_list')
 
+# ======================  HOME FEATURES =========================>
+@login_required
+def home_features_list(request):
+    """Home Features Section Management Page"""
+    features = HomeFeatures.objects.all().order_by('-created_at')
+    features_count = features.count()
+    
+    context = {
+        'features': features,
+        'features_count': features_count,
+    }
+    return render(request, 'homefeatures.html', context)
 
+@login_required
+def home_features_add(request):
+    """Create new Home Feature"""
+    if request.method == 'POST':
+        image = request.FILES.get('image')
+        main_feature = request.POST.get('main_feature')
+        text1 = request.POST.get('text1')
+        text1_description = request.POST.get('text1_description')
+        text2 = request.POST.get('text2')
+        text2_description = request.POST.get('text2_description')
+        text3 = request.POST.get('text3')
+        text3_description = request.POST.get('text3_description')
+        text4 = request.POST.get('text4')
+        text4_description = request.POST.get('text4_description')
+        text5 = request.POST.get('text5')
+        text5_description = request.POST.get('text5_description')
+        text6 = request.POST.get('text6')
+        text6_description = request.POST.get('text6_description')
+        is_active = request.POST.get('is_active') == 'on'
+        
+        HomeFeatures.objects.create(
+            image=image,
+            main_feature=main_feature,
+            text1=text1,
+            text1_description=text1_description,
+            text2=text2,
+            text2_description=text2_description,
+            text3=text3,
+            text3_description=text3_description,
+            text4=text4,
+            text4_description=text4_description,
+            text5=text5,
+            text5_description=text5_description,
+            text6=text6,
+            text6_description=text6_description,
+            is_active=is_active
+        )
+        messages.success(request, 'Home feature created successfully!')
+        return redirect('home_features_list')
+    return redirect('home_features_list')
+
+@login_required
+def home_features_edit(request, pk):
+    """Edit existing Home Feature"""
+    feature = get_object_or_404(HomeFeatures, pk=pk)
+    old_image = feature.image
+    
+    if request.method == 'POST':
+        feature.main_feature = request.POST.get('main_feature')
+        feature.text1 = request.POST.get('text1')
+        feature.text1_description = request.POST.get('text1_description')
+        feature.text2 = request.POST.get('text2')
+        feature.text2_description = request.POST.get('text2_description')
+        feature.text3 = request.POST.get('text3')
+        feature.text3_description = request.POST.get('text3_description')
+        feature.text4 = request.POST.get('text4')
+        feature.text4_description = request.POST.get('text4_description')
+        feature.text5 = request.POST.get('text5')
+        feature.text5_description = request.POST.get('text5_description')
+        feature.text6 = request.POST.get('text6')
+        feature.text6_description = request.POST.get('text6_description')
+        feature.is_active = request.POST.get('is_active') == 'on'
+        
+        if request.FILES.get('image'):
+            if old_image:
+                if os.path.isfile(old_image.path):
+                    try:
+                        os.remove(old_image.path)
+                    except Exception as e:
+                        print(f"Error deleting old image: {e}")
+            feature.image = request.FILES.get('image')
+        
+        feature.save()
+        messages.success(request, 'Home feature updated successfully!')
+        return redirect('home_features_list')
+    return redirect('home_features_list')
+
+@login_required
+def home_features_delete(request, pk):
+    """Delete Home Feature"""
+    feature = get_object_or_404(HomeFeatures, pk=pk)
+    
+    if feature.image:
+        if os.path.isfile(feature.image.path):
+            try:
+                os.remove(feature.image.path)
+            except Exception as e:
+                print(f"Error deleting image: {e}")
+    
+    feature.delete()
+    messages.success(request, 'Home feature deleted successfully!')
+    return redirect('home_features_list')
 
 
 

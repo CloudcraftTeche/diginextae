@@ -103,6 +103,13 @@ urlpatterns = [
     path('home/vision/<int:pk>/edit/', views.home_vision_edit, name='home_vision_edit'),
     path('home/vision/<int:pk>/delete/', views.home_vision_delete, name='home_vision_delete'),
 
+   #===================== Features Section =======================
+    path('home/features/', views.home_features_list, name='home_features_list'),
+    path('home/features/create/', views.home_features_add, name='home_features_add'),
+    path('home/features/<int:pk>/edit/', views.home_features_edit, name='home_features_edit'),
+    path('home/features/<int:pk>/delete/', views.home_features_delete, name='home_features_delete'),
+
+
 
    # ==================== CONTACTS SECTION ====================
     # Main contacts page
