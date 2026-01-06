@@ -294,20 +294,6 @@
               </ul>
             </li>
             <li class="nav-item">
-              <a href="{% url 'contacts_page' %}"
-                class="nav-link {% if request.resolver_match.url_name == 'contacts_page' %}active{% endif %}">
-                <i class="nav-icon fas fa-phone"></i>
-                <p>Contacts</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'ourwork_page' %}"
-                class="nav-link {% if request.resolver_match.url_name == 'ourwork_page' %}active{% endif %}">
-                <i class="nav-icon fas fa-briefcase"></i>
-                <p>Our Works</p>
-              </a>
-            </li>
-            <li class="nav-item">
               <a href="{% url 'aboutus_page' %}"
                 class="nav-link {% if request.resolver_match.url_name == 'aboutus_page' %}active{% endif %}">
                 <i class="nav-icon fas fa-info-circle"></i>
@@ -326,6 +312,27 @@
                 class="nav-link {% if request.resolver_match.url_name == 'solutions_management' %}active{% endif %}">
                 <i class="nav-icon fas fa-lightbulb"></i>
                 <p>Solutions</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'ourwork_page' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'ourwork_page' %}active{% endif %}">
+                <i class="nav-icon fas fa-briefcase"></i>
+                <p>Our Works</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'insights_page' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'insights_page' %}active{% endif %}">
+                <i class="nav-icon fas fa-lightbulb"></i>
+                <p>Insights</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'contacts_page' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'contacts_page' %}active{% endif %}">
+                <i class="nav-icon fas fa-phone"></i>
+                <p>Contacts</p>
               </a>
             </li>
           </ul>

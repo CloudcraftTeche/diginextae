@@ -8,7 +8,6 @@ from dashboard.models import (
     HomeVision,HomeFeatures,
 
     #  SERVICES
-
     Service, ServiceName, Subservice, ServiceDigitalMarketing,
 
     # solution
@@ -18,6 +17,9 @@ from dashboard.models import (
     Industry,
     Expertise,
     OurWorks,
+
+    # INSIGHTS
+    Insights,
 )
 
 
@@ -248,4 +250,9 @@ class OurWorksSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = OurWorks
-        fields = '__all__'        
+        fields = '__all__'    
+
+class InsightsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Insights
+        fields = '__all__'            

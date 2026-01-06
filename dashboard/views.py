@@ -2037,3 +2037,83 @@ def expertise_delete(request, pk):
     expertise.delete()
     messages.success(request, 'Expertise deleted successfully!')
     return redirect('ourwork_page')
+
+
+# ==================== INSIGHTS MANAGEMENT ====================
+@login_required
+def insights_page(request):
+    """Insights Management Page"""
+    insights = Insights.objects.all().order_by('-created_at')
+    insights_count = insights.count()
+    
+    context = {
+        'insights': insights,
+        'insights_count': insights_count,
+    }
+    return render(request, 'insights.html', context)
+
+
+@login_required
+def insights_create(request):
+    """Create Insight"""
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        subtitle = request.POST.get('subtitle')
+        description = request.POST.get('description')
+        banner_image = request.FILES.get('banner_image')
+        is_active = request.POST.get('is_active') == 'on'
+        
+        Insights.objects.create(
+            title=title,
+            subtitle=subtitle,
+            description=description,
+            banner_image=banner_image,
+            is_active=is_active
+        )
+        messages.success(request, 'Insight created successfully!')
+        return redirect('insights_page')
+    return redirect('insights_page')
+
+
+@login_required
+def insights_edit(request, pk):
+    """Edit Insight"""
+    insight = get_object_or_404(Insights, pk=pk)
+    old_image = insight.banner_image
+    
+    if request.method == 'POST':
+        insight.title = request.POST.get('title')
+        insight.subtitle = request.POST.get('subtitle')
+        insight.description = request.POST.get('description')
+        insight.is_active = request.POST.get('is_active') == 'on'
+        
+        if request.FILES.get('banner_image'):
+            if old_image:
+                if os.path.isfile(old_image.path):
+                    try:
+                        os.remove(old_image.path)
+                    except Exception as e:
+                        print(f"Error deleting old image: {e}")
+            insight.banner_image = request.FILES.get('banner_image')
+        
+        insight.save()
+        messages.success(request, 'Insight updated successfully!')
+        return redirect('insights_page')
+    return redirect('insights_page')
+
+
+@login_required
+def insights_delete(request, pk):
+    """Delete Insight"""
+    insight = get_object_or_404(Insights, pk=pk)
+    
+    if insight.banner_image:
+        if os.path.isfile(insight.banner_image.path):
+            try:
+                os.remove(insight.banner_image.path)
+            except Exception as e:
+                print(f"Error deleting image: {e}")
+    
+    insight.delete()
+    messages.success(request, 'Insight deleted successfully!')
+    return redirect('insights_page')    

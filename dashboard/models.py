@@ -497,3 +497,22 @@ class OurWorks(models.Model):
 
     def __str__(self):
         return self.title
+
+# ===================== INSIGHTS SECTION ===========================>
+
+class Insights(models.Model):
+    """Insights/Blog Section"""
+    title = models.CharField(max_length=200)
+    subtitle = models.CharField(max_length=200, blank=True, null=True)
+    description = models.TextField()
+    banner_image = models.ImageField(upload_to='insights/')
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Insight"
+        verbose_name_plural = "Insights"
+
+    def __str__(self):
+        return self.title        

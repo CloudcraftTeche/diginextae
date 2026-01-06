@@ -232,5 +232,11 @@ path('ourworks/expertise/create/', views.expertise_create, name='expertise_creat
 path('ourworks/expertise/<int:pk>/edit/', views.expertise_edit, name='expertise_edit'),
 path('ourworks/expertise/<int:pk>/delete/', views.expertise_delete, name='expertise_delete'),
 
+# ==================== INSIGHTS SECTION ====================
+path('insights/', views.insights_page, name='insights_page'),
+path('insights/create/', views.insights_create, name='insights_create'),
+path('insights/<int:pk>/edit/', views.insights_edit, name='insights_edit'),
+path('insights/<int:pk>/delete/', views.insights_delete, name='insights_delete'),
+
 
 ]
