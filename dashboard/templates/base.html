@@ -134,7 +134,14 @@
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Dashboard treeview -->
-            <li
+            <li class="nav-item">
+              <a href="{% url 'dashboard' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>Dashboard</p>
+              </a>
+            </li>
+            <!-- <li
               class="nav-item {% if request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'dashboard_v1' or request.resolver_match.url_name == 'dashboard_v2' or request.resolver_match.url_name == 'dashboard_v3' %}menu-open{% endif %}">
               <a href="#"
                 class="nav-link {% if request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'dashboard_v1' or request.resolver_match.url_name == 'dashboard_v2' or request.resolver_match.url_name == 'dashboard_v3' %}active{% endif %}">
@@ -167,7 +174,7 @@
                   </a>
                 </li>
               </ul>
-            </li>
+            </li> -->
             <li
               class="nav-item {% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'home_banner' or request.resolver_match.url_name == 'home_text1' or request.resolver_match.url_name == 'home_banner2' or request.resolver_match.url_name == 'home_text2' or request.resolver_match.url_name == 'home_concepts' or request.resolver_match.url_name == 'home_banner3_page' or request.resolver_match.url_name == 'home_text3_page' or request.resolver_match.url_name == 'home_available_works_page' or request.resolver_match.url_name == 'home_banner4_page' or request.resolver_match.url_name == 'home_about_us_page' or request.resolver_match.url_name == 'home_faq_page' or request.resolver_match.url_name == 'home_footer_page' or request.resolver_match.url_name == 'home_digital_marketing_page' or request.resolver_match.url_name == 'home_vision_list' or request.resolver_match.url_name == 'home_features_list' %}menu-open{% endif %}">
               <a href="#"
@@ -179,13 +186,13 @@
                 </p>
               </a>
               <ul class="nav nav-treeview">
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                   <a href="{% url 'home' %}"
                     class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>All Sections</p>
                   </a>
-                </li>
+                </li> -->
                 <li class="nav-item">
                   <a href="{% url 'home_banner' %}"
                     class="nav-link {% if request.resolver_match.url_name == 'home_banner' %}active{% endif %}">
@@ -193,13 +200,13 @@
                     <p>Banners</p>
                   </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                   <a href="{% url 'home_text1' %}"
                     class="nav-link {% if request.resolver_match.url_name == 'home_text1' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Text Section 1</p>
                   </a>
-                </li>
+                </li> -->
                 <li class="nav-item">
                   <a href="{% url 'home_banner2' %}"
                     class="nav-link {% if request.resolver_match.url_name == 'home_banner2' %}active{% endif %}">
@@ -214,7 +221,7 @@
                     <p>Text Section 2</p>
                   </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                   <a href="{% url 'home_concepts' %}"
                     class="nav-link {% if request.resolver_match.url_name == 'home_concepts' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
@@ -227,28 +234,28 @@
                     <i class="far fa-circle nav-icon"></i>
                     <p>Home Banner 3</p>
                   </a>
-                </li>
-                <li class="nav-item">
+                </li> -->
+                <!-- <li class="nav-item">
                   <a href="{% url 'home_text3_page' %}"
                     class="nav-link {% if request.resolver_match.url_name == 'home_text3_page' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Text Section 3</p>
                   </a>
-                </li>
-                <li class="nav-item">
+                </li> -->
+                <!-- <li class="nav-item">
                   <a href="{% url 'home_available_works_page' %}"
                     class="nav-link {% if request.resolver_match.url_name == 'home_available_works_page' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Available Works</p>
                   </a>
-                </li>
-                <li class="nav-item">
+                </li> -->
+                <!-- <li class="nav-item">
                   <a href="{% url 'home_banner4_page' %}"
                     class="nav-link {% if request.resolver_match.url_name == 'home_banner4_page' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Home Banner 4</p>
                   </a>
-                </li>
+                </li> -->
                 <li class="nav-item">
                   <a href="{% url 'home_about_us_page' %}"
                     class="nav-link {% if request.resolver_match.url_name == 'home_about_us_page' %}active{% endif %}">

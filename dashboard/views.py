@@ -126,9 +126,15 @@ def home_banner_create(request):
     if request.method == 'POST':
         form = HomeBannerForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            new_banner = form.save(commit=False)
+            
+            # ONLY if this banner is set to active, deactivate all others
+            if new_banner.is_active:
+                HomeBanner.objects.all().update(is_active=False)
+            
+            new_banner.save()
             messages.success(request, 'Home banner created successfully!')
-            return redirect('home')
+            return redirect('home_banner')
     else:
         form = HomeBannerForm()
     return render(request, 'home_banner_form.html', {'form': form, 'action': 'Create'})
@@ -142,6 +148,12 @@ def home_banner_edit(request, pk):
     if request.method == 'POST':
         form = HomeBannerForm(request.POST, request.FILES, instance=banner)
         if form.is_valid():
+            updated_banner = form.save(commit=False)
+            
+            # If this banner is set to active, deactivate all others
+            if updated_banner.is_active:
+                HomeBanner.objects.exclude(pk=pk).update(is_active=False)
+            
             if 'image' in request.FILES and old_image:
                 if os.path.isfile(old_image.path):
                     try:
@@ -149,9 +161,9 @@ def home_banner_edit(request, pk):
                     except Exception as e:
                         print(f"Error deleting old image: {e}")
             
-            form.save()
+            updated_banner.save()
             messages.success(request, 'Home banner updated successfully!')
-            return redirect('home')
+            return redirect('home_banner')
     else:
         form = HomeBannerForm(instance=banner)
     return render(request, 'home_banner_form.html', {'form': form, 'action': 'Edit'})
@@ -170,7 +182,7 @@ def home_banner_delete(request, pk):
     
     banner.delete()
     messages.success(request, 'Home banner deleted successfully!')
-    return redirect('home')
+    return redirect('home_banner')
 
 
 # ==================== HOME TEXT 1 CRUD ====================
@@ -240,7 +252,12 @@ def home_banner2_create(request):
     if request.method == 'POST':
         form = HomeBanner2Form(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            new_banner = form.save(commit=False)
+            
+            if new_banner.is_active:
+                HomeBanner2.objects.all().update(is_active=False)
+            
+            new_banner.save()
             messages.success(request, 'Secondary banner created successfully!')
             return redirect('home_banner2') 
     else:
@@ -256,6 +273,11 @@ def home_banner2_edit(request, pk):
     if request.method == 'POST':
         form = HomeBanner2Form(request.POST, request.FILES, instance=banner)
         if form.is_valid():
+            updated_banner = form.save(commit=False)
+            
+            if updated_banner.is_active:
+                HomeBanner2.objects.exclude(pk=pk).update(is_active=False)
+            
             if 'image' in request.FILES and old_image:
                 if os.path.isfile(old_image.path):
                     try:
@@ -263,7 +285,7 @@ def home_banner2_edit(request, pk):
                     except Exception as e:
                         print(f"Error deleting old image: {e}")
             
-            form.save()
+            updated_banner.save()
             messages.success(request, 'Secondary banner updated successfully!')
             return redirect('home_banner2') 
     else:
@@ -306,7 +328,12 @@ def home_text2_create(request):
     if request.method == 'POST':
         form = HomeText2Form(request.POST)
         if form.is_valid():
-            form.save()
+            new_text = form.save(commit=False)
+            
+            if new_text.is_active:
+                HomeText2.objects.all().update(is_active=False)
+            
+            new_text.save()
             messages.success(request, 'Text section 2 created successfully!')
             return redirect('home_text2')
     else:
@@ -320,7 +347,12 @@ def home_text2_edit(request, pk):
     if request.method == 'POST':
         form = HomeText2Form(request.POST, instance=text)
         if form.is_valid():
-            form.save()
+            updated_text = form.save(commit=False)
+            
+            if updated_text.is_active:
+                HomeText2.objects.exclude(pk=pk).update(is_active=False)
+            
+            updated_text.save()
             messages.success(request, 'Text section 2 updated successfully!')
             return redirect('home_text2')
     else:
@@ -684,7 +716,12 @@ def home_about_us_create(request):
     if request.method == 'POST':
         form = HomeAboutUsForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            new_about = form.save(commit=False)
+            
+            if new_about.is_active:
+                HomeAboutUs.objects.all().update(is_active=False)
+            
+            new_about.save()
             messages.success(request, 'About Us section created successfully!')
             return redirect('home_about_us_page')
     return redirect('home_about_us_page')
@@ -698,6 +735,11 @@ def home_about_us_edit(request, pk):
     if request.method == 'POST':
         form = HomeAboutUsForm(request.POST, request.FILES, instance=about_us)
         if form.is_valid():
+            updated_about = form.save(commit=False)
+            
+            if updated_about.is_active:
+                HomeAboutUs.objects.exclude(pk=pk).update(is_active=False)
+            
             if 'image' in request.FILES and old_image:
                 if os.path.isfile(old_image.path):
                     try:
@@ -705,7 +747,7 @@ def home_about_us_edit(request, pk):
                     except Exception as e:
                         print(f"Error deleting old image: {e}")
             
-            form.save()
+            updated_about.save()
             messages.success(request, 'About Us section updated successfully!')
             return redirect('home_about_us_page')
     return redirect('home_about_us_page')
@@ -746,7 +788,12 @@ def home_questions_create(request):
     if request.method == 'POST':
         form = HomeQuestionsForm(request.POST)
         if form.is_valid():
-            form.save()
+            new_question = form.save(commit=False)
+            
+            if new_question.is_active:
+                HomeQuestions.objects.all().update(is_active=False)
+            
+            new_question.save()
             messages.success(request, 'FAQ section created successfully!')
             return redirect('home_faq_page')
     return redirect('home_faq_page')
@@ -758,7 +805,12 @@ def home_questions_edit(request, pk):
     if request.method == 'POST':
         form = HomeQuestionsForm(request.POST, instance=questions)
         if form.is_valid():
-            form.save()
+            updated_question = form.save(commit=False)
+            
+            if updated_question.is_active:
+                HomeQuestions.objects.exclude(pk=pk).update(is_active=False)
+            
+            updated_question.save()
             messages.success(request, 'FAQ section updated successfully!')
             return redirect('home_faq_page')
     return redirect('home_faq_page')
@@ -823,7 +875,12 @@ def footer_create(request):
     if request.method == 'POST':
         form = FooterForm(request.POST)
         if form.is_valid():
-            form.save()
+            new_footer = form.save(commit=False)
+            
+            if new_footer.is_active:
+                Footer.objects.all().update(is_active=False)
+            
+            new_footer.save()
             messages.success(request, 'Footer created successfully!')
             return redirect('home_footer_page')
     return redirect('home_footer_page')
@@ -835,7 +892,12 @@ def footer_edit(request, pk):
     if request.method == 'POST':
         form = FooterForm(request.POST, instance=footer)
         if form.is_valid():
-            form.save()
+            updated_footer = form.save(commit=False)
+            
+            if updated_footer.is_active:
+                Footer.objects.exclude(pk=pk).update(is_active=False)
+            
+            updated_footer.save()
             messages.success(request, 'Footer updated successfully!')
             return redirect('home_footer_page')
     return redirect('home_footer_page')
@@ -909,6 +971,9 @@ def home_vision_add(request):
         description = request.POST.get('description')
         is_active = request.POST.get('is_active') == 'on'
         
+        if is_active:
+            HomeVision.objects.all().update(is_active=False)
+        
         HomeVision.objects.create(
             title=title,
             description=description,
@@ -926,7 +991,13 @@ def home_vision_edit(request, pk):
     if request.method == 'POST':
         vision.title = request.POST.get('title')
         vision.description = request.POST.get('description')
-        vision.is_active = request.POST.get('is_active') == 'on'
+        is_active = request.POST.get('is_active') == 'on'
+        
+        # If this vision is set to active, deactivate all others
+        if is_active:
+            HomeVision.objects.exclude(pk=pk).update(is_active=False)
+        
+        vision.is_active = is_active
         vision.save()
         
         messages.success(request, 'Vision updated successfully!')
@@ -973,6 +1044,8 @@ def home_features_add(request):
         text6 = request.POST.get('text6')
         text6_description = request.POST.get('text6_description')
         is_active = request.POST.get('is_active') == 'on'
+        if is_active:
+            HomeFeatures.objects.all().update(is_active=False)
         
         HomeFeatures.objects.create(
             image=image,
@@ -1015,7 +1088,13 @@ def home_features_edit(request, pk):
         feature.text5_description = request.POST.get('text5_description')
         feature.text6 = request.POST.get('text6')
         feature.text6_description = request.POST.get('text6_description')
-        feature.is_active = request.POST.get('is_active') == 'on'
+        is_active = request.POST.get('is_active') == 'on'
+        
+        # If this feature is set to active, deactivate all others
+        if is_active:
+            HomeFeatures.objects.exclude(pk=pk).update(is_active=False)
+        
+        feature.is_active = is_active
         
         if request.FILES.get('image'):
             if old_image:
