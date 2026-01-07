@@ -291,7 +291,7 @@ class AboutUsBanner1(models.Model):
     subtitle = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='about_us/banners/')
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -302,7 +302,7 @@ class AboutUsBanner1(models.Model):
 class AboutUsText1(models.Model):
     heading = models.CharField(max_length=255)
     content = models.TextField()
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -316,7 +316,7 @@ class AboutUsMission(models.Model):
     title = models.CharField(max_length=255)
     mission_text = models.TextField()
     icon = models.ImageField(upload_to='about_us/mission/', blank=True, null=True)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -328,7 +328,7 @@ class AboutUsMission(models.Model):
 class AboutUsText2(models.Model):
     heading = models.CharField(max_length=255)
     content = models.TextField()
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

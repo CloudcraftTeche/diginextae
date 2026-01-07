@@ -1312,6 +1312,9 @@ def aboutus_banner1_create(request):
         description = request.POST.get('description')
         image = request.FILES.get('image')
         is_active = request.POST.get('is_active') == 'on'
+        if is_active:
+            AboutUsBanner1.objects.all().update(is_active=False)
+
         
         AboutUsBanner1.objects.create(
             title=title,
@@ -1332,8 +1335,10 @@ def aboutus_banner1_edit(request, pk):
         banner.title = request.POST.get('title')
         banner.subtitle = request.POST.get('subtitle')
         banner.description = request.POST.get('description')
-        banner.is_active = request.POST.get('is_active') == 'on'
-        
+        is_active = request.POST.get('is_active') == 'on'
+        if is_active:
+            AboutUsBanner1.objects.exclude(pk=pk).update(is_active=False)
+        banner.is_active = is_active
         image = request.FILES.get('image')
         if image:
             banner.image = image
@@ -1357,6 +1362,8 @@ def aboutus_text1_create(request):
         heading = request.POST.get('heading')
         content = request.POST.get('content')
         is_active = request.POST.get('is_active') == 'on'
+        if is_active:
+            AboutUsText1.objects.all().update(is_active=False)
         
         AboutUsText1.objects.create(
             heading=heading,
@@ -1374,7 +1381,11 @@ def aboutus_text1_edit(request, pk):
     if request.method == 'POST':
         text.heading = request.POST.get('heading')
         text.content = request.POST.get('content')
-        text.is_active = request.POST.get('is_active') == 'on'
+        is_active = request.POST.get('is_active') == 'on'
+        if is_active:
+            AboutUsText1.objects.exclude(pk=pk).update(is_active=False)
+        
+        text.is_active = is_active
         text.save()
         
         messages.success(request, 'About Us text 1 updated successfully!')
@@ -1439,6 +1450,8 @@ def aboutus_text2_create(request):
         heading = request.POST.get('heading')
         content = request.POST.get('content')
         is_active = request.POST.get('is_active') == 'on'
+        if is_active:
+            AboutUsText2.objects.all().update(is_active=False)
         
         AboutUsText2.objects.create(
             heading=heading,
@@ -1456,7 +1469,11 @@ def aboutus_text2_edit(request, pk):
     if request.method == 'POST':
         text.heading = request.POST.get('heading')
         text.content = request.POST.get('content')
-        text.is_active = request.POST.get('is_active') == 'on'
+        is_active = request.POST.get('is_active') == 'on'
+        if is_active:
+            AboutUsText2.objects.exclude(pk=pk).update(is_active=False)
+        
+        text.is_active = is_active
         text.save()
         
         messages.success(request, 'About Us text 2 updated successfully!')

@@ -200,6 +200,13 @@
                     <p>Banners</p>
                   </a>
                 </li>
+                <li class="nav-item">
+                  <a href="{% url 'home_about_us_page' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home_about_us_page' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>About Us</p>
+                  </a>
+                </li>
                 <!-- <li class="nav-item">
                   <a href="{% url 'home_text1' %}"
                     class="nav-link {% if request.resolver_match.url_name == 'home_text1' %}active{% endif %}">
@@ -219,6 +226,20 @@
                     class="nav-link {% if request.resolver_match.url_name == 'home_text2' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Text Section 2</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'home_vision_list' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home_vision_list' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Vision</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'home_features_list' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'home_features_list' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Features</p>
                   </a>
                 </li>
                 <!-- <li class="nav-item">
@@ -257,13 +278,6 @@
                   </a>
                 </li> -->
                 <li class="nav-item">
-                  <a href="{% url 'home_about_us_page' %}"
-                    class="nav-link {% if request.resolver_match.url_name == 'home_about_us_page' %}active{% endif %}">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>About Us</p>
-                  </a>
-                </li>
-                <li class="nav-item">
                   <a href="{% url 'home_faq_page' %}"
                     class="nav-link {% if request.resolver_match.url_name == 'home_faq_page' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
@@ -282,20 +296,6 @@
                     class="nav-link {% if request.resolver_match.url_name == 'home_digital_marketing_page' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>SEO/Digital Marketing</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'home_vision_list' %}"
-                    class="nav-link {% if request.resolver_match.url_name == 'home_vision_list' %}active{% endif %}">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Vision</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'home_features_list' %}"
-                    class="nav-link {% if request.resolver_match.url_name == 'home_features_list' %}active{% endif %}">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Features</p>
                   </a>
                 </li>
               </ul>
@@ -447,6 +447,8 @@
   <script src="{% static 'dist/js/demo.js' %}"></script>
   <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
   <script src="{% static 'dist/js/pages/dashboard.js' %}"></script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>
