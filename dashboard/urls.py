@@ -246,5 +246,11 @@ path('insights/<int:pk>/delete/', views.insights_delete, name='insights_delete')
 path('insights/digital-marketing/', views.insights_digital_marketing_page, name='insights_digital_marketing_page'),
 path('insights/digital-marketing/update/', views.insights_digital_marketing_update, name='insights_digital_marketing_update'),
 
+# ==================== OUR INSIGHTS SECTION ====================
+path('our-insights/', views.our_insights_page, name='our_insights_page'),
+path('our-insights/create/', views.our_insights_create, name='our_insights_create'),
+path('our-insights/<int:pk>/edit/', views.our_insights_edit, name='our_insights_edit'),
+path('our-insights/<int:pk>/delete/', views.our_insights_delete, name='our_insights_delete'),
+
 
 ]

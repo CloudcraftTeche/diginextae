@@ -2198,6 +2198,8 @@ def insights_create(request):
         description = request.POST.get('description')
         banner_image = request.FILES.get('banner_image')
         is_active = request.POST.get('is_active') == 'on'
+        if is_active:
+            Insights.objects.all().update(is_active=False)
         
         Insights.objects.create(
             title=title,
@@ -2221,7 +2223,11 @@ def insights_edit(request, pk):
         insight.title = request.POST.get('title')
         insight.subtitle = request.POST.get('subtitle')
         insight.description = request.POST.get('description')
-        insight.is_active = request.POST.get('is_active') == 'on'
+        is_active = request.POST.get('is_active') == 'on'
+        if is_active:
+            Insights.objects.exclude(pk=pk).update(is_active=False)
+        
+        insight.is_active = is_active
         
         if request.FILES.get('banner_image'):
             if old_image:
@@ -2292,3 +2298,85 @@ def insights_digital_marketing_update(request):
             return redirect('insights_digital_marketing_page')
     
     return redirect('insights_digital_marketing_page')    
+
+
+# ==================== OUR INSIGHTS MANAGEMENT ====================
+@login_required
+def our_insights_page(request):
+    """Our Insights Management Page"""
+    our_insights = OurInsights.objects.all().order_by('-created_at')
+    our_insights_count = our_insights.count()
+    
+    context = {
+        'our_insights': our_insights,
+        'our_insights_count': our_insights_count,
+    }
+    return render(request, 'ourinsights.html', context)
+
+
+@login_required
+def our_insights_create(request):
+    """Create Our Insight"""
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        image = request.FILES.get('image')
+        insight_date = request.POST.get('insight_date')
+        is_active = request.POST.get('is_active') == 'on'
+        
+        
+        OurInsights.objects.create(
+            title=title,
+            description=description,
+            image=image,
+            insight_date=insight_date,
+            is_active=is_active
+        )
+        messages.success(request, 'Our Insight created successfully!')
+        return redirect('our_insights_page')
+    return redirect('our_insights_page')
+
+
+@login_required
+def our_insights_edit(request, pk):
+    """Edit Our Insight"""
+    insight = get_object_or_404(OurInsights, pk=pk)
+    old_image = insight.image
+    
+    if request.method == 'POST':
+        insight.title = request.POST.get('title')
+        insight.description = request.POST.get('description')
+        insight.insight_date = request.POST.get('insight_date')
+        insight.is_active = request.POST.get('is_active') == 'on'
+        
+        
+        if request.FILES.get('image'):
+            if old_image:
+                if os.path.isfile(old_image.path):
+                    try:
+                        os.remove(old_image.path)
+                    except Exception as e:
+                        print(f"Error deleting old image: {e}")
+            insight.image = request.FILES.get('image')
+        
+        insight.save()
+        messages.success(request, 'Our Insight updated successfully!')
+        return redirect('our_insights_page')
+    return redirect('our_insights_page')
+
+
+@login_required
+def our_insights_delete(request, pk):
+    """Delete Our Insight"""
+    insight = get_object_or_404(OurInsights, pk=pk)
+    
+    if insight.image:
+        if os.path.isfile(insight.image.path):
+            try:
+                os.remove(insight.image.path)
+            except Exception as e:
+                print(f"Error deleting image: {e}")
+    
+    insight.delete()
+    messages.success(request, 'Our Insight deleted successfully!')
+    return redirect('our_insights_page')

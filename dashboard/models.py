@@ -498,6 +498,18 @@ class OurWorks(models.Model):
     def __str__(self):
         return self.title
 
+class OurWorksDigitalMarketing(models.Model):
+    meta_title = models.CharField(max_length=200, blank=True, null=True)
+    meta_description = models.TextField(blank=True, null=True)
+    meta_keywords = models.CharField(max_length=500, blank=True, null=True)
+    banner_image = models.ImageField(upload_to='ourworks_digital_marketing/', blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "Our Works Page SEO / Marketing"         
+
 # ===================== INSIGHTS SECTION ===========================>
 
 class Insights(models.Model):
@@ -506,7 +518,7 @@ class Insights(models.Model):
     subtitle = models.CharField(max_length=200, blank=True, null=True)
     description = models.TextField()
     banner_image = models.ImageField(upload_to='insights/')
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -529,14 +541,21 @@ class InsightsDigitalMarketing(models.Model):
     def __str__(self):
         return "Insights Page SEO / Marketing"      
 
-class OurWorksDigitalMarketing(models.Model):
-    meta_title = models.CharField(max_length=200, blank=True, null=True)
-    meta_description = models.TextField(blank=True, null=True)
-    meta_keywords = models.CharField(max_length=500, blank=True, null=True)
-    banner_image = models.ImageField(upload_to='ourworks_digital_marketing/', blank=True, null=True)
-    is_active = models.BooleanField(default=True)
+class OurInsights(models.Model):
+    """Our Insights Model"""
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    image = models.ImageField(upload_to='our_insights/')
+    insight_date = models.CharField(max_length=100, help_text="e.g., 6 months, 1 week, 1 year")
+    is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        verbose_name = "Our Insight"
+        verbose_name_plural = "Our Insights"
+        ordering = ['-created_at']
+
     def __str__(self):
-        return "Our Works Page SEO / Marketing"              
+        return self.title
+             

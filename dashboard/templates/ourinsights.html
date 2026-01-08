@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Insights Management - Diginext{% endblock %}
+{% block title %}Our Insights Management - Diginext{% endblock %}
 
 {% block content %}
 
@@ -11,12 +11,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Banners Management</h1>
+                    <h1 class="m-0">Our Insights Management</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Insights Banners</li>
+                        <li class="breadcrumb-item active">Our Insights</li>
                     </ol>
                 </div>
             </div>
@@ -46,36 +46,36 @@
                 <div class="col-lg-12">
                     <div class="small-box bg-primary">
                         <div class="inner">
-                            <h3>{{ insights_count }}</h3>
-                            <p>Total Banners</p>
+                            <h3>{{ our_insights_count }}</h3>
+                            <p>Total Our Insights</p>
                         </div>
                         <div class="icon">
-                            <i class="fas fa-lightbulb"></i>
+                            <i class="fas fa-chart-line"></i>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Insights Section -->
+            <!-- Our Insights Section -->
             <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">All Banners</h3>
+                            <h3 class="card-title">All Our Insights</h3>
                             <div class="card-tools">
                                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createInsightModal">
-                                    <i class="fas fa-plus"></i> Add Banners
+                                    <i class="fas fa-plus"></i> Add New Insight
                                 </button>
                             </div>
                         </div>
                         <div class="card-body">
-                            {% if insights %}
+                            {% if our_insights %}
                             <div class="row">
-                                {% for insight in insights %}
+                                {% for insight in our_insights %}
                                 <div class="col-md-4 col-sm-6 mb-4">
                                     <div class="card h-100">
-                                        {% if insight.banner_image %}
-                                        <img src="{{ insight.banner_image.url }}" class="card-img-top" alt="{{ insight.title }}" style="height: 200px; object-fit: cover;">
+                                        {% if insight.image %}
+                                        <img src="{{ insight.image.url }}" class="card-img-top" alt="{{ insight.title }}" style="height: 200px; object-fit: cover;">
                                         {% else %}
                                         <div class="bg-secondary text-center" style="height: 200px; display: flex; align-items: center; justify-content: center;">
                                             <i class="fas fa-image fa-3x text-white"></i>
@@ -83,10 +83,11 @@
                                         {% endif %}
                                         <div class="card-body">
                                             <h5 class="card-title">{{ insight.title }}</h5>
-                                            {% if insight.subtitle %}
-                                            <h6 class="card-text mb-2 text-muted">{{ insight.subtitle }}</h6>
-                                            {% endif %}
                                             <p class="card-text">{{ insight.description|truncatewords:20 }}</p>
+                                            <p class="mb-2">
+                                                <i class="fas fa-clock text-muted"></i> 
+                                                <strong>{{ insight.insight_date }}</strong>
+                                            </p>
                                             <p>
                                                 {% if insight.is_active %}
                                                 <span class="badge badge-success">Active</span>
@@ -97,10 +98,10 @@
                                             <small class="text-muted">{{ insight.created_at|date:"M d, Y" }}</small>
                                         </div>
                                         <div class="card-footer text-center">
-                                            <button type="button" class="btn btn-sm btn-info" onclick="editInsight({{ insight.pk }}, '{{ insight.title|escapejs }}', '{{ insight.subtitle|escapejs }}', '{{ insight.description|escapejs }}', {{ insight.is_active|lower }}, '{% if insight.banner_image %}{{ insight.banner_image.url }}{% endif %}')">
+                                            <button type="button" class="btn btn-sm btn-info" onclick="editInsight({{ insight.pk }}, '{{ insight.title|escapejs }}', '{{ insight.description|escapejs }}', '{{ insight.insight_date|escapejs }}', {{ insight.is_active|lower }}, '{% if insight.image %}{{ insight.image.url }}{% endif %}')">
                                                 <i class="fas fa-edit"></i> Edit
                                             </button>
-                                            <button type="button" class="btn btn-sm btn-danger" onclick="deleteInsight('{% url 'insights_delete' insight.pk %}')">
+                                            <button type="button" class="btn btn-sm btn-danger" onclick="deleteInsight('{% url 'our_insights_delete' insight.pk %}')">
                                                 <i class="fas fa-trash"></i> Delete
                                             </button>
                                         </div>
@@ -110,7 +111,7 @@
                             </div>
                             {% else %}
                             <div class="alert alert-info">
-                                <i class="fas fa-info-circle"></i> No insights found. Click "Add Insight" to create one.
+                                <i class="fas fa-info-circle"></i> No insights found. Click "Add New Insight" to create one.
                             </div>
                             {% endif %}
                         </div>
@@ -128,10 +129,10 @@
 <div class="modal fade" id="createInsightModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form method="POST" action="{% url 'insights_create' %}" enctype="multipart/form-data">
+            <form method="POST" action="{% url 'our_insights_create' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="modal-header bg-primary">
-                    <h5 class="modal-title">Create Insight</h5>
+                    <h5 class="modal-title">Create Our Insight</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span>
                     </button>
@@ -142,17 +143,18 @@
                         <input type="text" class="form-control" id="insight_title" name="title" placeholder="Enter title" required>
                     </div>
                     <div class="form-group">
-                        <label for="insight_subtitle">Subtitle</label>
-                        <input type="text" class="form-control" id="insight_subtitle" name="subtitle" placeholder="Enter subtitle">
-                    </div>
-                    <div class="form-group">
                         <label for="insight_description">Description <span class="text-danger">*</span></label>
                         <textarea class="form-control" id="insight_description" name="description" rows="5" placeholder="Enter description" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="insight_banner_image">Banner Image <span class="text-danger">*</span></label>
-                        <input type="file" class="form-control" id="insight_banner_image" name="banner_image" accept="image/*" required>
-                        <small class="form-text text-muted">Recommended size: 1200x600px</small>
+                        <label for="insight_date">Insight Date <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="insight_date" name="insight_date" placeholder="e.g., 6 months, 1 week, 2 years" required>
+                        <small class="form-text text-muted">Examples: "6 months", "1 week", "2 years", "3 days"</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="insight_image">Image <span class="text-danger">*</span></label>
+                        <input type="file" class="form-control" id="insight_image" name="image" accept="image/*" required>
+                        <small class="form-text text-muted">Recommended size: 800x600px</small>
                     </div>
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="insight_is_active" name="is_active">
@@ -175,7 +177,7 @@
             <form method="POST" id="editInsightForm" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="modal-header bg-info">
-                    <h5 class="modal-title">Edit Insight</h5>
+                    <h5 class="modal-title">Edit Our Insight</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span>
                     </button>
@@ -187,17 +189,18 @@
                         <input type="text" class="form-control" id="edit_insight_title" name="title" required>
                     </div>
                     <div class="form-group">
-                        <label for="edit_insight_subtitle">Subtitle</label>
-                        <input type="text" class="form-control" id="edit_insight_subtitle" name="subtitle">
-                    </div>
-                    <div class="form-group">
                         <label for="edit_insight_description">Description <span class="text-danger">*</span></label>
                         <textarea class="form-control" id="edit_insight_description" name="description" rows="5" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="edit_insight_banner_image">Banner Image (leave empty to keep current)</label>
-                        <input type="file" class="form-control" id="edit_insight_banner_image" name="banner_image" accept="image/*">
-                        <small class="form-text text-muted">Recommended size: 1200x600px</small>
+                        <label for="edit_insight_date">Insight Date <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="edit_insight_date" name="insight_date" required>
+                        <small class="form-text text-muted">Examples: "6 months", "1 week", "2 years", "3 days"</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_insight_image">Image (leave empty to keep current)</label>
+                        <input type="file" class="form-control" id="edit_insight_image" name="image" accept="image/*">
+                        <small class="form-text text-muted">Recommended size: 800x600px</small>
                     </div>
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="edit_insight_is_active" name="is_active">
@@ -215,23 +218,23 @@
 
 <script>
 // Edit Insight
-function editInsight(id, title, subtitle, description, isActive, imageUrl) {
-    document.getElementById('editInsightForm').action = "{% url 'insights_edit' 0 %}".replace('0', id);
+function editInsight(id, title, description, insightDate, isActive, imageUrl) {
+    document.getElementById('editInsightForm').action = "{% url 'our_insights_edit' 0 %}".replace('0', id);
     document.getElementById('edit_insight_title').value = title;
-    document.getElementById('edit_insight_subtitle').value = subtitle;
     document.getElementById('edit_insight_description').value = description;
+    document.getElementById('edit_insight_date').value = insightDate;
     document.getElementById('edit_insight_is_active').checked = isActive;
     
     const imagePreview = document.getElementById('edit_insight_image_preview');
     if (imageUrl) {
         imagePreview.innerHTML = `
             <div class="mb-3">
-                <label class="d-block mb-2"><strong>Current Banner Image:</strong></label>
-                <img src="${imageUrl}" alt="Current banner" class="img-thumbnail" style="max-width: 100%; max-height: 200px;">
+                <label class="d-block mb-2"><strong>Current Image:</strong></label>
+                <img src="${imageUrl}" alt="Current image" class="img-thumbnail" style="max-width: 100%; max-height: 200px;">
             </div>
         `;
     } else {
-        imagePreview.innerHTML = '<p class="text-muted mb-2">No banner image</p>';
+        imagePreview.innerHTML = '<p class="text-muted mb-2">No image</p>';
     }
     
     $('#editInsightModal').modal('show');

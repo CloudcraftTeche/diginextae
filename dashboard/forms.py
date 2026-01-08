@@ -3,7 +3,7 @@ from .models import (
     HomeBanner, HomeText1, HomeBanner2, HomeText2, Conncepts,
     HomeBanner3, HomeText3, HomeAvailableWorks, HomeBanner4, 
     Contents, HomeAboutUs, HomeQuestions, Question, Footer,
-    HomeDigitalMarketing,  HomeVision,Insights,InsightsDigitalMarketing,OurWorksDigitalMarketing,
+    HomeDigitalMarketing,  HomeVision,Insights,InsightsDigitalMarketing,OurWorksDigitalMarketing,OurInsights
 )
 
 
@@ -382,5 +382,17 @@ class OurWorksDigitalMarketingForm(forms.ModelForm):
             'meta_title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter meta title'}),
             'meta_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter meta description'}),
             'meta_keywords': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter meta keywords (comma separated)'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }        
+
+
+class OurInsightsForm(forms.ModelForm):
+    class Meta:
+        model = OurInsights
+        fields = ['title', 'description', 'image', 'insight_date', 'is_active']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter title'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Enter description'}),
+            'insight_date': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., 6 months, 1 week, 2 years'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }        

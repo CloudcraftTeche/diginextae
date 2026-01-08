@@ -22,6 +22,7 @@ from dashboard.models import (
     # INSIGHTS
     Insights,
     InsightsDigitalMarketing,
+    OurInsights,
 )
 
 
@@ -267,4 +268,9 @@ class InsightsSerializer(serializers.ModelSerializer):
 class InsightsDigitalMarketingSerializer(serializers.ModelSerializer):
     class Meta:
         model = InsightsDigitalMarketing
+        fields = '__all__'
+
+class OurInsightsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OurInsights
         fields = '__all__'
