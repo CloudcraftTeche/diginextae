@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse    
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -2460,3 +2461,49 @@ def our_insights_delete(request, pk):
     insight.delete()
     messages.success(request, 'Our Insight deleted successfully!')
     return redirect('our_insights_page')
+
+# ==================== CHALLENGE SECTION SAVE ====================
+@login_required
+def get_challenge_section(request, insight_id):
+    section = InsightChallengeSection.objects.filter(insight_id=insight_id).first()
+
+    if not section:
+        return JsonResponse({"exists": False})
+
+    return JsonResponse({
+        "exists": True,
+        "id": section.id,
+        "title": section.title,
+        "description": section.description,
+        "challenges": list(section.items.values_list("text", flat=True))
+    })
+
+@login_required
+def save_challenge_section(request, insight_id):
+    insight = get_object_or_404(OurInsights, id=insight_id)
+
+    if request.method == "POST":
+
+        title = request.POST.get("title")
+        description = request.POST.get("description")
+        challenges = request.POST.getlist("challenges[]")
+
+        # If editing, delete old section (or you can update instead)
+        InsightChallengeSection.objects.filter(insight=insight).delete()
+
+        # Create new section
+        section = InsightChallengeSection.objects.create(
+            insight=insight,
+            title=title,
+            description=description
+        )
+
+        # Save each challenge
+        for ch in challenges:
+            if ch.strip():
+                InsightChallengeItem.objects.create(
+                    section=section,
+                    text=ch
+                )
+
+        return redirect('our_insights_page')

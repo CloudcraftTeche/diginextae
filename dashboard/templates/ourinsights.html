@@ -98,6 +98,11 @@
                                             <small class="text-muted">{{ insight.created_at|date:"M d, Y" }}</small>
                                         </div>
                                         <div class="card-footer text-center">
+                                        <button type="button" class="btn btn-sm btn-info"
+                                            onclick="openChallenges({{ insight.id }})">
+                                            <i class="fas fa-list"></i> Challenges
+                                        </button>
+
                                          <button type="button"
                                                     class="btn btn-sm btn-info"
                                                     onclick="editInsight(
@@ -352,6 +357,63 @@
     </div>
 </div>
 
+<!-- challenges Modal -->
+<div class="modal fade" id="challengesModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+
+            <form method="POST" id="challengesForm">
+                {% csrf_token %}
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Manage Challenges</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="section_id" id="sectionId">
+
+                    <input type="hidden" name="insight_id" id="modalInsightId">
+
+                    <!-- Title -->
+                    <div class="mb-3">
+                        <label>Title</label>
+                        <input type="text" name="title" id="challengeTitle" class="form-control">
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label>Description</label>
+                        <textarea name="description" id="challengeDescription" class="form-control" rows="3"></textarea>
+                    </div>
+
+                    <!-- Challenges -->
+                    <label class="fw-bold">Challenges</label>
+
+                    <div id="challengeContainer"></div>
+
+                    <button type="button" class="btn btn-sm btn-success mt-2" onclick="addChallengeField()">
+                        + Add Challenge
+                    </button>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+
 
 
 <script>
@@ -402,6 +464,58 @@ function deleteInsight(url) {
         window.location.href = url;
     }
 }
+
+function openChallenges(insightId) {
+
+    fetch(`/dashboard/insights/${insightId}/challenges/get/`)
+    .then(res => res.json())
+    .then(data => {
+
+        document.getElementById("modalInsightId").value = insightId;
+        document.getElementById("challengeContainer").innerHTML = "";
+        document.getElementById("sectionId").value = "";
+
+        if (data.exists) {
+            document.getElementById("sectionId").value = data.id;
+            document.getElementById("challengeTitle").value = data.title;
+            document.getElementById("challengeDescription").value = data.description;
+
+            data.challenges.forEach(ch => addChallengeField(ch));
+        } else {
+            document.getElementById("challengesForm").reset();
+            addChallengeField();
+        }
+
+        document.getElementById("challengesForm").action =
+            `/dashboard/insights/${insightId}/challenges/`;
+
+        $('#challengesModal').modal('show');
+    });
+}
+
+function addChallengeField(value="") {
+    let div = document.createElement("div");
+    div.className = "d-flex mb-2";
+    div.innerHTML = `
+        <input type="text" name="challenges[]" class="form-control me-2" value="${value}">
+        <button type="button" class="btn btn-danger" onclick="this.parentElement.remove()">×</button>
+    `;
+    document.getElementById("challengeContainer").appendChild(div);
+}
+
+// function addChallengeField(value = "") {
+//     let container = document.getElementById("challengeContainer");
+
+//     let div = document.createElement("div");
+//     div.className = "d-flex mb-2";
+
+//     div.innerHTML = `
+//         <input type="text" name="challenges[]" class="form-control me-2" value="${value}" placeholder="Enter challenge">
+//         <button type="button" class="btn btn-danger" onclick="this.parentElement.remove()">×</button>
+//     `;
+
+//     container.appendChild(div);
+// }
 
 // Auto-hide alerts
 setTimeout(function() {

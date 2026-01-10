@@ -642,4 +642,36 @@ class OurInsights(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return self.title     
+        return self.title  
+
+
+# ================= Challenge Section for Our Insights ===========================>
+
+class InsightChallengeSection(models.Model):
+    insight = models.ForeignKey(
+        OurInsights,
+        on_delete=models.CASCADE,
+        related_name="challenge_sections"
+    )
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+   
+# ================= Challenge Items for Each Section ===========================>
+
+class InsightChallengeItem(models.Model):
+    section = models.ForeignKey(
+        InsightChallengeSection,
+        on_delete=models.CASCADE,
+        related_name="items"
+    )
+    text = models.CharField(max_length=255)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.text

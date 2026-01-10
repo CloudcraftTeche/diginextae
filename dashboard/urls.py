@@ -241,6 +241,11 @@ path('insights/', views.insights_page, name='insights_page'),
 path('insights/create/', views.insights_create, name='insights_create'),
 path('insights/<int:pk>/edit/', views.insights_edit, name='insights_edit'),
 path('insights/<int:pk>/delete/', views.insights_delete, name='insights_delete'),
+path("insights/<int:insight_id>/challenges/", views.save_challenge_section, name="save_challenge_section"),
+path("insights/<int:insight_id>/challenges/get/", views.get_challenge_section, name="get_challenge_section"),
+
+  
+
 
 # ==================== INSIGHTS DIGITAL MARKETING ====================
 path('insights/digital-marketing/', views.insights_digital_marketing_page, name='insights_digital_marketing_page'),
