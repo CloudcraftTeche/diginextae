@@ -479,14 +479,77 @@ class Expertise(models.Model):
 
 class OurWorks(models.Model):
     """Our Works Portfolio"""
+
+    # ================= Banner Section =================
+    banner_image = models.ImageField(
+        upload_to='our_works/banners/',
+        null=True,
+        blank=True
+    )
+    banner_heading = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True
+    )
+    banner_description = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    # ================= Work Details =================
     title = models.CharField(max_length=200)
     description = models.TextField()
     image = models.ImageField(upload_to='our_works/')
-    
-    # ForeignKey relationships (one industry and one expertise per work)
-    industry = models.ForeignKey(Industry, on_delete=models.SET_NULL, null=True, blank=True, related_name='works')
-    expertise = models.ForeignKey(Expertise, on_delete=models.SET_NULL, null=True, blank=True, related_name='works')
-    
+
+    industry = models.ForeignKey(
+        'Industry',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='works'
+    )
+    expertise = models.ForeignKey(
+        'Expertise',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='works'
+    )
+
+    language = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True
+    )
+    time_scale = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True
+    )
+    launch_date = models.CharField(   # text because form uses text
+        max_length=100,
+        null=True,
+        blank=True
+    )
+    system = models.CharField(
+        max_length=150,
+        null=True,
+        blank=True
+    )
+
+    # ================= Banner 2 =================
+    banner2_image = models.ImageField(
+        upload_to='our_works/banners/',
+        null=True,
+        blank=True
+    )
+    banner2_title = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True
+    )
+
+    # ================= Status & Timestamps =================
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -543,11 +606,33 @@ class InsightsDigitalMarketing(models.Model):
 
 class OurInsights(models.Model):
     """Our Insights Model"""
+
+    category = models.CharField(
+        max_length=150,
+        null=True,
+        blank=True,
+        help_text="e.g., Technology, Business, Marketing"
+    )
+
     title = models.CharField(max_length=200)
+
     description = models.TextField()
+
+    services = models.TextField(
+        null=True,
+        blank=True,
+        help_text="Comma separated values. Example: Web Development, SEO, UI/UX Design"
+    )
+
     image = models.ImageField(upload_to='our_insights/')
-    insight_date = models.CharField(max_length=100, help_text="e.g., 6 months, 1 week, 1 year")
+
+    insight_date = models.CharField(
+        max_length=100,
+        help_text="e.g., 6 months, 1 week, 1 year"
+    )
+
     is_active = models.BooleanField(default=False)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -557,5 +642,4 @@ class OurInsights(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return self.title
-             
+        return self.title     

@@ -98,9 +98,21 @@
                                             <small class="text-muted">{{ insight.created_at|date:"M d, Y" }}</small>
                                         </div>
                                         <div class="card-footer text-center">
-                                            <button type="button" class="btn btn-sm btn-info" onclick="editInsight({{ insight.pk }}, '{{ insight.title|escapejs }}', '{{ insight.description|escapejs }}', '{{ insight.insight_date|escapejs }}', {{ insight.is_active|lower }}, '{% if insight.image %}{{ insight.image.url }}{% endif %}')">
+                                         <button type="button"
+                                                    class="btn btn-sm btn-info"
+                                                    onclick="editInsight(
+                                                        {{ insight.pk }},
+                                                        '{{ insight.category|default_if_none:''|escapejs }}',
+                                                        '{{ insight.title|escapejs }}',
+                                                        '{{ insight.description|escapejs }}',
+                                                        '{{ insight.services|default_if_none:''|escapejs }}',
+                                                        '{{ insight.insight_date|escapejs }}',
+                                                        {{ insight.is_active|lower }},
+                                                        '{% if insight.image %}{{ insight.image.url }}{% endif %}'
+                                                    )">
                                                 <i class="fas fa-edit"></i> Edit
                                             </button>
+
                                             <button type="button" class="btn btn-sm btn-danger" onclick="deleteInsight('{% url 'our_insights_delete' insight.pk %}')">
                                                 <i class="fas fa-trash"></i> Delete
                                             </button>
@@ -131,44 +143,120 @@
         <div class="modal-content">
             <form method="POST" action="{% url 'our_insights_create' %}" enctype="multipart/form-data">
                 {% csrf_token %}
+
                 <div class="modal-header bg-primary">
                     <h5 class="modal-title">Create Our Insight</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span>
                     </button>
                 </div>
+
                 <div class="modal-body">
+
+                    <!-- Category -->
+                    <div class="form-group">
+                        <label for="insight_category">Category</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="insight_category"
+                            name="category"
+                            placeholder="Enter category">
+                    </div>
+
+                    <!-- Title -->
                     <div class="form-group">
                         <label for="insight_title">Title <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="insight_title" name="title" placeholder="Enter title" required>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="insight_title"
+                            name="title"
+                            placeholder="Enter title"
+                            required>
                     </div>
+
+                    <!-- Description -->
                     <div class="form-group">
                         <label for="insight_description">Description <span class="text-danger">*</span></label>
-                        <textarea class="form-control" id="insight_description" name="description" rows="5" placeholder="Enter description" required></textarea>
+                        <textarea
+                            class="form-control"
+                            id="insight_description"
+                            name="description"
+                            rows="5"
+                            placeholder="Enter description"
+                            required></textarea>
                     </div>
+
+                    <!-- Services (comma separated) -->
+                    <div class="form-group">
+                        <label for="insight_services">Services</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="insight_services"
+                            name="services"
+                            placeholder="e.g., Technical SEO, Content Strategy, Local SEO">
+                        <small class="form-text text-muted">
+                            Enter services separated by commas.  
+                            Example: <em>Technical SEO, Content Strategy, Local SEO</em>
+                        </small>
+                    </div>
+
+                    <!-- Insight Date -->
                     <div class="form-group">
                         <label for="insight_date">Insight Date <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="insight_date" name="insight_date" placeholder="e.g., 6 months, 1 week, 2 years" required>
-                        <small class="form-text text-muted">Examples: "6 months", "1 week", "2 years", "3 days"</small>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="insight_date"
+                            name="insight_date"
+                            placeholder="e.g., 6 months, 1 week, 2 years"
+                            required>
+                        <small class="form-text text-muted">
+                            Examples: "6 months", "1 week", "2 years", "3 days"
+                        </small>
                     </div>
+
+                    <!-- Image -->
                     <div class="form-group">
                         <label for="insight_image">Image <span class="text-danger">*</span></label>
-                        <input type="file" class="form-control" id="insight_image" name="image" accept="image/*" required>
-                        <small class="form-text text-muted">Recommended size: 800x600px</small>
+                        <input
+                            type="file"
+                            class="form-control"
+                            id="insight_image"
+                            name="image"
+                            accept="image/*"
+                            required>
+                        <small class="form-text text-muted">
+                            Recommended size: 800×600px
+                        </small>
                     </div>
+
+                    <!-- Active -->
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="insight_is_active" name="is_active">
-                        <label class="form-check-label" for="insight_is_active">Active</label>
+                        <input
+                            type="checkbox"
+                            class="form-check-input"
+                            id="insight_is_active"
+                            name="is_active">
+                        <label class="form-check-label" for="insight_is_active">
+                            Active
+                        </label>
                     </div>
+
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Create Insight</button>
                 </div>
+
             </form>
         </div>
     </div>
 </div>
+
 
 <!-- Edit Insight Modal -->
 <div class="modal fade" id="editInsightModal" tabindex="-1">
@@ -182,31 +270,79 @@
                         <span>&times;</span>
                     </button>
                 </div>
+
                 <div class="modal-body">
                     <div id="edit_insight_image_preview"></div>
+
+                    <!-- Category (Nullable) -->
+                    <div class="form-group">
+                        <label for="edit_insight_category">Category</label>
+                        <input type="text"
+                               class="form-control"
+                               id="edit_insight_category"
+                               name="category"
+                               placeholder="e.g. Technical SEO, Content Strategy, Local SEO">
+                    </div>
+
                     <div class="form-group">
                         <label for="edit_insight_title">Title <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="edit_insight_title" name="title" required>
                     </div>
+
                     <div class="form-group">
                         <label for="edit_insight_description">Description <span class="text-danger">*</span></label>
-                        <textarea class="form-control" id="edit_insight_description" name="description" rows="5" required></textarea>
+                        <textarea class="form-control"
+                                  id="edit_insight_description"
+                                  name="description"
+                                  rows="5"
+                                  required></textarea>
                     </div>
+
+                    <!-- Services (Comma separated) -->
+                    <div class="form-group">
+                        <label for="edit_insight_services">Services</label>
+                        <input type="text"
+                               class="form-control"
+                               id="edit_insight_services"
+                               name="services"
+                               placeholder="SEO Audit, Keyword Research, Local SEO">
+                        <small class="form-text text-muted">
+                            Enter services separated by commas
+                            (e.g. SEO Audit, Content Marketing, Local SEO)
+                        </small>
+                    </div>
+
                     <div class="form-group">
                         <label for="edit_insight_date">Insight Date <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="edit_insight_date" name="insight_date" required>
-                        <small class="form-text text-muted">Examples: "6 months", "1 week", "2 years", "3 days"</small>
+                        <input type="text"
+                               class="form-control"
+                               id="edit_insight_date"
+                               name="insight_date"
+                               required>
+                        <small class="form-text text-muted">
+                            Examples: "6 months", "1 week", "2 years", "3 days"
+                        </small>
                     </div>
+
                     <div class="form-group">
                         <label for="edit_insight_image">Image (leave empty to keep current)</label>
-                        <input type="file" class="form-control" id="edit_insight_image" name="image" accept="image/*">
+                        <input type="file"
+                               class="form-control"
+                               id="edit_insight_image"
+                               name="image"
+                               accept="image/*">
                         <small class="form-text text-muted">Recommended size: 800x600px</small>
                     </div>
+
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="edit_insight_is_active" name="is_active">
+                        <input type="checkbox"
+                               class="form-check-input"
+                               id="edit_insight_is_active"
+                               name="is_active">
                         <label class="form-check-label" for="edit_insight_is_active">Active</label>
                     </div>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-info">Update Insight</button>
@@ -216,27 +352,47 @@
     </div>
 </div>
 
+
+
 <script>
 // Edit Insight
-function editInsight(id, title, description, insightDate, isActive, imageUrl) {
-    document.getElementById('editInsightForm').action = "{% url 'our_insights_edit' 0 %}".replace('0', id);
+function editInsight(
+    id,
+    category,
+    title,
+    description,
+    services,
+    insightDate,
+    isActive,
+    imageUrl
+) {
+    document.getElementById('editInsightForm').action =
+        "{% url 'our_insights_edit' 0 %}".replace('0', id);
+
+    // Set values
+    document.getElementById('edit_insight_category').value = category || '';
     document.getElementById('edit_insight_title').value = title;
     document.getElementById('edit_insight_description').value = description;
+    document.getElementById('edit_insight_services').value = services || '';
     document.getElementById('edit_insight_date').value = insightDate;
     document.getElementById('edit_insight_is_active').checked = isActive;
-    
+
+    // Image preview
     const imagePreview = document.getElementById('edit_insight_image_preview');
     if (imageUrl) {
         imagePreview.innerHTML = `
             <div class="mb-3">
                 <label class="d-block mb-2"><strong>Current Image:</strong></label>
-                <img src="${imageUrl}" alt="Current image" class="img-thumbnail" style="max-width: 100%; max-height: 200px;">
+                <img src="${imageUrl}"
+                     alt="Current image"
+                     class="img-thumbnail"
+                     style="max-width: 100%; max-height: 200px;">
             </div>
         `;
     } else {
         imagePreview.innerHTML = '<p class="text-muted mb-2">No image</p>';
     }
-    
+
     $('#editInsightModal').modal('show');
 }
 

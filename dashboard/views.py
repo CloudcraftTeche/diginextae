@@ -1980,27 +1980,62 @@ def ourwork_page(request):
 def ourwork_create(request):
     """Create Our Work"""
     if request.method == 'POST':
+
+        # ================= Banner Section =================
+        banner_image = request.FILES.get('banner_image')
+        banner_heading = request.POST.get('banner_heading')
+        banner_description = request.POST.get('banner_description')
+
+        # ================= Work Section =================
         title = request.POST.get('title')
         description = request.POST.get('description')
         image = request.FILES.get('image')
+
         industry_id = request.POST.get('industry')
         expertise_id = request.POST.get('expertise')
+
+        language = request.POST.get('language')
+        time_scale = request.POST.get('time_scale')
+        launch_date = request.POST.get('launch_date')
+        system = request.POST.get('system')
+
         is_active = request.POST.get('is_active') == 'on'
-        
-        # Get Industry and Expertise objects
+
+        # ================= Banner 2 Section =================
+        banner2_image = request.FILES.get('banner2_image')
+        banner2_title = request.POST.get('banner2_title')
+
+        # ================= Foreign Keys =================
         industry = get_object_or_404(Industry, pk=industry_id) if industry_id else None
-        expertise_obj = get_object_or_404(Expertise, pk=expertise_id) if expertise_id else None
-        
+        expertise = get_object_or_404(Expertise, pk=expertise_id) if expertise_id else None
+
+        # ================= Save Data =================
         OurWorks.objects.create(
+            banner_image=banner_image,
+            banner_heading=banner_heading,
+            banner_description=banner_description,
+
             title=title,
             description=description,
             image=image,
+
             industry=industry,
-            expertise=expertise_obj,
+            expertise=expertise,
+
+            language=language,
+            time_scale=time_scale,
+            launch_date=launch_date,
+            system=system,
+
+            banner2_image=banner2_image,
+            banner2_title=banner2_title,
+
             is_active=is_active
         )
+
         messages.success(request, 'Our Work created successfully!')
         return redirect('ourwork_page')
+
     return redirect('ourwork_page')
 
 
@@ -2008,31 +2043,66 @@ def ourwork_create(request):
 def ourwork_edit(request, pk):
     """Edit Our Work"""
     work = get_object_or_404(OurWorks, pk=pk)
-    old_image = work.image
-    
+
+    # Store old images
+    old_work_image = work.image
+    old_banner_image = work.banner_image
+    old_banner2_image = work.banner2_image
+
     if request.method == 'POST':
+
+        # ================= Banner Section =================
+        work.banner_heading = request.POST.get('banner_heading')
+        work.banner_description = request.POST.get('banner_description')
+
+        if request.FILES.get('banner_image'):
+            if old_banner_image and os.path.isfile(old_banner_image.path):
+                try:
+                    os.remove(old_banner_image.path)
+                except Exception as e:
+                    print(f"Banner image delete error: {e}")
+            work.banner_image = request.FILES.get('banner_image')
+
+        # ================= Work Section =================
         work.title = request.POST.get('title')
         work.description = request.POST.get('description')
         work.is_active = request.POST.get('is_active') == 'on'
-        
+
         industry_id = request.POST.get('industry')
         expertise_id = request.POST.get('expertise')
-        
+
         work.industry = get_object_or_404(Industry, pk=industry_id) if industry_id else None
         work.expertise = get_object_or_404(Expertise, pk=expertise_id) if expertise_id else None
-        
+
+        work.language = request.POST.get('language')
+        work.time_scale = request.POST.get('time_scale')
+        work.launch_date = request.POST.get('launch_date')
+        work.system = request.POST.get('system')
+
         if request.FILES.get('image'):
-            if old_image:
-                if os.path.isfile(old_image.path):
-                    try:
-                        os.remove(old_image.path)
-                    except Exception as e:
-                        print(f"Error deleting old image: {e}")
+            if old_work_image and os.path.isfile(old_work_image.path):
+                try:
+                    os.remove(old_work_image.path)
+                except Exception as e:
+                    print(f"Work image delete error: {e}")
             work.image = request.FILES.get('image')
-        
+
+        # ================= Banner 2 Section =================
+        work.banner2_title = request.POST.get('banner2_title')
+
+        if request.FILES.get('banner2_image'):
+            if old_banner2_image and os.path.isfile(old_banner2_image.path):
+                try:
+                    os.remove(old_banner2_image.path)
+                except Exception as e:
+                    print(f"Banner2 image delete error: {e}")
+            work.banner2_image = request.FILES.get('banner2_image')
+
+        # ================= Save =================
         work.save()
         messages.success(request, 'Our Work updated successfully!')
         return redirect('ourwork_page')
+
     return redirect('ourwork_page')
 
 
@@ -2193,23 +2263,27 @@ def insights_page(request):
 def insights_create(request):
     """Create Insight"""
     if request.method == 'POST':
+        category = request.POST.get('category')  # nullable
         title = request.POST.get('title')
-        subtitle = request.POST.get('subtitle')
         description = request.POST.get('description')
-        banner_image = request.FILES.get('banner_image')
+        services = request.POST.get('services')  # comma separated
+        insight_date = request.POST.get('insight_date')
+        image = request.FILES.get('image')
         is_active = request.POST.get('is_active') == 'on'
-        if is_active:
-            Insights.objects.all().update(is_active=False)
-        
-        Insights.objects.create(
+
+        OurInsights.objects.create(
+            category=category if category else None,
             title=title,
-            subtitle=subtitle,
             description=description,
-            banner_image=banner_image,
+            services=services,
+            insight_date=insight_date,
+            image=image,
             is_active=is_active
         )
+
         messages.success(request, 'Insight created successfully!')
         return redirect('insights_page')
+
     return redirect('insights_page')
 
 
@@ -2318,16 +2392,20 @@ def our_insights_page(request):
 def our_insights_create(request):
     """Create Our Insight"""
     if request.method == 'POST':
+        category = request.POST.get('category')
         title = request.POST.get('title')
         description = request.POST.get('description')
+        services = request.POST.get('services')
         image = request.FILES.get('image')
         insight_date = request.POST.get('insight_date')
         is_active = request.POST.get('is_active') == 'on'
         
         
         OurInsights.objects.create(
+            category=category,
             title=title,
             description=description,
+            services=services,
             image=image,
             insight_date=insight_date,
             is_active=is_active
@@ -2344,8 +2422,10 @@ def our_insights_edit(request, pk):
     old_image = insight.image
     
     if request.method == 'POST':
+        insight.category = request.POST.get('category')
         insight.title = request.POST.get('title')
         insight.description = request.POST.get('description')
+        insight.services = request.POST.get('services')
         insight.insight_date = request.POST.get('insight_date')
         insight.is_active = request.POST.get('is_active') == 'on'
         

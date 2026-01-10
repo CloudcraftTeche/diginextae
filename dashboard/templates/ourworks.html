@@ -120,9 +120,38 @@
                                             <small class="text-muted">{{ work.created_at|date:"M d, Y" }}</small>
                                         </div>
                                         <div class="card-footer text-center">
-                                            <button type="button" class="btn btn-sm btn-info" onclick="editWork({{ work.pk }}, '{{ work.title|escapejs }}', '{{ work.description|escapejs }}', {% if work.industry %}{{ work.industry.pk }}{% else %}null{% endif %}, {% if work.expertise %}{{ work.expertise.pk }}{% else %}null{% endif %}, {{ work.is_active|lower }}, '{% if work.image %}{{ work.image.url }}{% endif %}')">
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm btn-info"
+                                                onclick="editWork(
+                                                    {{ work.pk }},
+
+                                                    '{{ work.title|escapejs }}',
+                                                    '{{ work.description|escapejs }}',
+
+                                                    {% if work.industry %}{{ work.industry.pk }}{% else %}null{% endif %},
+                                                    {% if work.expertise %}{{ work.expertise.pk }}{% else %}null{% endif %},
+
+                                                    {{ work.is_active|yesno:"true,false" }},
+
+                                                    '{% if work.image %}{{ work.image.url }}{% else %}{% endif %}',
+
+                                                    '{% if work.banner_image %}{{ work.banner_image.url }}{% else %}{% endif %}',
+                                                    '{{ work.banner_heading|default_if_none:""|escapejs }}',
+                                                    '{{ work.banner_description|default_if_none:""|escapejs }}',
+
+                                                    '{{ work.language|default_if_none:""|escapejs }}',
+                                                    '{{ work.time_scale|default_if_none:""|escapejs }}',
+                                                    '{{ work.launch_date|default_if_none:""|escapejs }}',
+                                                    '{{ work.system|default_if_none:""|escapejs }}',
+
+                                                    '{% if work.banner2_image %}{{ work.banner2_image.url }}{% else %}{% endif %}',
+                                                    '{{ work.banner2_title|default_if_none:""|escapejs }}'
+                                                )"
+                                            >
                                                 <i class="fas fa-edit"></i> Edit
                                             </button>
+
                                             <button type="button" class="btn btn-sm btn-danger" onclick="deleteWork('{% url 'ourwork_delete' work.pk %}')">
                                                 <i class="fas fa-trash"></i> Delete
                                             </button>
@@ -228,56 +257,134 @@
         <div class="modal-content">
             <form method="POST" action="{% url 'ourwork_create' %}" enctype="multipart/form-data">
                 {% csrf_token %}
+
                 <div class="modal-header bg-info">
                     <h5 class="modal-title">Create Our Work</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span>
                     </button>
                 </div>
+
                 <div class="modal-body">
+                    <!-- ================= BANNER SECTION ================= -->
+
+                    <h5 class="text-info mb-3">Banner Section</h5>
+
+                    <div class="form-group">
+                        <label>Banner Image</label>
+                        <input type="file" class="form-control" name="banner_image" accept="image/*">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Banner Heading</label>
+                        <input type="text" class="form-control" name="banner_heading">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Banner Description</label>
+                        <textarea class="form-control" name="banner_description" rows="3"></textarea>
+                    </div>
+                    <hr>
+
+                    <!-- ================= OUR WORK DETAILS ================= -->
+                     <h5 class="text-info mb-3">Work</h5>
                     <div class="form-group">
                         <label for="work_title">Title <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="work_title" name="title" required>
                     </div>
+
                     <div class="form-group">
                         <label for="work_description">Description <span class="text-danger">*</span></label>
                         <textarea class="form-control" id="work_description" name="description" rows="4" required></textarea>
                     </div>
+
                     <div class="form-group">
                         <label for="work_image">Image <span class="text-danger">*</span></label>
                         <input type="file" class="form-control" id="work_image" name="image" accept="image/*" required>
                     </div>
+
                     <div class="form-group">
                         <label for="work_industry">Industry</label>
                         <select class="form-control" id="work_industry" name="industry">
                             <option value="">-- Select Industry --</option>
                             {% for industry in industries %}
-                            <option value="{{ industry.pk }}">{{ industry.name }}</option>
+                                <option value="{{ industry.pk }}">{{ industry.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
+
                     <div class="form-group">
                         <label for="work_expertise">Expertise</label>
                         <select class="form-control" id="work_expertise" name="expertise">
                             <option value="">-- Select Expertise --</option>
                             {% for exp in expertise %}
-                            <option value="{{ exp.pk }}">{{ exp.name }}</option>
+                                <option value="{{ exp.pk }}">{{ exp.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="form-check">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Language</label>
+                                <input type="text" class="form-control" name="language">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Time Scale</label>
+                                <input type="text" class="form-control" name="time_scale">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Launch Date</label>
+                                <input type="text" class="form-control" name="launch_date">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>System</label>
+                                <input type="text" class="form-control" name="system">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= BANNER 2 SECTION ================= -->
+                    <hr>
+                    <h5 class="text-info mb-3">Banner 2 Section</h5>
+
+                    <div class="form-group">
+                        <label>Banner 2 Image</label>
+                        <input type="file" class="form-control" name="banner2_image" accept="image/*">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Banner 2 Title</label>
+                        <input type="text" class="form-control" name="banner2_title">
+                    </div>
+                                    
+                    <div class="form-check mb-4">
                         <input type="checkbox" class="form-check-input" id="work_is_active" name="is_active" checked>
                         <label class="form-check-label" for="work_is_active">Active</label>
                     </div>
+
                 </div>
+
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-info">Create Work</button>
                 </div>
+
             </form>
         </div>
     </div>
 </div>
+
 
 <!-- Edit Work Modal -->
 <div class="modal fade" id="editWorkModal" tabindex="-1">
@@ -285,57 +392,142 @@
         <div class="modal-content">
             <form method="POST" id="editWorkForm" enctype="multipart/form-data">
                 {% csrf_token %}
+
                 <div class="modal-header bg-info">
                     <h5 class="modal-title">Edit Our Work</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span>
                     </button>
                 </div>
+
                 <div class="modal-body">
-                    <div id="edit_work_image_preview"></div>
+
+                    <!-- ================= BANNER SECTION ================= -->
+                    <h5 class="text-info mb-3">Banner Section</h5>
+
+                    <div id="edit_banner_image_preview" class="mb-2"></div>
+
                     <div class="form-group">
-                        <label for="edit_work_title">Title <span class="text-danger">*</span></label>
+                        <label>Banner Image (leave empty to keep current)</label>
+                        <input type="file" class="form-control" name="banner_image" accept="image/*">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Banner Heading</label>
+                        <input type="text" class="form-control" name="banner_heading" id="edit_banner_heading">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Banner Description</label>
+                        <textarea class="form-control" name="banner_description" id="edit_banner_description" rows="3"></textarea>
+                    </div>
+
+                    <hr>
+
+                    <!-- ================= WORK SECTION ================= -->
+                    <h5 class="text-info mb-3">Work</h5>
+
+                    <div id="edit_work_image_preview" class="mb-2"></div>
+
+                    <div class="form-group">
+                        <label>Title <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="edit_work_title" name="title" required>
                     </div>
+
                     <div class="form-group">
-                        <label for="edit_work_description">Description <span class="text-danger">*</span></label>
+                        <label>Description <span class="text-danger">*</span></label>
                         <textarea class="form-control" id="edit_work_description" name="description" rows="4" required></textarea>
                     </div>
+
                     <div class="form-group">
-                        <label for="edit_work_image">Image (leave empty to keep current)</label>
-                        <input type="file" class="form-control" id="edit_work_image" name="image" accept="image/*">
+                        <label>Image (leave empty to keep current)</label>
+                        <input type="file" class="form-control" name="image" accept="image/*">
                     </div>
+
                     <div class="form-group">
-                        <label for="edit_work_industry">Industry</label>
+                        <label>Industry</label>
                         <select class="form-control" id="edit_work_industry" name="industry">
                             <option value="">-- Select Industry --</option>
                             {% for industry in industries %}
-                            <option value="{{ industry.pk }}">{{ industry.name }}</option>
+                                <option value="{{ industry.pk }}">{{ industry.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
+
                     <div class="form-group">
-                        <label for="edit_work_expertise">Expertise</label>
+                        <label>Expertise</label>
                         <select class="form-control" id="edit_work_expertise" name="expertise">
                             <option value="">-- Select Expertise --</option>
                             {% for exp in expertise %}
-                            <option value="{{ exp.pk }}">{{ exp.name }}</option>
+                                <option value="{{ exp.pk }}">{{ exp.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="form-check">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Language</label>
+                                <input type="text" class="form-control" name="language" id="edit_language">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Time Scale</label>
+                                <input type="text" class="form-control" name="time_scale" id="edit_time_scale">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Launch Date</label>
+                                <input type="text" class="form-control" name="launch_date" id="edit_launch_date">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>System</label>
+                                <input type="text" class="form-control" name="system" id="edit_system">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= BANNER 2 SECTION ================= -->
+                    <hr>
+                    <h5 class="text-info mb-3">Banner 2 Section</h5>
+
+                    <div id="edit_banner2_image_preview" class="mb-2"></div>
+
+                    <div class="form-group">
+                        <label>Banner 2 Image (leave empty to keep current)</label>
+                        <input type="file" class="form-control" name="banner2_image" accept="image/*">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Banner 2 Title</label>
+                        <input type="text" class="form-control" name="banner2_title" id="edit_banner2_title">
+                    </div>
+
+                    <!-- ================= STATUS ================= -->
+                    <div class="form-check mt-3">
                         <input type="checkbox" class="form-check-input" id="edit_work_is_active" name="is_active">
                         <label class="form-check-label" for="edit_work_is_active">Active</label>
                     </div>
+
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-info">Update Work</button>
                 </div>
+
             </form>
         </div>
     </div>
 </div>
+
 
 <!-- Create Industry Modal -->
 <div class="modal fade" id="createIndustryModal" tabindex="-1">
@@ -463,23 +655,76 @@
 
 <script>
 // Edit Work
-function editWork(id, title, description, industryId, expertiseId, isActive, imageUrl) {
-    document.getElementById('editWorkForm').action = "{% url 'ourwork_edit' 0 %}".replace('0', id);
-    document.getElementById('edit_work_title').value = title;
-    document.getElementById('edit_work_description').value = description;
-    document.getElementById('edit_work_industry').value = industryId || '';
-    document.getElementById('edit_work_expertise').value = expertiseId || '';
-    document.getElementById('edit_work_is_active').checked = isActive;
-    
-    const imagePreview = document.getElementById('edit_work_image_preview');
-    if (imageUrl) {
-        imagePreview.innerHTML = `<div class="mb-3"><img src="${imageUrl}" class="img-thumbnail" style="max-width: 200px;"></div>`;
-    } else {
-        imagePreview.innerHTML = '';
+    function editWork(
+        id,
+        title,
+        description,
+        industryId,
+        expertiseId,
+        isActive,
+
+        // Work image
+        imageUrl,
+
+        // Banner section
+        bannerImageUrl,
+        bannerHeading,
+        bannerDescription,
+
+        // Extra details
+        language,
+        timeScale,
+        launchDate,
+        system,
+
+        // Banner 2
+        banner2ImageUrl,
+        banner2Title
+    ) {
+        // Set form action
+        document.getElementById('editWorkForm').action =
+            "{% url 'ourwork_edit' 0 %}".replace('0', id);
+
+        // ================= Work =================
+        document.getElementById('edit_work_title').value = title || '';
+        document.getElementById('edit_work_description').value = description || '';
+        document.getElementById('edit_work_industry').value = industryId || '';
+        document.getElementById('edit_work_expertise').value = expertiseId || '';
+        document.getElementById('edit_work_is_active').checked = !!isActive;
+
+        // Work image preview
+        const workImagePreview = document.getElementById('edit_work_image_preview');
+        workImagePreview.innerHTML = imageUrl
+            ? `<img src="${imageUrl}" class="img-thumbnail mb-3" style="max-width:200px;">`
+            : '';
+
+        // ================= Banner =================
+        document.getElementById('edit_banner_heading').value = bannerHeading || '';
+        document.getElementById('edit_banner_description').value = bannerDescription || '';
+
+        const bannerPreview = document.getElementById('edit_banner_image_preview');
+        bannerPreview.innerHTML = bannerImageUrl
+            ? `<img src="${bannerImageUrl}" class="img-thumbnail mb-3" style="max-width:200px;">`
+            : '';
+
+        // ================= Extra Fields =================
+        document.getElementById('edit_language').value = language || '';
+        document.getElementById('edit_time_scale').value = timeScale || '';
+        document.getElementById('edit_launch_date').value = launchDate || '';
+        document.getElementById('edit_system').value = system || '';
+
+        // ================= Banner 2 =================
+        document.getElementById('edit_banner2_title').value = banner2Title || '';
+
+        const banner2Preview = document.getElementById('edit_banner2_image_preview');
+        banner2Preview.innerHTML = banner2ImageUrl
+            ? `<img src="${banner2ImageUrl}" class="img-thumbnail mb-3" style="max-width:200px;">`
+            : '';
+
+        // Show modal
+        $('#editWorkModal').modal('show');
     }
-    
-    $('#editWorkModal').modal('show');
-}
+
 
 function deleteWork(url) {
     if (confirm('Are you sure you want to delete this work?')) {
