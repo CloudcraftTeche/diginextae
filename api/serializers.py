@@ -6,7 +6,12 @@ from dashboard.models import (
     Contents, HomeAboutUs, HomeQuestions, Question, Footer,
     HomeDigitalMarketing,  ContactSA, Leads, ContactDigitalMarketing,
     HomeVision,HomeFeatures,
-
+    # ABOUT US
+    AboutUsBanner1,
+    AboutUsText1,
+    AboutUsMission,
+    AboutUsText2,
+    AboutUsDigitalMarketing,
     #  SERVICES
     Service, ServiceName, Subservice, ServiceDigitalMarketing,
 
@@ -131,7 +136,35 @@ class HomeFeaturesSerializer(serializers.ModelSerializer):
 
 
 
+#===========  ABOUT US  SERIALIZERS =============>
+class AboutUsBanner1Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = AboutUsBanner1
+        fields = '__all__'
 
+
+class AboutUsText1Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = AboutUsText1
+        fields = '__all__'
+
+
+class AboutUsMissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AboutUsMission
+        fields = '__all__'
+
+
+class AboutUsText2Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = AboutUsText2
+        fields = '__all__'
+
+
+class AboutUsDigitalMarketingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AboutUsDigitalMarketing
+        fields = '__all__'
 
 # ========== contacts ======================>
 

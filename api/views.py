@@ -6,7 +6,16 @@ from rest_framework import status
 from dashboard.models import (
     HomeBanner, HomeText1, HomeBanner2, HomeText2, Conncepts,
     HomeBanner3, HomeText3, HomeAvailableWorks, HomeBanner4,
-    Contents, HomeAboutUs, HomeQuestions, Question, Footer,
+    Contents, HomeAboutUs, HomeQuestions, Question, Footer,HomeVision,
+    HomeFeatures,
+
+    # ABOUT US
+    AboutUsBanner1,
+    AboutUsText1,
+    AboutUsMission,
+    AboutUsText2,
+    AboutUsDigitalMarketing,
+
     
     # contacts
     HomeDigitalMarketing, ContactSA, Leads, ContactDigitalMarketing,
@@ -14,7 +23,16 @@ from dashboard.models import (
 
     Service, ServiceName, Subservice, ServiceDigitalMarketing,
     #  solution 
-    Subsolutions, Solutions, SolutionsName, solutionsDigitalMarketing
+    Subsolutions, Solutions, SolutionsName, solutionsDigitalMarketing,
+    # OUR WORKS
+    Industry,
+    Expertise,
+    OurWorks,
+    OurWorksDigitalMarketing,
+    # INSIGHTS
+    Insights,
+    InsightsDigitalMarketing,
+    OurInsights,
 )
 from .serializers import (
     HomeBannerSerializer, HomeText1Serializer, HomeBanner2Serializer,
@@ -22,18 +40,36 @@ from .serializers import (
     HomeText3Serializer, HomeAvailableWorksSerializer, HomeBanner4Serializer,
     ContentsSerializer, HomeAboutUsSerializer, HomeQuestionsSerializer,
     QuestionSerializer, FooterSerializer, HomeDigitalMarketingSerializer,
+    HomeVisionSerializer,
+    HomeFeaturesSerializer,
 
 
       ContactSASerializer, 
     LeadsSerializer, 
     ContactDigitalMarketingSerializer,
-
+    # ABOUT US
+    AboutUsBanner1Serializer,
+    AboutUsText1Serializer,
+    AboutUsMissionSerializer,
+    AboutUsText2Serializer,
+    AboutUsDigitalMarketingSerializer,
     # SERVICES
 
     ServiceSerializer, ServiceNameSerializer, SubserviceSerializer, ServiceDigitalSerializer,
 
     # solution 
-    SubsolutionsSerializer, SolutionsSerializer, SolutionsNameSerializer, SolutionsDigitalSerializer
+    SubsolutionsSerializer, SolutionsSerializer, SolutionsNameSerializer, SolutionsDigitalSerializer,
+
+    # OUR WORKS
+    IndustrySerializer,
+    ExpertiseSerializer,
+    OurWorksSerializer,
+    OurWorksDigitalMarketingSerializer,
+    # INSIGHTS
+    InsightsSerializer,
+    InsightsDigitalMarketingSerializer,
+    OurInsightsSerializer,
+
 )
 
 
@@ -280,15 +316,244 @@ class HomeDigitalMarketingListView(APIView):
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+class HomeVisionListView(APIView):
+    """GET: Retrieve all active Home Vision records"""
+    def get(self, request):
+        try:
+            visions = HomeVision.objects.filter(is_active=True)
+            serializer = HomeVisionSerializer(visions, many=True)
+            return custom_response(
+                success=True,
+                message="Home visions retrieved successfully",
+                data=serializer.data
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving home visions: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
+class HomeFeaturesListView(APIView):
+    """GET: Retrieve all active Home Features records"""
+    def get(self, request):
+        try:
+            features = HomeFeatures.objects.filter(is_active=True)
+            serializer = HomeFeaturesSerializer(features, many=True)
+            return custom_response(
+                success=True,
+                message="Home features retrieved successfully",
+                data=serializer.data
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving home features: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+# ==================== ABOUT US SECTION ====================
+
+class AboutUsBanner1ListView(APIView):
+    """GET: Retrieve all active About Us Banner 1 records"""
+    def get(self, request):
+        try:
+            banners = AboutUsBanner1.objects.filter(is_active=True)
+            serializer = AboutUsBanner1Serializer(banners, many=True)
+            return custom_response(
+                success=True,
+                message="About us banners retrieved successfully",
+                data=serializer.data
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving about us banners: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
+class AboutUsBanner1DetailView(APIView):
+    """GET: Retrieve a single About Us Banner by ID"""
+    def get(self, request, pk):
+        try:
+            banner = AboutUsBanner1.objects.get(pk=pk, is_active=True)
+            serializer = AboutUsBanner1Serializer(banner)
+            return custom_response(
+                success=True,
+                message="About us banner retrieved successfully",
+                data=serializer.data
+            )
+        except AboutUsBanner1.DoesNotExist:
+            return custom_response(
+                success=False,
+                message="About us banner not found",
+                status_code=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving about us banner: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
+class AboutUsText1ListView(APIView):
+    """GET: Retrieve all active About Us Text 1 records"""
+    def get(self, request):
+        try:
+            texts = AboutUsText1.objects.filter(is_active=True)
+            serializer = AboutUsText1Serializer(texts, many=True)
+            return custom_response(
+                success=True,
+                message="About us text 1 retrieved successfully",
+                data=serializer.data
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving about us text 1: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
+class AboutUsText1DetailView(APIView):
+    """GET: Retrieve a single About Us Text 1 by ID"""
+    def get(self, request, pk):
+        try:
+            text = AboutUsText1.objects.get(pk=pk, is_active=True)
+            serializer = AboutUsText1Serializer(text)
+            return custom_response(
+                success=True,
+                message="About us text 1 retrieved successfully",
+                data=serializer.data
+            )
+        except AboutUsText1.DoesNotExist:
+            return custom_response(
+                success=False,
+                message="About us text 1 not found",
+                status_code=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving about us text 1: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
+
+class AboutUsMissionListView(APIView):
+    """GET: Retrieve all active About Us Mission records"""
+    def get(self, request):
+        try:
+            missions = AboutUsMission.objects.filter(is_active=True)
+            serializer = AboutUsMissionSerializer(missions, many=True)
+            return custom_response(
+                success=True,
+                message="About us missions retrieved successfully",
+                data=serializer.data
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving about us missions: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class AboutUsMissionDetailView(APIView):
+    """GET: Retrieve a single About Us Mission by ID"""
+    def get(self, request, pk):
+        try:
+            mission = AboutUsMission.objects.get(pk=pk, is_active=True)
+            serializer = AboutUsMissionSerializer(mission)
+            return custom_response(
+                success=True,
+                message="About us mission retrieved successfully",
+                data=serializer.data
+            )
+        except AboutUsMission.DoesNotExist:
+            return custom_response(
+                success=False,
+                message="About us mission not found",
+                status_code=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving about us mission: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class AboutUsText2ListView(APIView):
+    """GET: Retrieve all active About Us Text 2 records"""
+    def get(self, request):
+        try:
+            texts = AboutUsText2.objects.filter(is_active=True)
+            serializer = AboutUsText2Serializer(texts, many=True)
+            return custom_response(
+                success=True,
+                message="About us text 2 retrieved successfully",
+                data=serializer.data
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving about us text 2: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class AboutUsText2DetailView(APIView):
+    """GET: Retrieve a single About Us Text 2 by ID"""
+    def get(self, request, pk):
+        try:
+            text = AboutUsText2.objects.get(pk=pk, is_active=True)
+            serializer = AboutUsText2Serializer(text)
+            return custom_response(
+                success=True,
+                message="About us text 2 retrieved successfully",
+                data=serializer.data
+            )
+        except AboutUsText2.DoesNotExist:
+            return custom_response(
+                success=False,
+                message="About us text 2 not found",
+                status_code=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving about us text 2: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class AboutUsDigitalMarketingView(APIView):
+    """GET: Retrieve About Us Digital Marketing settings"""
+    def get(self, request):
+        try:
+            digital_marketing = AboutUsDigitalMarketing.objects.filter(is_active=True).first()
+            if digital_marketing:
+                serializer = AboutUsDigitalMarketingSerializer(digital_marketing)
+                return custom_response(
+                    success=True,
+                    message="About us digital marketing retrieved successfully",
+                    data=serializer.data
+                )
+            return custom_response(
+                success=False,
+                message="About us digital marketing not found",
+                status_code=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving about us digital marketing: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 # ========================== contatcs ======================>
 
@@ -759,3 +1024,203 @@ class solutionDigitalMarket_view(APIView):
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         
+
+# ==================== OUR WORKS SECTION ====================
+
+class IndustryListView(APIView):
+    """GET: Retrieve all active Industries"""
+    def get(self, request):
+        try:
+            industries = Industry.objects.filter(is_active=True)
+            serializer = IndustrySerializer(industries, many=True)
+            return custom_response(
+                success=True,
+                message="Industries retrieved successfully",
+                data=serializer.data
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving industries: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class ExpertiseListView(APIView):
+    """GET: Retrieve all active Expertise"""
+    def get(self, request):
+        try:
+            expertise = Expertise.objects.filter(is_active=True)
+            serializer = ExpertiseSerializer(expertise, many=True)
+            return custom_response(
+                success=True,
+                message="Expertise retrieved successfully",
+                data=serializer.data
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving expertise: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class OurWorksListView(APIView):
+    """GET: Retrieve all active Our Works"""
+    def get(self, request):
+        try:
+            ourworks = OurWorks.objects.filter(is_active=True).select_related('industry', 'expertise')
+            serializer = OurWorksSerializer(ourworks, many=True)
+            return custom_response(
+                success=True,
+                message="Our works retrieved successfully",
+                data=serializer.data
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving our works: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class OurWorksDetailView(APIView):
+    """GET: Retrieve a single Our Work by ID"""
+    def get(self, request, pk):
+        try:
+            work = OurWorks.objects.select_related('industry', 'expertise').get(pk=pk, is_active=True)
+            serializer = OurWorksSerializer(work)
+            return custom_response(
+                success=True,
+                message="Our work retrieved successfully",
+                data=serializer.data
+            )
+        except OurWorks.DoesNotExist:
+            return custom_response(
+                success=False,
+                message="Our work not found",
+                status_code=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving our work: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class OurWorksDigitalMarketingView(APIView):
+    """GET: Retrieve Our Works Digital Marketing settings"""
+    def get(self, request):
+        try:
+            digital_marketing = OurWorksDigitalMarketing.objects.filter(is_active=True).first()
+            if digital_marketing:
+                serializer = OurWorksDigitalMarketingSerializer(digital_marketing)
+                return custom_response(
+                    success=True,
+                    message="Our works digital marketing retrieved successfully",
+                    data=serializer.data
+                )
+            return custom_response(
+                success=False,
+                message="Our works digital marketing not found",
+                status_code=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving our works digital marketing: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+# ==================== INSIGHTS SECTION ====================
+
+class InsightsListView(APIView):
+    """GET: Retrieve all active Insights (Banners)"""
+    def get(self, request):
+        try:
+            insights = Insights.objects.filter(is_active=True).order_by('-created_at')
+            serializer = InsightsSerializer(insights, many=True)
+            return custom_response(
+                success=True,
+                message="Insights retrieved successfully",
+                data=serializer.data
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving insights: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+
+
+class OurInsightsListView(APIView):
+    """GET: Retrieve all active Our Insights"""
+    def get(self, request):
+        try:
+            our_insights = OurInsights.objects.filter(is_active=True).order_by('-created_at')
+            serializer = OurInsightsSerializer(our_insights, many=True)
+            return custom_response(
+                success=True,
+                message="Our insights retrieved successfully",
+                data=serializer.data
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving our insights: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class OurInsightsDetailView(APIView):
+    """GET: Retrieve a single Our Insight by ID"""
+    def get(self, request, pk):
+        try:
+            insight = OurInsights.objects.get(pk=pk, is_active=True)
+            serializer = OurInsightsSerializer(insight)
+            return custom_response(
+                success=True,
+                message="Our insight retrieved successfully",
+                data=serializer.data
+            )
+        except OurInsights.DoesNotExist:
+            return custom_response(
+                success=False,
+                message="Our insight not found",
+                status_code=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving our insight: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class InsightsDigitalMarketingView(APIView):
+    """GET: Retrieve Insights Digital Marketing settings"""
+    def get(self, request):
+        try:
+            digital_marketing = InsightsDigitalMarketing.objects.filter(is_active=True).first()
+            if digital_marketing:
+                serializer = InsightsDigitalMarketingSerializer(digital_marketing)
+                return custom_response(
+                    success=True,
+                    message="Insights digital marketing retrieved successfully",
+                    data=serializer.data
+                )
+            return custom_response(
+                success=False,
+                message="Insights digital marketing not found",
+                status_code=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving insights digital marketing: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )        
