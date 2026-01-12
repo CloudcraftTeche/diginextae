@@ -130,8 +130,8 @@ def home_banner_create(request):
             new_banner = form.save(commit=False)
             
             # ONLY if this banner is set to active, deactivate all others
-            if new_banner.is_active:
-                HomeBanner.objects.all().update(is_active=False)
+            # if new_banner.is_active:
+            #     HomeBanner.objects.all().update(is_active=False)
             
             new_banner.save()
             messages.success(request, 'Home banner created successfully!')
@@ -152,8 +152,8 @@ def home_banner_edit(request, pk):
             updated_banner = form.save(commit=False)
             
             # If this banner is set to active, deactivate all others
-            if updated_banner.is_active:
-                HomeBanner.objects.exclude(pk=pk).update(is_active=False)
+            # if updated_banner.is_active:
+            #     HomeBanner.objects.exclude(pk=pk).update(is_active=False)
             
             if 'image' in request.FILES and old_image:
                 if os.path.isfile(old_image.path):
@@ -255,8 +255,8 @@ def home_banner2_create(request):
         if form.is_valid():
             new_banner = form.save(commit=False)
             
-            if new_banner.is_active:
-                HomeBanner2.objects.all().update(is_active=False)
+            # if new_banner.is_active:
+            #     HomeBanner2.objects.all().update(is_active=False)
             
             new_banner.save()
             messages.success(request, 'Secondary banner created successfully!')
@@ -276,8 +276,8 @@ def home_banner2_edit(request, pk):
         if form.is_valid():
             updated_banner = form.save(commit=False)
             
-            if updated_banner.is_active:
-                HomeBanner2.objects.exclude(pk=pk).update(is_active=False)
+            # if updated_banner.is_active:
+            #     HomeBanner2.objects.exclude(pk=pk).update(is_active=False)
             
             if 'image' in request.FILES and old_image:
                 if os.path.isfile(old_image.path):
@@ -791,8 +791,8 @@ def home_questions_create(request):
         if form.is_valid():
             new_question = form.save(commit=False)
             
-            if new_question.is_active:
-                HomeQuestions.objects.all().update(is_active=False)
+            # if new_question.is_active:
+            #     HomeQuestions.objects.all().update(is_active=False)
             
             new_question.save()
             messages.success(request, 'FAQ section created successfully!')
@@ -808,8 +808,8 @@ def home_questions_edit(request, pk):
         if form.is_valid():
             updated_question = form.save(commit=False)
             
-            if updated_question.is_active:
-                HomeQuestions.objects.exclude(pk=pk).update(is_active=False)
+            # if updated_question.is_active:
+            #     HomeQuestions.objects.exclude(pk=pk).update(is_active=False)
             
             updated_question.save()
             messages.success(request, 'FAQ section updated successfully!')
