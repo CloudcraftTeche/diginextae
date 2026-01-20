@@ -1,99 +1,352 @@
 {% extends 'base.html' %}
 
-{% block title %}Dashboard Overview - Diginext{% endblock %}
+{% block title %}CMS Dashboard - Diginext{% endblock %}
 
 {% block content %}
 
-
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">Dashboard</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Dashboard v1</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
-        <div class="row">
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>150</h3>
-                <p>New Orders</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-bag"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>53<sup style="font-size: 20px">%</sup></h3>
-                <p>Bounce Rate</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-stats-bars"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>44</h3>
-                <p>User Registrations</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-person-add"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>65</h3>
-                <p>Unique Visitors</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
+  <!-- Content Header -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          {% comment %} <h1 class="m-0">CMS Dashboard</h1> {% endcomment %}
         </div>
-        <!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item active">Dashboard</li>
+          </ol>
+        </div>
+      </div>
+    </div>
   </div>
-  <!-- /.content-wrapper -->
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+
+      <!-- KPI Row -->
+      <div class="row">
+        <div class="col-lg-3 col-6">
+          <div class="small-box bg-primary">
+            <div class="inner"> 
+              <h3>{{ total_posts|default:"10" }}</h3>
+              <p>Total Services</p>
+              <small class="text-muted">Last updated today</small>
+            </div>
+            <div class="icon"><i class="fas fa-file-alt"></i></div>
+            <a href="#" class="small-box-footer">Manage Services <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+          <div class="small-box bg-success">
+            <div class="inner">
+              <h3>{{ published_pages|default:"12" }}</h3>
+              <p>Published Solutions</p>
+              <small class="text-muted">Last updated today</small>
+            </div>
+            <div class="icon"><i class="fas fa-file"></i></div>
+            <a href="#" class="small-box-footer">Manage Solutionsx <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+          <div class="small-box bg-warning">
+            <div class="inner">
+              <h3>{{ draft_count|default:"20" }}</h3>
+              <p>Total  Works</p>
+              <small class="text-muted">Last updated today</small>
+            </div>
+            <div class="icon"><i class="fas fa-edit"></i></div>
+            <a href="#" class="small-box-footer">Review Works <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+          <div class="small-box bg-info">
+            <div class="inner">
+              <h3>{{ media_count|default:"4" }}</h3>
+              <p>Enquiries</p>
+              <small class="text-muted">Last updated today</small>
+            </div>
+            <div class="icon"><i class="fas fa-photo-video"></i></div>
+            <a href="#" class="small-box-footer">Open media Enquiries <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="card">
+            <div class="card-header border-0">
+              <h3 class="card-title">Content Activity (Last 7 / 30 Days)</h3>
+              <div class="card-tools">
+                <div class="btn-group btn-group-sm mr-2" role="group" aria-label="Range">
+                  <button id="range7" class="btn btn-tool active" title="Last 7 days">7d</button>
+                  <button id="range30" class="btn btn-tool" title="Last 30 days">30d</button>
+                </div>
+                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+              </div>
+            </div>
+            <div class="card-body">
+              <canvas id="contentActivityChart" width="900" height="360"></canvas>
+              <div class="mt-2 text-muted small">Lines: Published content per day (blue) and Edits/Updates per day (orange)</div>
+
+              <div class="row mt-3">
+                <div class="col-6">
+                  <small class="text-muted">Published (total)</small>
+                  <div id="statPublished" class="h5 mb-0">27</div>
+                  <small id="statPublishedSuffix" class="text-muted">(Last 7 days)</small>
+                </div>
+                <div class="col-6">
+                  <small class="text-muted">Edits (total)</small>
+                  <div id="statEdits" class="h5 mb-0">12</div>
+                  <small id="statEditsSuffix" class="text-muted">(Last 7 days)</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-header border-0">
+              <h3 class="card-title">Content Distribution</h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+              </div>
+            </div>
+            <div class="card-body">
+              <canvas id="contentDistributionChart" width="350" height="280"></canvas>
+              <ul class="list-unstyled mt-3 mb-0">
+                <li><i class="far fa-circle text-primary"></i> Blog Posts <span class="float-right">{{ distribution.blog_posts|default:"45%" }}</span></li>
+                <li><i class="far fa-circle text-success"></i> Pages <span class="float-right">{{ distribution.pages|default:"30%" }}</span></li>
+                <li><i class="far fa-circle text-warning"></i> Products/Services <span class="float-right">{{ distribution.products|default:"15%" }}</span></li>
+                <li><i class="far fa-circle text-danger"></i> Others <span class="float-right">{{ distribution.others|default:"10%" }}</span></li>
+              </ul>
+            </div>
+          </div>
+
+          
+        </div>
+      </div>
+
+      <!-- Recent Content & Details -->
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="card">
+            <div class="card-header border-0">
+              <h3 class="card-title">Recent Content</h3>
+              <div class="card-tools">
+                <a href="#" class="btn btn-tool">View All</a>
+              </div>
+            </div>
+            <div class="card-body table-responsive p-0">
+              <table class="table table-hover table-valign-middle">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Updated At</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><a href="#">How to design a modern CMS dashboard</a></td>
+                    <td>Post</td>
+                    <td><span class="badge badge-success">Published</span></td>
+                    <td>2026-01-19 14:22</td>
+                  </tr>
+                  <tr>
+                    <td><a href="#">About our Services</a></td>
+                    <td>Page</td>
+                    <td><span class="badge badge-secondary">Published</span></td>
+                    <td>2026-01-18 09:11</td>
+                  </tr>
+                  <tr>
+                    <td><a href="#">Spring promo landing (draft)</a></td>
+                    <td>Page</td>
+                    <td><span class="badge badge-warning">Draft</span></td>
+                    <td>2026-01-17 18:05</td>
+                  </tr>
+                  <tr>
+                    <td><a href="#">New product write-up</a></td>
+                    <td>Service</td>
+                    <td><span class="badge badge-info">Review</span></td>
+                    <td>2026-01-16 11:33</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">System / Quick Stats</h3>
+            </div>
+            <div class="card-body">
+              <p class="mb-2">Total Categories <span class="float-right text-bold">{{ total_categories|default:"24" }}</span></p>
+              <p class="mb-2">Total Tags <span class="float-right text-bold">{{ total_tags|default:"128" }}</span></p>
+              <p class="mb-2">Comments Pending <span class="float-right text-bold text-warning">{{ comments_pending|default:"5" }}</span></p>
+              <p class="mb-0">Last Backup <span class="float-right text-muted">{{ last_backup|default:"2026-01-18 02:15" }}</span></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Activity Feed</h3>
+            </div>
+            <div class="card-body">
+              <ul class="list-unstyled">
+                <li class="mb-2"><strong>Admin</strong> published "How to design a modern CMS dashboard" <br/><small class="text-muted">2 hours ago</small></li>
+                <li class="mb-2"><strong>Editor</strong> moved "Spring promo landing" to Draft <br/><small class="text-muted">1 day ago</small></li>
+                <li class="mb-2"><strong>System</strong> backup completed <br/><small class="text-muted">2 days ago</small></li>
+              </ul>
+            </div>
+          </div>
+
+          
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Tips</h3>
+            </div>
+            <div class="card-body">
+              <p class="small text-muted">Use the quick filters on the content list to find drafts and items pending review. Connect the charts to your analytics backend for live trends.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
 
 
+<!-- Charts initialization -->
+<script>
+  // Initialize charts after window load so Chart.js (included in base.html) is available
+  window.addEventListener('load', function() {
+    if (typeof Chart === 'undefined') {
+      console.error('Chart.js not loaded');
+      return;
+    }
 
+    // Demo static data (replace with Django context or API)
+    const activityLabels7 = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const published7 = [2, 3, 4, 5, 6, 4, 7];
+    const edits7 = [1, 2, 1, 3, 2, 1, 2];
+
+    // 30-day demo data (labels and values)
+    const activityLabels30 = Array.from({length:30}, (_,i) => 'D' + (i+1));
+    const published30 = [1,2,2,3,4,2,5,3,4,3,2,4,5,3,4,6,2,3,4,5,3,4,3,2,5,4,3,6,2,4];
+    const edits30 = [0,1,1,2,1,0,2,1,1,1,0,1,2,1,1,2,1,1,1,2,1,1,1,0,1,1,1,2,1,1];
+
+    // Line chart - Content Activity (create chart instance)
+    const canvasActivity = document.getElementById('contentActivityChart');
+    if (canvasActivity && canvasActivity.getContext) {
+      const ctxActivity = canvasActivity.getContext('2d');
+      const activityChart = new Chart(ctxActivity, {
+        type: 'line',
+        data: {
+         labels: activityLabels7,
+         datasets: [
+           {
+             label: 'Published',
+             data: published7,
+             borderColor: '#007bff',
+             backgroundColor: 'rgba(0,123,255,0.08)',
+             fill: true,
+             tension: 0.3,
+             pointRadius: 3
+           },
+           {
+             label: 'Edits',
+             data: edits7,
+             borderColor: '#fd7e14',
+             backgroundColor: 'rgba(253,126,20,0.06)',
+             fill: true,
+             tension: 0.3,
+             pointRadius: 3
+           }
+         ]
+        },
+        options: {
+          // Use fixed pixel size from canvas attributes (not responsive)
+          responsive:false,
+          plugins:{ legend:{ position: 'top' } },
+          scales:{ y:{ beginAtZero:true, precision:0 } }
+        }
+      });
+
+      // helper: update totals and suffix labels
+      function sum(arr){ return arr.reduce((a,b)=>a+(+b||0),0); }
+      function updateActivityTotals(publishedArr, editsArr, label) {
+        const sp = document.getElementById('statPublished');
+        const se = document.getElementById('statEdits');
+        const sps = document.getElementById('statPublishedSuffix');
+        const ses = document.getElementById('statEditsSuffix');
+        if (sp) sp.textContent = sum(publishedArr);
+        if (se) se.textContent = sum(editsArr);
+        if (sps) sps.textContent = '(' + label + ')';
+        if (ses) ses.textContent = '(' + label + ')';
+      }
+
+      // switcher for 7 / 30 days
+      function switchRange(range) {
+        if(range === '7') {
+          activityChart.data.labels = activityLabels7;
+          activityChart.data.datasets[0].data = published7;
+          activityChart.data.datasets[1].data = edits7;
+          updateActivityTotals(published7, edits7, 'Last 7 days');
+          document.getElementById('range7')?.classList.add('active');
+          document.getElementById('range30')?.classList.remove('active');
+        } else {
+          activityChart.data.labels = activityLabels30;
+          activityChart.data.datasets[0].data = published30;
+          activityChart.data.datasets[1].data = edits30;
+          updateActivityTotals(published30, edits30, 'Last 30 days');
+          document.getElementById('range30')?.classList.add('active');
+          document.getElementById('range7')?.classList.remove('active');
+        }
+        activityChart.update();
+      }
+
+      // attach events safely
+      var r7 = document.getElementById('range7');
+      var r30 = document.getElementById('range30');
+      if(r7 && r30){
+        r7.addEventListener('click', function(e){ e.preventDefault(); switchRange('7'); });
+        r30.addEventListener('click', function(e){ e.preventDefault(); switchRange('30'); });
+      }
+
+      // initialize totals for 7 days
+      updateActivityTotals(published7, edits7, 'Last 7 days');
+    }
+
+    // Donut chart - Content Distribution
+    const canvasDist = document.getElementById('contentDistributionChart');
+    if (canvasDist && canvasDist.getContext) {
+      const ctxDist = canvasDist.getContext('2d');
+      new Chart(ctxDist, {
+        type: 'doughnut',
+        data: {
+           labels: ['Blog Posts','Pages','Products/Services','Others'],
+           datasets: [{
+             data: [45, 30, 15, 10],
+             backgroundColor: ['#007bff','#28a745','#ffc107','#dc3545']
+           }]
+         },
+        options:{ responsive:false, plugins:{ legend:{ position:'bottom' } } }
+       });
+     }
+
+   });
+ </script>
 
 {% endblock %}
