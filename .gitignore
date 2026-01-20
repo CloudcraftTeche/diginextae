@@ -1,6 +1,23 @@
-media/
-staticfiles/
-env_file/
+# Python
 __pycache__/
 *.pyc
 *.pyo
+venv/
+env/
+
+# Django
+*.log
+db.sqlite3
+/media
+/staticfiles
+
+# Environment - NEVER commit these
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
