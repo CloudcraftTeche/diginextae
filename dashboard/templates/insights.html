@@ -74,8 +74,8 @@
                                 {% for insight in insights %}
                                 <div class="col-md-4 col-sm-6 mb-4">
                                     <div class="card h-100">
-                                        {% if insight.image %}
-                                        <img src="{{ insight.image.url }}" class="card-img-top" alt="{{ insight.title }}" style="height: 200px; object-fit: cover;">
+                                        {% if insight.banner_image %}
+                                        <img src="{{ insight.banner_image.url }}" class="card-img-top" alt="{{ insight.title }}" style="height: 200px; object-fit: cover;">
                                         {% else %}
                                         <div class="bg-secondary text-center" style="height: 200px; display: flex; align-items: center; justify-content: center;">
                                             <i class="fas fa-image fa-3x text-white"></i>

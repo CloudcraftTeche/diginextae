@@ -2252,7 +2252,7 @@ def expertise_delete(request, pk):
 @login_required
 def insights_page(request):
     """Insights Management Page"""
-    insights = OurInsights.objects.all().order_by('-created_at')
+    insights = Insights.objects.all().order_by('-created_at')
     insights_count = insights.count()
     
     context = {
@@ -2266,27 +2266,31 @@ def insights_page(request):
 def insights_create(request):
     """Create Insight"""
     if request.method == 'POST':
-        category = request.POST.get('category')  # nullable
+        # category = request.POST.get('category')  # nullable
         title = request.POST.get('title')
+        subtitle = request.POST.get('subtitle')
         description = request.POST.get('description')
-        services = request.POST.get('services')  # comma separated
+        # services = request.POST.get('services')  # comma separated
         insight_date = request.POST.get('insight_date')
         if not insight_date:
             insight_date = timezone.now().date()
         image = request.FILES.get('banner_image')
         is_active = request.POST.get('is_active') == 'on'
-        OurInsights.objects.create(
-            category=category if category else None,
+
+        Insights.objects.create(
+            # category=category if category else None,
             title=title,
+            subtitle=subtitle,
             description=description,
-            services=services,
-            insight_date=insight_date,
-            image=image,
+            # services=services,
+            # insight_date=insight_date,
+            banner_image=image,
             is_active=is_active
         )
 
         messages.success(request, 'Insight created successfully!')
         return redirect('insights_page')
+
     return redirect('insights_page')
 
 
