@@ -3,6 +3,8 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.utils import timezone
+
 import os
 from .models import *
 from .forms import *
@@ -2250,7 +2252,7 @@ def expertise_delete(request, pk):
 @login_required
 def insights_page(request):
     """Insights Management Page"""
-    insights = Insights.objects.all().order_by('-created_at')
+    insights = OurInsights.objects.all().order_by('-created_at')
     insights_count = insights.count()
     
     context = {
@@ -2269,9 +2271,10 @@ def insights_create(request):
         description = request.POST.get('description')
         services = request.POST.get('services')  # comma separated
         insight_date = request.POST.get('insight_date')
-        image = request.FILES.get('image')
+        if not insight_date:
+            insight_date = timezone.now().date()
+        image = request.FILES.get('banner_image')
         is_active = request.POST.get('is_active') == 'on'
-
         OurInsights.objects.create(
             category=category if category else None,
             title=title,
@@ -2284,7 +2287,6 @@ def insights_create(request):
 
         messages.success(request, 'Insight created successfully!')
         return redirect('insights_page')
-
     return redirect('insights_page')
 
 
