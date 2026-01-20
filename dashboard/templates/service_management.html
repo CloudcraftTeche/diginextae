@@ -239,11 +239,15 @@
                               {% endif %}
                               <div class="card-body">
                                 <h6 class="card-title font-weight-bold">{{ sub.subservice_name }}</h6>
+                                {% if sub.subservice_title %}
+                                <p class="card-text text-muted small">{{ sub.subservice_title }}</p>
+                                {% endif %}
                                 <p class="card-text text-muted small">{{ sub.subservice_description|truncatewords:15|default:"<em>No description</em>" }}</p>
+                              
                               </div>
                               <div class="card-footer bg-white border-top">
                                 <div class="d-flex justify-content-end">
-                                  <button class="btn btn-sm btn-warning mr-1" onclick="editSubservice({{ sub.pk }}, {{ sub.service_heading.pk }}, '{{ sub.subservice_name|escapejs }}', '{{ sub.subservice_description|escapejs }}', '{% if sub.sub_service_image %}{{ sub.sub_service_image.url }}{% endif %}')">
+                                  <button class="btn btn-sm btn-warning mr-1" onclick="editSubservice({{ sub.pk }}, {{ sub.service_heading.pk }}, '{{ sub.subservice_name|escapejs }}', '{{ sub.subservice_title|escapejs }}', '{{ sub.subservice_description|escapejs }}', '{% if sub.sub_service_image %}{{ sub.sub_service_image.url }}{% endif %}')">
                                     <i class="fas fa-edit"></i>
                                   </button>
                                   <button class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'subservice_delete' sub.pk %}', 'subservice')">
@@ -618,6 +622,10 @@
               <input type="text" class="form-control" name="subservice_name" placeholder="Enter subservice name" required>
             </div>
             <div class="form-group">
+              <label>Subservice Title</label>
+              <input type="text" class="form-control" name="subservice_title" placeholder="Enter subservice title">
+            </div>
+            <div class="form-group">
               <label>Subservice Description</label>
               <textarea class="form-control" name="subservice_description" rows="4" placeholder="Enter subservice description"></textarea>
             </div>
@@ -660,6 +668,10 @@
             <div class="form-group">
               <label>Subservice Name <span class="text-danger">*</span></label>
               <input type="text" class="form-control" id="edit_subservice_name" name="subservice_name" required>
+            </div>
+            <div class="form-group">
+              <label>Subservice Title</label>
+              <input type="text" class="form-control" id="edit_subservice_title" name="subservice_title">
             </div>
             <div class="form-group">
               <label>Subservice Description</label>
@@ -777,10 +789,11 @@
     }
 
     // Edit Subservice
-    function editSubservice(id, headingId, name, description, currentImage) {
+    function editSubservice(id, headingId, name,title, description, currentImage) {
       document.getElementById('editSubserviceForm').action = "{% url 'subservice_edit' 0 %}".replace('0', id);
       document.getElementById('edit_subservice_heading').value = headingId;
       document.getElementById('edit_subservice_name').value = name;
+      document.getElementById('edit_subservice_title').value = title || '';  
       document.getElementById('edit_subservice_description').value = description;
       
       if (currentImage) {

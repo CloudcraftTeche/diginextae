@@ -6,816 +6,876 @@
 {% block content %}
 
 <div class="content-wrapper">
-    <!-- Content Header -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0"><i class="fas fa-lightbulb"></i> Solutions Management</h1>
-            <p class="text-muted">Manage your solutions, solution categories and subsolutions</p>
-          </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-              <li class="breadcrumb-item active">Solutions</li>
-            </ol>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Display Messages -->
-    {% if messages %}
+  <!-- Content Header -->
+  <div class="content-header">
     <div class="container-fluid">
-      {% for message in messages %}
-      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-        <i class="fas fa-check-circle"></i> {{ message }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0"><i class="fas fa-lightbulb"></i> Solutions Management</h1>
+          <p class="text-muted">Manage your solutions, solution categories and subsolutions</p>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item active">Solutions</li>
+          </ol>
+        </div>
       </div>
-      {% endfor %}
     </div>
-    {% endif %}
+  </div>
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        
-        <!-- Statistics Cards -->
-        <div class="row mb-4">
-          <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
-            <div class="small-box bg-info elevation-2">
-              <div class="inner">
-                <h3>{{ solutions_count }}</h3>
-                <p>Solution Banners</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-image"></i>
-              </div>
-              <a href="#banner" class="small-box-footer" onclick="$('#banner-tab').click()">
-                View Details <i class="fas fa-arrow-circle-right"></i>
-              </a>
-            </div>
-          </div>
+  <!-- Display Messages -->
+  {% if messages %}
+  <div class="container-fluid">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      <i class="fas fa-check-circle"></i> {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
 
-          <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
-            <div class="small-box bg-success elevation-2">
-              <div class="inner">
-                <h3>{{ solutions_name_count }}</h3>
-                <p>Solution Categories</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-list"></i>
-              </div>
-              <a href="#solutionsname" class="small-box-footer" onclick="$('#solutionsname-tab').click()">
-                View Details <i class="fas fa-arrow-circle-right"></i>
-              </a>
-            </div>
-          </div>
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
 
-          <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
-            <div class="small-box bg-warning elevation-2">
-              <div class="inner">
-                <h3>{{ subsolutions_count }}</h3>
-                <p>Subsolutions</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-sitemap"></i>
-              </div>
-              <a href="#subsolutions" class="small-box-footer" onclick="$('#subsolutions-tab').click()">
-                View Details <i class="fas fa-arrow-circle-right"></i>
-              </a>
+      <!-- Statistics Cards -->
+      <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+          <div class="small-box bg-info elevation-2">
+            <div class="inner">
+              <h3>{{ solutions_count }}</h3>
+              <p>Solution Banners</p>
             </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
-            <div class="small-box bg-danger elevation-2">
-              <div class="inner">
-                <h3>{{ digital_marketing_count }}</h3>
-                <p>Digital Marketing</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-bullhorn"></i>
-              </div>
-              <a href="#digitalmarketing" class="small-box-footer" onclick="$('#digitalmarketing-tab').click()">
-                View Details <i class="fas fa-arrow-circle-right"></i>
-              </a>
+            <div class="icon">
+              <i class="fas fa-image"></i>
             </div>
+            <a href="#banner" class="small-box-footer" onclick="$('#banner-tab').click()">
+              View Details <i class="fas fa-arrow-circle-right"></i>
+            </a>
           </div>
         </div>
 
-        <!-- Navigation Tabs -->
-        <div class="card card-primary card-outline card-outline-tabs elevation-2">
-          <div class="card-header p-0 border-bottom-0">
-            <ul class="nav nav-tabs" id="solutionsTabs" role="tablist">
-              <li class="nav-item">
-                <a class="nav-link active" id="banner-tab" data-toggle="pill" href="#banner" role="tab">
-                  <i class="fas fa-image"></i> Solution Banner
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" id="solutionsname-tab" data-toggle="pill" href="#solutionsname" role="tab">
-                  <i class="fas fa-list"></i> Solution Categories
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" id="subsolutions-tab" data-toggle="pill" href="#subsolutions" role="tab">
-                  <i class="fas fa-sitemap"></i> Subsolutions
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" id="digitalmarketing-tab" data-toggle="pill" href="#digitalmarketing" role="tab">
-                  <i class="fas fa-bullhorn"></i> Digital Marketing
-                </a>
-              </li>
-            </ul>
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+          <div class="small-box bg-success elevation-2">
+            <div class="inner">
+              <h3>{{ solutions_name_count }}</h3>
+              <p>Solution Categories</p>
+            </div>
+            <div class="icon">
+              <i class="fas fa-list"></i>
+            </div>
+            <a href="#solutionsname" class="small-box-footer" onclick="$('#solutionsname-tab').click()">
+              View Details <i class="fas fa-arrow-circle-right"></i>
+            </a>
           </div>
-          <div class="card-body">
-            <div class="tab-content" id="solutionsTabsContent">
-              
-              <!-- Solutions Banner Tab -->
-              <div class="tab-pane fade show active" id="banner" role="tabpanel">
-                <div class="mb-3">
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createSolutionsModal">
-                    <i class="fas fa-plus-circle"></i> Add Solution Banner
-                  </button>
-                </div>
-                
-                {% if solutions %}
-                <div class="row">
-                  {% for solution in solutions %}
-                  <div class="col-lg-6 col-md-6 mb-4">
-                    <div class="card shadow-sm h-100">
-                      {% if solution.image %}
-                      <img src="{{ solution.image.url }}" class="card-img-top" alt="{{ solution.banner_description_title }}" style="height: 250px; object-fit: cover;">
-                      {% else %}
-                      <div class="bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
-                        <span class="text-muted"><i class="fas fa-image fa-5x"></i></span>
-                      </div>
-                      {% endif %}
-                      <div class="card-body">
-                        <h5 class="card-title font-weight-bold">{{ solution.banner_description_title|default:"No Title" }}</h5>
-                        <p class="card-text text-muted">{{ solution.banner_description|truncatewords:25|default:"<em>No description</em>" }}</p>
-                      </div>
-                      <div class="card-footer bg-white border-top">
-                        <div class="d-flex justify-content-end">
-                          <button class="btn btn-sm btn-warning mr-1" onclick="editSolutions({{ solution.pk }}, '{{ solution.banner_description_title|escapejs }}', '{{ solution.banner_description|escapejs }}', '{% if solution.image %}{{ solution.image.url }}{% endif %}')">
-                            <i class="fas fa-edit"></i> Edit
-                          </button>
-                          <button class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'solutions_delete' solution.pk %}', 'solution banner')">
-                            <i class="fas fa-trash-alt"></i> Delete
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {% endfor %}
-                </div>
-                {% else %}
-                <div class="alert alert-info">
-                  <i class="fas fa-info-circle"></i> No solution banners added yet. Click the button above to add your first solution banner.
-                </div>
-                {% endif %}
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+          <div class="small-box bg-warning elevation-2">
+            <div class="inner">
+              <h3>{{ subsolutions_count }}</h3>
+              <p>Subsolutions</p>
+            </div>
+            <div class="icon">
+              <i class="fas fa-sitemap"></i>
+            </div>
+            <a href="#subsolutions" class="small-box-footer" onclick="$('#subsolutions-tab').click()">
+              View Details <i class="fas fa-arrow-circle-right"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+          <div class="small-box bg-danger elevation-2">
+            <div class="inner">
+              <h3>{{ digital_marketing_count }}</h3>
+              <p>Digital Marketing</p>
+            </div>
+            <div class="icon">
+              <i class="fas fa-bullhorn"></i>
+            </div>
+            <a href="#digitalmarketing" class="small-box-footer" onclick="$('#digitalmarketing-tab').click()">
+              View Details <i class="fas fa-arrow-circle-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="card card-primary card-outline card-outline-tabs elevation-2">
+        <div class="card-header p-0 border-bottom-0">
+          <ul class="nav nav-tabs" id="solutionsTabs" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="banner-tab" data-toggle="pill" href="#banner" role="tab">
+                <i class="fas fa-image"></i> Solution Banner
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="solutionsname-tab" data-toggle="pill" href="#solutionsname" role="tab">
+                <i class="fas fa-list"></i> Solution Categories
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="subsolutions-tab" data-toggle="pill" href="#subsolutions" role="tab">
+                <i class="fas fa-sitemap"></i> Subsolutions
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="digitalmarketing-tab" data-toggle="pill" href="#digitalmarketing" role="tab">
+                <i class="fas fa-bullhorn"></i> Digital Marketing
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body">
+          <div class="tab-content" id="solutionsTabsContent">
+
+            <!-- Solutions Banner Tab -->
+            <div class="tab-pane fade show active" id="banner" role="tabpanel">
+              <div class="mb-3">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createSolutionsModal">
+                  <i class="fas fa-plus-circle"></i> Add Solution Banner
+                </button>
               </div>
 
-              <!-- Solutions Name Tab -->
-              <div class="tab-pane fade" id="solutionsname" role="tabpanel">
-                <div class="mb-3">
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createSolutionsNameModal">
-                    <i class="fas fa-plus-circle"></i> Add Solution Category
-                  </button>
-                </div>
-                
-                {% if solutions_names %}
-                <div class="row">
-                  {% for sn in solutions_names %}
-                  <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card shadow-sm h-100">
-                      {% if sn.solutions_image %}
-                      <img src="{{ sn.solutions_image.url }}" class="card-img-top" alt="{{ sn.solutions_name }}" style="height: 200px; object-fit: cover;">
-                      {% else %}
-                      <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                        <span class="text-muted"><i class="fas fa-image fa-4x"></i></span>
-                      </div>
-                      {% endif %}
-                      <div class="card-body">
-                        <h5 class="card-title font-weight-bold">{{ sn.solutions_name }}</h5>
-                        <p class="card-text text-muted">{{ sn.solutions_description|truncatewords:20 }}</p>
-                        <span class="badge badge-info">{{ sn.solutions.count }} Subsolution(s)</span>
-                      </div>
-                      <div class="card-footer bg-white border-top">
-                        <div class="d-flex justify-content-end">
-                          <button class="btn btn-sm btn-warning mr-1" onclick="editSolutionsName({{ sn.pk }}, '{{ sn.solutions_name|escapejs }}', '{{ sn.solutions_description|escapejs }}', '{% if sn.solutions_image %}{{ sn.solutions_image.url }}{% endif %}')">
-                            <i class="fas fa-edit"></i> Edit
-                          </button>
-                          <button class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'solutions_name_delete' sn.pk %}', 'solution category')">
-                            <i class="fas fa-trash-alt"></i> Delete
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {% endfor %}
-                </div>
-                {% else %}
-                <div class="alert alert-info">
-                  <i class="fas fa-info-circle"></i> No solution categories added yet. Click the button above to add your first solution category.
-                </div>
-                {% endif %}
-              </div>
-
-              <!-- Subsolutions Tab -->
-              <div class="tab-pane fade" id="subsolutions" role="tabpanel">
-                <div class="mb-3">
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createSubsolutionsModal">
-                    <i class="fas fa-plus-circle"></i> Add Subsolution
-                  </button>
-                </div>
-                
-                {% if solutions_names %}
-                  {% for sn in solutions_names %}
-                    {% if sn.solutions.all %}
-                    <div class="card mb-4">
-                      <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-folder-open"></i> {{ sn.solutions_name }}</h5>
-                      </div>
-                      <div class="card-body">
-                        <div class="row">
-                          {% for sub in sn.solutions.all %}
-                          <div class="col-lg-4 col-md-6 mb-3">
-                            <div class="card shadow-sm h-100">
-                              {% if sub.solutions_image %}
-                              <img src="{{ sub.solutions_image.url }}" class="card-img-top" alt="{{ sub.solutions_name }}" style="height: 150px; object-fit: cover;">
-                              {% else %}
-                              <div class="bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
-                                <span class="text-muted"><i class="fas fa-image fa-3x"></i></span>
-                              </div>
-                              {% endif %}
-                              <div class="card-body">
-                                <h6 class="card-title font-weight-bold">{{ sub.solutions_name }}</h6>
-                                <p class="card-text text-muted small">{{ sub.solutions_description|truncatewords:15|default:"<em>No description</em>" }}</p>
-                              </div>
-                              <div class="card-footer bg-white border-top">
-                                <div class="d-flex justify-content-end">
-                                  <button class="btn btn-sm btn-warning mr-1" onclick="editSubsolutions({{ sub.pk }}, {{ sub.solutions_heading.pk }}, '{{ sub.solutions_name|escapejs }}', '{{ sub.solutions_description|escapejs }}', '{% if sub.solutions_image %}{{ sub.solutions_image.url }}{% endif %}')">
-                                    <i class="fas fa-edit"></i>
-                                  </button>
-                                  <button class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'subsolutions_delete' sub.pk %}', 'subsolution')">
-                                    <i class="fas fa-trash-alt"></i>
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          {% endfor %}
-                        </div>
-                      </div>
+              {% if solutions %}
+              <div class="row">
+                {% for solution in solutions %}
+                <div class="col-lg-6 col-md-6 mb-4">
+                  <div class="card shadow-sm h-100">
+                    {% if solution.image %}
+                    <img src="{{ solution.image.url }}" class="card-img-top"
+                      alt="{{ solution.banner_description_title }}" style="height: 250px; object-fit: cover;">
+                    {% else %}
+                    <div class="bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                      <span class="text-muted"><i class="fas fa-image fa-5x"></i></span>
                     </div>
                     {% endif %}
-                  {% endfor %}
-                  
-                  {% if subsolutions_count == 0 %}
-                  <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> No subsolutions added yet. Click the button above to add your first subsolution.
-                  </div>
-                  {% endif %}
-                {% else %}
-                <div class="alert alert-warning">
-                  <i class="fas fa-exclamation-triangle"></i> Please create solution categories first before adding subsolutions.
-                </div>
-                {% endif %}
-              </div>
-
-              <!-- Digital Marketing Tab -->
-              <div class="tab-pane fade" id="digitalmarketing" role="tabpanel">
-                <div class="mb-3 d-flex justify-content-between align-items-center">
-                  <div>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createDigitalMarketingModal">
-                      <i class="fas fa-plus-circle"></i> Add Digital Marketing
-                    </button>
-                  </div>
-                  <div class="text-muted small">Recommended banner size: 1920x600px</div>
-                </div>
-
-                {% if digital_marketing_list %}
-                <div class="row">
-                  {% for dm in digital_marketing_list %}
-                  <div class="col-lg-6 col-md-6 mb-4">
-                    <div class="card shadow-sm h-100">
-                      {% if dm.banner_image %}
-                      <img src="{{ dm.banner_image.url }}" class="card-img-top" alt="{{ dm.meta_title|default:'Digital Marketing' }}" style="height:250px; object-fit:cover;">
-                      {% else %}
-                      <div class="bg-light d-flex align-items-center justify-content-center" style="height:250px;">
-                        <span class="text-muted"><i class="fas fa-image fa-5x"></i></span>
-                      </div>
-                      {% endif %}
-                      <div class="card-body">
-                        <h5 class="card-title font-weight-bold">{{ dm.meta_title|default:"No title" }}</h5>
-                        <p class="card-text text-muted">{{ dm.meta_description|truncatewords:25|default:"<em>No description</em>" }}</p>
-                        <div class="small text-muted">Keywords: {{ dm.meta_keywords|default:"-" }}</div>
-                        <div class="mt-2">
-                          <span class="badge badge-{{ dm.is_active|yesno:'success,danger' }}">{{ dm.is_active|yesno:'Active,Inactive' }}</span>
-                        </div>
-                      </div>
-                      <div class="card-footer bg-white border-top">
-                        <div class="d-flex justify-content-end">
-                          <button class="btn btn-sm btn-warning mr-1"
-                                  onclick="editDigitalMarketing({{ dm.pk }}, '{{ dm.meta_title|escapejs }}', '{{ dm.meta_description|escapejs }}', '{{ dm.meta_keywords|escapejs }}', '{% if dm.banner_image %}{{ dm.banner_image.url }}{% endif %}', {{ dm.is_active|yesno:'true,false' }})">
-                            <i class="fas fa-edit"></i> Edit
-                          </button>
-                          <button class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'solutions_digital_marketing_delete' dm.pk %}', 'digital marketing section')">
-                            <i class="fas fa-trash-alt"></i> Delete
-                          </button>
-                        </div>
+                    <div class="card-body">
+                      <h5 class="card-title font-weight-bold">{{ solution.banner_description_title|default:"No Title" }}
+                      </h5>
+                      <p class="card-text text-muted">{{ solution.banner_description|truncatewords:25|default:"<em>No
+                          description</em>" }}</p>
+                    </div>
+                    <div class="card-footer bg-white border-top">
+                      <div class="d-flex justify-content-end">
+                        <button class="btn btn-sm btn-warning mr-1"
+                          onclick="editSolutions({{ solution.pk }}, '{{ solution.banner_description_title|escapejs }}', '{{ solution.banner_description|escapejs }}', '{% if solution.image %}{{ solution.image.url }}{% endif %}')">
+                          <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-sm btn-danger"
+                          onclick="deleteItem('{% url 'solutions_delete' solution.pk %}', 'solution banner')">
+                          <i class="fas fa-trash-alt"></i> Delete
+                        </button>
                       </div>
                     </div>
                   </div>
-                  {% endfor %}
                 </div>
-                {% else %}
-                <div class="alert alert-info">
-                  <i class="fas fa-info-circle"></i> No digital marketing sections created yet. Click the button above to add one.
-                </div>
-                {% endif %}
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No solution banners added yet. Click the button above to add your
+                first solution banner.
+              </div>
+              {% endif %}
+            </div>
+
+            <!-- Solutions Name Tab -->
+            <div class="tab-pane fade" id="solutionsname" role="tabpanel">
+              <div class="mb-3">
+                <button type="button" class="btn btn-primary" data-toggle="modal"
+                  data-target="#createSolutionsNameModal">
+                  <i class="fas fa-plus-circle"></i> Add Solution Category
+                </button>
               </div>
 
+              {% if solutions_names %}
+              <div class="row">
+                {% for sn in solutions_names %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                  <div class="card shadow-sm h-100">
+                    {% if sn.solutions_image %}
+                    <img src="{{ sn.solutions_image.url }}" class="card-img-top" alt="{{ sn.solutions_name }}"
+                      style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                      <span class="text-muted"><i class="fas fa-image fa-4x"></i></span>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                      <h5 class="card-title font-weight-bold">{{ sn.solutions_name }}</h5>
+                      <p class="card-text text-muted">{{ sn.solutions_description|truncatewords:20 }}</p>
+                      <span class="badge badge-info">{{ sn.solutions.count }} Subsolution(s)</span>
+                    </div>
+                    <div class="card-footer bg-white border-top">
+                      <div class="d-flex justify-content-end">
+                        <button class="btn btn-sm btn-warning mr-1"
+                          onclick="editSolutionsName({{ sn.pk }}, '{{ sn.solutions_name|escapejs }}', '{{ sn.solutions_description|escapejs }}', '{% if sn.solutions_image %}{{ sn.solutions_image.url }}{% endif %}')">
+                          <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-sm btn-danger"
+                          onclick="deleteItem('{% url 'solutions_name_delete' sn.pk %}', 'solution category')">
+                          <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No solution categories added yet. Click the button above to add your
+                first solution category.
+              </div>
+              {% endif %}
+            </div>
+
+            <!-- Subsolutions Tab -->
+            <div class="tab-pane fade" id="subsolutions" role="tabpanel">
+              <div class="mb-3">
+                <button type="button" class="btn btn-primary" data-toggle="modal"
+                  data-target="#createSubsolutionsModal">
+                  <i class="fas fa-plus-circle"></i> Add Subsolution
+                </button>
+              </div>
+
+              {% if solutions_names %}
+              {% for sn in solutions_names %}
+              {% if sn.solutions.all %}
+              <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                  <h5 class="mb-0"><i class="fas fa-folder-open"></i> {{ sn.solutions_name }}</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    {% for sub in sn.solutions.all %}
+                    <div class="col-lg-4 col-md-6 mb-3">
+                      <div class="card shadow-sm h-100">
+                        {% if sub.solutions_image %}
+                        <img src="{{ sub.solutions_image.url }}" class="card-img-top" alt="{{ sub.solutions_name }}"
+                          style="height: 150px; object-fit: cover;">
+                        {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                          <span class="text-muted"><i class="fas fa-image fa-3x"></i></span>
+                        </div>
+                        {% endif %}
+                        <div class="card-body">
+                          <h6 class="card-title font-weight-bold">{{ sub.solutions_name }}</h6>
+                          {% if sub.solutions_title %}
+                          <p class="card-text text-muted small">{{ sub.solutions_title }}</p>
+                          {% endif %}
+                          <p class="card-text text-muted small">{{ sub.solutions_description|truncatewords:15|default:"<em>No description</em>" }}</p>
+                        </div>
+                        <div class="card-footer bg-white border-top">
+                          <div class="d-flex justify-content-end">
+                            <button class="btn btn-sm btn-warning mr-1"
+                            onclick="editSubsolutions({{ sub.pk }}, {{ sub.solutions_heading.pk }}, '{{ sub.solutions_name|escapejs }}', '{{ sub.solutions_title|escapejs }}', '{{ sub.solutions_description|escapejs }}', '{% if sub.solutions_image %}{{ sub.solutions_image.url }}{% endif %}')">
+                              <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger"
+                              onclick="deleteItem('{% url 'subsolutions_delete' sub.pk %}', 'subsolution')">
+                              <i class="fas fa-trash-alt"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+              {% endfor %}
+
+              {% if subsolutions_count == 0 %}
+              <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No subsolutions added yet. Click the button above to add your first
+                subsolution.
+              </div>
+              {% endif %}
+              {% else %}
+              <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i> Please create solution categories first before adding
+                subsolutions.
+              </div>
+              {% endif %}
+            </div>
+
+            <!-- Digital Marketing Tab -->
+            <div class="tab-pane fade" id="digitalmarketing" role="tabpanel">
+              <div class="mb-3 d-flex justify-content-between align-items-center">
+                <div>
+                  <button type="button" class="btn btn-primary" data-toggle="modal"
+                    data-target="#createDigitalMarketingModal">
+                    <i class="fas fa-plus-circle"></i> Add Digital Marketing
+                  </button>
+                </div>
+                <div class="text-muted small">Recommended banner size: 1920x600px</div>
+              </div>
+
+              {% if digital_marketing_list %}
+              <div class="row">
+                {% for dm in digital_marketing_list %}
+                <div class="col-lg-6 col-md-6 mb-4">
+                  <div class="card shadow-sm h-100">
+                    {% if dm.banner_image %}
+                    <img src="{{ dm.banner_image.url }}" class="card-img-top"
+                      alt="{{ dm.meta_title|default:'Digital Marketing' }}" style="height:250px; object-fit:cover;">
+                    {% else %}
+                    <div class="bg-light d-flex align-items-center justify-content-center" style="height:250px;">
+                      <span class="text-muted"><i class="fas fa-image fa-5x"></i></span>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                      <h5 class="card-title font-weight-bold">{{ dm.meta_title|default:"No title" }}</h5>
+                      <p class="card-text text-muted">{{ dm.meta_description|truncatewords:25|default:"<em>No
+                          description</em>" }}</p>
+                      <div class="small text-muted">Keywords: {{ dm.meta_keywords|default:"-" }}</div>
+                      <div class="mt-2">
+                        <span class="badge badge-{{ dm.is_active|yesno:'success,danger' }}">{{
+                          dm.is_active|yesno:'Active,Inactive' }}</span>
+                      </div>
+                    </div>
+                    <div class="card-footer bg-white border-top">
+                      <div class="d-flex justify-content-end">
+                        <button class="btn btn-sm btn-warning mr-1"
+                          onclick="editDigitalMarketing({{ dm.pk }}, '{{ dm.meta_title|escapejs }}', '{{ dm.meta_description|escapejs }}', '{{ dm.meta_keywords|escapejs }}', '{% if dm.banner_image %}{{ dm.banner_image.url }}{% endif %}', {{ dm.is_active|yesno:'true,false' }})">
+                          <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-sm btn-danger"
+                          onclick="deleteItem('{% url 'solutions_digital_marketing_delete' dm.pk %}', 'digital marketing section')">
+                          <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No digital marketing sections created yet. Click the button above to
+                add one.
+              </div>
+              {% endif %}
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ===================== MODALS ===================== -->
+
+<!-- Create Solutions Modal -->
+<div class="modal fade" id="createSolutionsModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" action="{% url 'solutions_create' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Solution Banner</h5>
+          <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Banner Title</label>
+            <input type="text" class="form-control" name="banner_description_title" placeholder="Enter banner title">
+          </div>
+          <div class="form-group">
+            <label>Banner Description</label>
+            <textarea class="form-control" name="banner_description" rows="4"
+              placeholder="Enter banner description"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Banner Image</label>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" name="image" id="create_solutions_image" accept="image/*">
+              <label class="custom-file-label" for="create_solutions_image">Choose file</label>
+            </div>
+            <small class="form-text text-muted">Recommended size: 1920x600px</small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i>
+            Close</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Solutions Modal -->
+<div class="modal fade" id="editSolutionsModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" id="editSolutionsForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-header bg-warning">
+          <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Solution Banner</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Banner Title</label>
+            <input type="text" class="form-control" id="edit_solutions_title" name="banner_description_title">
+          </div>
+          <div class="form-group">
+            <label>Banner Description</label>
+            <textarea class="form-control" id="edit_solutions_description" name="banner_description"
+              rows="4"></textarea>
+          </div>
+
+          <div id="edit_solutions_current_image_container" class="form-group" style="display:none;">
+            <label>Current Image</label>
+            <div class="border p-2 text-center bg-light">
+              <img id="edit_solutions_current_image" src="" alt="Current Image" class="img-thumbnail"
+                style="max-height: 150px;">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Change Image <small class="text-muted">(leave empty to keep current)</small></label>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" name="image" id="edit_solutions_image" accept="image/*">
+              <label class="custom-file-label" for="edit_solutions_image">Choose new file</label>
             </div>
           </div>
         </div>
-
-      </div>
-    </section>
-  </div>
-
-  <!-- ===================== MODALS ===================== -->
-
-  <!-- Create Solutions Modal -->
-  <div class="modal fade" id="createSolutionsModal">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <form method="POST" action="{% url 'solutions_create' %}" enctype="multipart/form-data">
-          {% csrf_token %}
-          <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Solution Banner</h5>
-            <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
-          </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label>Banner Title</label>
-              <input type="text" class="form-control" name="banner_description_title" placeholder="Enter banner title">
-            </div>
-            <div class="form-group">
-              <label>Banner Description</label>
-              <textarea class="form-control" name="banner_description" rows="4" placeholder="Enter banner description"></textarea>
-            </div>
-            <div class="form-group">
-              <label>Banner Image</label>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" name="image" id="create_solutions_image" accept="image/*">
-                <label class="custom-file-label" for="create_solutions_image">Choose file</label>
-              </div>
-              <small class="form-text text-muted">Recommended size: 1920x600px</small>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
-            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button>
-          </div>
-        </form>
-      </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i>
+            Close</button>
+          <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
+        </div>
+      </form>
     </div>
   </div>
+</div>
 
-  <!-- Edit Solutions Modal -->
-  <div class="modal fade" id="editSolutionsModal">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <form method="POST" id="editSolutionsForm" enctype="multipart/form-data">
-          {% csrf_token %}
-          <div class="modal-header bg-warning">
-            <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Solution Banner</h5>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
+<!-- Create Solutions Name Modal -->
+<div class="modal fade" id="createSolutionsNameModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" action="{% url 'solutions_name_create' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Solution Category</h5>
+          <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Solution Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="solutions_name" placeholder="Enter solution name" required>
           </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label>Banner Title</label>
-              <input type="text" class="form-control" id="edit_solutions_title" name="banner_description_title">
-            </div>
-            <div class="form-group">
-              <label>Banner Description</label>
-              <textarea class="form-control" id="edit_solutions_description" name="banner_description" rows="4"></textarea>
-            </div>
-            
-            <div id="edit_solutions_current_image_container" class="form-group" style="display:none;">
-              <label>Current Image</label>
-              <div class="border p-2 text-center bg-light">
-                <img id="edit_solutions_current_image" src="" alt="Current Image" class="img-thumbnail" style="max-height: 150px;">
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label>Change Image <small class="text-muted">(leave empty to keep current)</small></label>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" name="image" id="edit_solutions_image" accept="image/*">
-                <label class="custom-file-label" for="edit_solutions_image">Choose new file</label>
-              </div>
+          <div class="form-group">
+            <label>Solution Description <span class="text-danger">*</span></label>
+            <textarea class="form-control" name="solutions_description" rows="4"
+              placeholder="Enter solution description" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>Solution Image <span class="text-danger">*</span></label>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" name="solutions_image" id="create_solutionsname_image"
+                accept="image/*" required>
+              <label class="custom-file-label" for="create_solutionsname_image">Choose file</label>
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
-            <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
-          </div>
-        </form>
-      </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i>
+            Close</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button>
+        </div>
+      </form>
     </div>
   </div>
+</div>
 
-  <!-- Create Solutions Name Modal -->
-  <div class="modal fade" id="createSolutionsNameModal">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <form method="POST" action="{% url 'solutions_name_create' %}" enctype="multipart/form-data">
-          {% csrf_token %}
-          <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Solution Category</h5>
-            <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+<!-- Edit Solutions Name Modal -->
+<div class="modal fade" id="editSolutionsNameModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" id="editSolutionsNameForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-header bg-warning">
+          <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Solution Category</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Solution Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="edit_solutionsname_name" name="solutions_name" required>
           </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label>Solution Name <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" name="solutions_name" placeholder="Enter solution name" required>
-            </div>
-            <div class="form-group">
-              <label>Solution Description <span class="text-danger">*</span></label>
-              <textarea class="form-control" name="solutions_description" rows="4" placeholder="Enter solution description" required></textarea>
-            </div>
-            <div class="form-group">
-              <label>Solution Image <span class="text-danger">*</span></label>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" name="solutions_image" id="create_solutionsname_image" accept="image/*" required>
-                <label class="custom-file-label" for="create_solutionsname_image">Choose file</label>
-              </div>
+          <div class="form-group">
+            <label>Solution Description <span class="text-danger">*</span></label>
+            <textarea class="form-control" id="edit_solutionsname_description" name="solutions_description" rows="4"
+              required></textarea>
+          </div>
+
+          <div id="edit_solutionsname_current_image_container" class="form-group" style="display:none;">
+            <label>Current Image</label>
+            <div class="border p-2 text-center bg-light">
+              <img id="edit_solutionsname_current_image" src="" alt="Current Image" class="img-thumbnail"
+                style="max-height: 150px;">
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
-            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button>
+
+          <div class="form-group">
+            <label>Change Image <small class="text-muted">(leave empty to keep current)</small></label>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" name="solutions_image" id="edit_solutionsname_image"
+                accept="image/*">
+              <label class="custom-file-label" for="edit_solutionsname_image">Choose new file</label>
+            </div>
           </div>
-        </form>
-      </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i>
+            Close</button>
+          <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
+        </div>
+      </form>
     </div>
   </div>
+</div>
 
-  <!-- Edit Solutions Name Modal -->
-  <div class="modal fade" id="editSolutionsNameModal">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <form method="POST" id="editSolutionsNameForm" enctype="multipart/form-data">
-          {% csrf_token %}
-          <div class="modal-header bg-warning">
-            <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Solution Category</h5>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
+<!-- Create Subsolutions Modal -->
+<div class="modal fade" id="createSubsolutionsModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" action="{% url 'subsolutions_create' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Subsolution</h5>
+          <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Solution Category <span class="text-danger">*</span></label>
+            <select class="form-control" name="solutions_heading" required>
+              <option value="">Select Solution Category</option>
+              {% for sn in solutions_names %}
+              <option value="{{ sn.pk }}">{{ sn.solutions_name }}</option>
+              {% endfor %}
+            </select>
           </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label>Solution Name <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" id="edit_solutionsname_name" name="solutions_name" required>
-            </div>
-            <div class="form-group">
-              <label>Solution Description <span class="text-danger">*</span></label>
-              <textarea class="form-control" id="edit_solutionsname_description" name="solutions_description" rows="4" required></textarea>
-            </div>
-            
-            <div id="edit_solutionsname_current_image_container" class="form-group" style="display:none;">
-              <label>Current Image</label>
-              <div class="border p-2 text-center bg-light">
-                <img id="edit_solutionsname_current_image" src="" alt="Current Image" class="img-thumbnail" style="max-height: 150px;">
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label>Change Image <small class="text-muted">(leave empty to keep current)</small></label>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" name="solutions_image" id="edit_solutionsname_image" accept="image/*">
-                <label class="custom-file-label" for="edit_solutionsname_image">Choose new file</label>
-              </div>
+          <div class="form-group">
+            <label>Subsolution Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="solutions_name" placeholder="Enter subsolution name" required>
+          </div>
+          <div class="form-group">
+            <label>Subsolution Title</label>
+            <input type="text" class="form-control" name="solutions_title" placeholder="Enter subsolution title">
+          </div>
+          <div class="form-group">
+            <label>Subsolution Description</label>
+            <textarea class="form-control" name="solutions_description" rows="4"
+              placeholder="Enter subsolution description"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Subsolution Image <span class="text-danger">*</span></label>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" name="solutions_image" id="create_subsolutions_image"
+                accept="image/*" required>
+              <label class="custom-file-label" for="create_subsolutions_image">Choose file</label>
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
-            <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
-          </div>
-        </form>
-      </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i>
+            Close</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button>
+        </div>
+      </form>
     </div>
   </div>
+</div>
 
-  <!-- Create Subsolutions Modal -->
-  <div class="modal fade" id="createSubsolutionsModal">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <form method="POST" action="{% url 'subsolutions_create' %}" enctype="multipart/form-data">
-          {% csrf_token %}
-          <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Subsolution</h5>
-            <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+<!-- Edit Subsolutions Modal -->
+<div class="modal fade" id="editSubsolutionsModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" id="editSubsolutionsForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-header bg-warning">
+          <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Subsolution</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Solution Category <span class="text-danger">*</span></label>
+            <select class="form-control" id="edit_subsolutions_heading" name="solutions_heading" required>
+              {% for sn in solutions_names %}
+              <option value="{{ sn.pk }}">{{ sn.solutions_name }}</option>
+              {% endfor %}
+            </select>
           </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label>Solution Category <span class="text-danger">*</span></label>
-              <select class="form-control" name="solutions_heading" required>
-                <option value="">Select Solution Category</option>
-                {% for sn in solutions_names %}
-                <option value="{{ sn.pk }}">{{ sn.solutions_name }}</option>
-                {% endfor %}
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Subsolution Name <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" name="solutions_name" placeholder="Enter subsolution name" required>
-            </div>
-            <div class="form-group">
-              <label>Subsolution Description</label>
-              <textarea class="form-control" name="solutions_description" rows="4" placeholder="Enter subsolution description"></textarea>
-            </div>
-            <div class="form-group">
-              <label>Subsolution Image <span class="text-danger">*</span></label>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" name="solutions_image" id="create_subsolutions_image" accept="image/*" required>
-                <label class="custom-file-label" for="create_subsolutions_image">Choose file</label>
-              </div>
+          <div class="form-group">
+            <label>Subsolution Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="edit_subsolutions_name" name="solutions_name" required>
+          </div>
+          <div class="form-group">
+            <label>Subsolution Title</label>
+            <input type="text" class="form-control" id="edit_subsolutions_title" name="solutions_title">
+          </div>
+          <div class="form-group">
+            <label>Subsolution Description</label>
+            <textarea class="form-control" id="edit_subsolutions_description" name="solutions_description"
+              rows="4"></textarea>
+          </div>
+
+          <div id="edit_subsolutions_current_image_container" class="form-group" style="display:none;">
+            <label>Current Image</label>
+            <div class="border p-2 text-center bg-light">
+              <img id="edit_subsolutions_current_image" src="" alt="Current Image" class="img-thumbnail"
+                style="max-height: 150px;">
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
-            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button>
+
+          <div class="form-group">
+            <label>Change Image <small class="text-muted">(leave empty to keep current)</small></label>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" name="solutions_image" id="edit_subsolutions_image"
+                accept="image/*">
+              <label class="custom-file-label" for="edit_subsolutions_image">Choose new file</label>
+            </div>
           </div>
-        </form>
-      </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i>
+            Close</button>
+          <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
+        </div>
+      </form>
     </div>
   </div>
+</div>
 
-  <!-- Edit Subsolutions Modal -->
-  <div class="modal fade" id="editSubsolutionsModal">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <form method="POST" id="editSubsolutionsForm" enctype="multipart/form-data">
-          {% csrf_token %}
-          <div class="modal-header bg-warning">
-            <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Subsolution</h5>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
+<!-- Create Digital Marketing Modal -->
+<div class="modal fade" id="createDigitalMarketingModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" action="{% url 'solutions_digital_marketing_create' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Digital Marketing</h5>
+          <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Meta Title</label>
+            <input type="text" class="form-control" name="meta_title" placeholder="Enter meta title">
           </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label>Solution Category <span class="text-danger">*</span></label>
-              <select class="form-control" id="edit_subsolutions_heading" name="solutions_heading" required>
-                {% for sn in solutions_names %}
-                <option value="{{ sn.pk }}">{{ sn.solutions_name }}</option>
-                {% endfor %}
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Subsolution Name <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" id="edit_subsolutions_name" name="solutions_name" required>
-            </div>
-            <div class="form-group">
-              <label>Subsolution Description</label>
-              <textarea class="form-control" id="edit_subsolutions_description" name="solutions_description" rows="4"></textarea>
-            </div>
-            
-            <div id="edit_subsolutions_current_image_container" class="form-group" style="display:none;">
-              <label>Current Image</label>
-              <div class="border p-2 text-center bg-light">
-                <img id="edit_subsolutions_current_image" src="" alt="Current Image" class="img-thumbnail" style="max-height: 150px;">
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label>Change Image <small class="text-muted">(leave empty to keep current)</small></label>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" name="solutions_image" id="edit_subsolutions_image" accept="image/*">
-                <label class="custom-file-label" for="edit_subsolutions_image">Choose new file</label>
-              </div>
-            </div>
+          <div class="form-group">
+            <label>Meta Description</label>
+            <textarea class="form-control" name="meta_description" rows="4"
+              placeholder="Enter meta description"></textarea>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
-            <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
+          <div class="form-group">
+            <label>Meta Keywords</label>
+            <input type="text" class="form-control" name="meta_keywords" placeholder="Enter meta keywords">
           </div>
-        </form>
-      </div>
+          <div class="form-group">
+            <label>Banner Image</label>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" name="banner_image" id="create_dm_banner_image"
+                accept="image/*">
+              <label class="custom-file-label" for="create_dm_banner_image">Choose file</label>
+            </div>
+            <small class="form-text text-muted">Recommended size: 1920x600px</small>
+          </div>
+          <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="create_dm_is_active" name="is_active" checked>
+            <label class="form-check-label" for="create_dm_is_active">Active</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i>
+            Close</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button>
+        </div>
+      </form>
     </div>
   </div>
+</div>
 
-  <!-- Create Digital Marketing Modal -->
-  <div class="modal fade" id="createDigitalMarketingModal">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <form method="POST" action="{% url 'solutions_digital_marketing_create' %}" enctype="multipart/form-data">
-          {% csrf_token %}
-          <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Digital Marketing</h5>
-            <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+<!-- Edit Digital Marketing Modal -->
+<div class="modal fade" id="editDigitalMarketingModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" id="editDigitalMarketingForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-header bg-warning">
+          <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Digital Marketing</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Meta Title</label>
+            <input type="text" class="form-control" id="edit_dm_meta_title" name="meta_title">
           </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label>Meta Title</label>
-              <input type="text" class="form-control" name="meta_title" placeholder="Enter meta title">
-            </div>
-            <div class="form-group">
-              <label>Meta Description</label>
-              <textarea class="form-control" name="meta_description" rows="4" placeholder="Enter meta description"></textarea>
-            </div>
-            <div class="form-group">
-              <label>Meta Keywords</label>
-              <input type="text" class="form-control" name="meta_keywords" placeholder="Enter meta keywords">
-            </div>
-            <div class="form-group">
-              <label>Banner Image</label>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" name="banner_image" id="create_dm_banner_image" accept="image/*">
-                <label class="custom-file-label" for="create_dm_banner_image">Choose file</label>
-              </div>
-              <small class="form-text text-muted">Recommended size: 1920x600px</small>
-            </div>
-            <div class="form-group form-check">
-              <input type="checkbox" class="form-check-input" id="create_dm_is_active" name="is_active" checked>
-              <label class="form-check-label" for="create_dm_is_active">Active</label>
+          <div class="form-group">
+            <label>Meta Description</label>
+            <textarea class="form-control" id="edit_dm_meta_description" name="meta_description" rows="4"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Meta Keywords</label>
+            <input type="text" class="form-control" id="edit_dm_meta_keywords" name="meta_keywords">
+          </div>
+
+          <div id="edit_dm_current_image_container" class="form-group" style="display:none;">
+            <label>Current Banner</label>
+            <div class="border p-2 text-center bg-light">
+              <img id="edit_dm_current_image" src="" alt="Current Banner" class="img-thumbnail"
+                style="max-height:150px;">
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
-            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button>
+
+          <div class="form-group">
+            <label>Change Banner <small class="text-muted">(leave empty to keep current)</small></label>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" name="banner_image" id="edit_dm_banner_image"
+                accept="image/*">
+              <label class="custom-file-label" for="edit_dm_banner_image">Choose new file</label>
+            </div>
           </div>
-        </form>
-      </div>
+
+          <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="edit_dm_is_active" name="is_active">
+            <label class="form-check-label" for="edit_dm_is_active">Active</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i>
+            Close</button>
+          <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
+        </div>
+      </form>
     </div>
   </div>
+</div>
 
-  <!-- Edit Digital Marketing Modal -->
-  <div class="modal fade" id="editDigitalMarketingModal">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <form method="POST" id="editDigitalMarketingForm" enctype="multipart/form-data">
-          {% csrf_token %}
-          <div class="modal-header bg-warning">
-            <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Digital Marketing</h5>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-          </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label>Meta Title</label>
-              <input type="text" class="form-control" id="edit_dm_meta_title" name="meta_title">
-            </div>
-            <div class="form-group">
-              <label>Meta Description</label>
-              <textarea class="form-control" id="edit_dm_meta_description" name="meta_description" rows="4"></textarea>
-            </div>
-            <div class="form-group">
-              <label>Meta Keywords</label>
-              <input type="text" class="form-control" id="edit_dm_meta_keywords" name="meta_keywords">
-            </div>
-
-            <div id="edit_dm_current_image_container" class="form-group" style="display:none;">
-              <label>Current Banner</label>
-              <div class="border p-2 text-center bg-light">
-                <img id="edit_dm_current_image" src="" alt="Current Banner" class="img-thumbnail" style="max-height:150px;">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Change Banner <small class="text-muted">(leave empty to keep current)</small></label>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" name="banner_image" id="edit_dm_banner_image" accept="image/*">
-                <label class="custom-file-label" for="edit_dm_banner_image">Choose new file</label>
-              </div>
-            </div>
-
-            <div class="form-group form-check">
-              <input type="checkbox" class="form-check-input" id="edit_dm_is_active" name="is_active">
-              <label class="form-check-label" for="edit_dm_is_active">Active</label>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
-            <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- JavaScript Functions -->
+<!-- JavaScript Functions -->
 <script>
-    // File input label update
-    $('.custom-file-input').on('change', function() {
-      var fileName = $(this).val().split('\\').pop();
-      $(this).siblings('.custom-file-label').addClass('selected').html(fileName);
+  // File input label update
+  $('.custom-file-input').on('change', function () {
+    var fileName = $(this).val().split('\\').pop();
+    $(this).siblings('.custom-file-label').addClass('selected').html(fileName);
+  });
+
+  // Edit Solutions
+  function editSolutions(id, title, description, currentImage) {
+    document.getElementById('editSolutionsForm').action = "{% url 'solutions_edit' 0 %}".replace('0', id);
+    document.getElementById('edit_solutions_title').value = title;
+    document.getElementById('edit_solutions_description').value = description;
+
+    if (currentImage) {
+      document.getElementById('edit_solutions_current_image').src = currentImage;
+      document.getElementById('edit_solutions_current_image_container').style.display = 'block';
+    } else {
+      document.getElementById('edit_solutions_current_image_container').style.display = 'none';
+    }
+
+    $('#edit_solutions_image').val('');
+    $('#edit_solutions_image').siblings('.custom-file-label').html('Choose new file');
+
+    $('#editSolutionsModal').modal('show');
+  }
+
+  // Edit Solutions Name
+  function editSolutionsName(id, name, description, currentImage) {
+    document.getElementById('editSolutionsNameForm').action = "{% url 'solutions_name_edit' 0 %}".replace('0', id);
+    document.getElementById('edit_solutionsname_name').value = name;
+    document.getElementById('edit_solutionsname_description').value = description;
+
+    if (currentImage) {
+      document.getElementById('edit_solutionsname_current_image').src = currentImage;
+      document.getElementById('edit_solutionsname_current_image_container').style.display = 'block';
+    } else {
+      document.getElementById('edit_solutionsname_current_image_container').style.display = 'none';
+    }
+
+    $('#edit_solutionsname_image').val('');
+    $('#edit_solutionsname_image').siblings('.custom-file-label').html('Choose new file');
+
+    $('#editSolutionsNameModal').modal('show');
+  }
+
+  // Edit Subsolutions
+  function editSubsolutions(id, headingId, name,title, description, currentImage) {
+    document.getElementById('editSubsolutionsForm').action = "{% url 'subsolutions_edit' 0 %}".replace('0', id);
+    document.getElementById('edit_subsolutions_heading').value = headingId;
+    document.getElementById('edit_subsolutions_name').value = name;
+    document.getElementById('edit_subsolutions_title').value = title || '';
+    document.getElementById('edit_subsolutions_description').value = description;
+
+    if (currentImage) {
+      document.getElementById('edit_subsolutions_current_image').src = currentImage;
+      document.getElementById('edit_subsolutions_current_image_container').style.display = 'block';
+    } else {
+      document.getElementById('edit_subsolutions_current_image_container').style.display = 'none';
+    }
+
+    $('#edit_subsolutions_image').val('');
+    $('#edit_subsolutions_image').siblings('.custom-file-label').html('Choose new file');
+
+    $('#editSubsolutionsModal').modal('show');
+  }
+
+  // Edit Digital Marketing
+  function editDigitalMarketing(id, metaTitle, metaDescription, metaKeywords, currentImage, isActive) {
+    document.getElementById('editDigitalMarketingForm').action = "{% url 'solutions_digital_marketing_edit' 0 %}".replace('0', id);
+
+    document.getElementById('edit_dm_meta_title').value = metaTitle || '';
+    document.getElementById('edit_dm_meta_description').value = metaDescription || '';
+    document.getElementById('edit_dm_meta_keywords').value = metaKeywords || '';
+    document.getElementById('edit_dm_is_active').checked = Boolean(isActive);
+
+    if (currentImage) {
+      document.getElementById('edit_dm_current_image').src = currentImage;
+      document.getElementById('edit_dm_current_image_container').style.display = 'block';
+    } else {
+      document.getElementById('edit_dm_current_image_container').style.display = 'none';
+    }
+
+    $('#edit_dm_banner_image').val('');
+    $('#edit_dm_banner_image').siblings('.custom-file-label').html('Choose new file');
+
+    $('#editDigitalMarketingModal').modal('show');
+  }
+
+  // Delete function
+  function deleteItem(url, itemType) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You want to delete this " + itemType + "?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = url;
+      }
     });
+  }
 
-    // Edit Solutions
-    function editSolutions(id, title, description, currentImage) {
-      document.getElementById('editSolutionsForm').action = "{% url 'solutions_edit' 0 %}".replace('0', id);
-      document.getElementById('edit_solutions_title').value = title;
-      document.getElementById('edit_solutions_description').value = description;
-      
-      if (currentImage) {
-        document.getElementById('edit_solutions_current_image').src = currentImage;
-        document.getElementById('edit_solutions_current_image_container').style.display = 'block';
-      } else {
-        document.getElementById('edit_solutions_current_image_container').style.display = 'none';
-      }
-      
-      $('#edit_solutions_image').val('');
-      $('#edit_solutions_image').siblings('.custom-file-label').html('Choose new file');
-      
-      $('#editSolutionsModal').modal('show');
-    }
-
-    // Edit Solutions Name
-    function editSolutionsName(id, name, description, currentImage) {
-      document.getElementById('editSolutionsNameForm').action = "{% url 'solutions_name_edit' 0 %}".replace('0', id);
-      document.getElementById('edit_solutionsname_name').value = name;
-      document.getElementById('edit_solutionsname_description').value = description;
-      
-      if (currentImage) {
-        document.getElementById('edit_solutionsname_current_image').src = currentImage;
-        document.getElementById('edit_solutionsname_current_image_container').style.display = 'block';
-      } else {
-        document.getElementById('edit_solutionsname_current_image_container').style.display = 'none';
-      }
-      
-      $('#edit_solutionsname_image').val('');
-      $('#edit_solutionsname_image').siblings('.custom-file-label').html('Choose new file');
-      
-      $('#editSolutionsNameModal').modal('show');
-    }
-
-    // Edit Subsolutions
-    function editSubsolutions(id, headingId, name, description, currentImage) {
-      document.getElementById('editSubsolutionsForm').action = "{% url 'subsolutions_edit' 0 %}".replace('0', id);
-      document.getElementById('edit_subsolutions_heading').value = headingId;
-      document.getElementById('edit_subsolutions_name').value = name;
-      document.getElementById('edit_subsolutions_description').value = description;
-      
-      if (currentImage) {
-        document.getElementById('edit_subsolutions_current_image').src = currentImage;
-        document.getElementById('edit_subsolutions_current_image_container').style.display = 'block';
-      } else {
-        document.getElementById('edit_subsolutions_current_image_container').style.display = 'none';
-      }
-      
-      $('#edit_subsolutions_image').val('');
-      $('#edit_subsolutions_image').siblings('.custom-file-label').html('Choose new file');
-      
-      $('#editSubsolutionsModal').modal('show');
-    }
-
-    // Edit Digital Marketing
-    function editDigitalMarketing(id, metaTitle, metaDescription, metaKeywords, currentImage, isActive) {
-      document.getElementById('editDigitalMarketingForm').action = "{% url 'solutions_digital_marketing_edit' 0 %}".replace('0', id);
-      
-      document.getElementById('edit_dm_meta_title').value = metaTitle || '';
-      document.getElementById('edit_dm_meta_description').value = metaDescription || '';
-      document.getElementById('edit_dm_meta_keywords').value = metaKeywords || '';
-      document.getElementById('edit_dm_is_active').checked = Boolean(isActive);
-
-      if (currentImage) {
-        document.getElementById('edit_dm_current_image').src = currentImage;
-        document.getElementById('edit_dm_current_image_container').style.display = 'block';
-      } else {
-        document.getElementById('edit_dm_current_image_container').style.display = 'none';
-      }
-
-      $('#edit_dm_banner_image').val('');
-      $('#edit_dm_banner_image').siblings('.custom-file-label').html('Choose new file');
-
-      $('#editDigitalMarketingModal').modal('show');
-    }
-
-    // Delete function
-    function deleteItem(url, itemType) {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You want to delete this " + itemType + "?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: 'Cancel'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          window.location.href = url;
-        }
-      });
-    }
-
-    // Auto-hide alerts after 5 seconds
-    setTimeout(function() {
-      $('.alert').fadeOut('slow');
-    }, 5000);
-  </script>
+  // Auto-hide alerts after 5 seconds
+  setTimeout(function () {
+    $('.alert').fadeOut('slow');
+  }, 5000);
+</script>
 
 {% endblock %}

@@ -379,6 +379,7 @@ class ServiceName(models.Model):
 class Subservice(models.Model):
     service_heading = models.ForeignKey(ServiceName, on_delete=models.CASCADE, related_name='subservices')
     subservice_name = models.CharField(max_length=255)
+    subservice_title = models.CharField(max_length=255, blank=True, null=True)
     subservice_description = models.TextField(blank=True, null=True)
     sub_service_image =models.ImageField(upload_to='sub_service_images/')
 
@@ -426,6 +427,7 @@ class SolutionsName(models.Model):
 class Subsolutions(models.Model):
     solutions_heading = models.ForeignKey(SolutionsName, on_delete=models.CASCADE, related_name='solutions')
     solutions_name = models.CharField(max_length=255)
+    solutions_title = models.CharField(max_length=255, blank=True, null=True)
     solutions_description = models.TextField(blank=True, null=True)
     solutions_image =models.ImageField(upload_to='Subsolutions/')
 

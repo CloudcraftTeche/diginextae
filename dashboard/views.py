@@ -1644,6 +1644,7 @@ def subservice_create(request):
     if request.method == 'POST':
         service_heading_id = request.POST.get('service_heading')
         subservice_name = request.POST.get('subservice_name')
+        subservice_title = request.POST.get('subservice_title')
         subservice_description = request.POST.get('subservice_description')
         sub_service_image = request.FILES.get('sub_service_image')
         
@@ -1652,6 +1653,7 @@ def subservice_create(request):
         Subservice.objects.create(
             service_heading=service_heading,
             subservice_name=subservice_name,
+            subservice_title=subservice_title,
             subservice_description=subservice_description,
             sub_service_image=sub_service_image
         )
@@ -1667,6 +1669,7 @@ def subservice_edit(request, pk):
         service_heading_id = request.POST.get('service_heading')
         subservice.service_heading = get_object_or_404(ServiceName, pk=service_heading_id)
         subservice.subservice_name = request.POST.get('subservice_name')
+        subservice.subservice_title = request.POST.get('subservice_title')
         subservice.subservice_description = request.POST.get('subservice_description')
         
         if request.FILES.get('sub_service_image'):
@@ -1861,6 +1864,7 @@ def subsolutions_create(request):
     if request.method == 'POST':
         solutions_heading_id = request.POST.get('solutions_heading')
         solutions_name = request.POST.get('solutions_name')
+        solutions_title = request.POST.get('solutions_title')
         solutions_description = request.POST.get('solutions_description')
         solutions_image = request.FILES.get('solutions_image')
         
@@ -1869,6 +1873,7 @@ def subsolutions_create(request):
         Subsolutions.objects.create(
             solutions_heading=solutions_heading,
             solutions_name=solutions_name,
+            solutions_title=solutions_title,
             solutions_description=solutions_description,
             solutions_image=solutions_image
         )
@@ -1885,6 +1890,7 @@ def subsolutions_edit(request, pk):
         solutions_heading_id = request.POST.get('solutions_heading')
         subsolution.solutions_heading = get_object_or_404(SolutionsName, pk=solutions_heading_id)
         subsolution.solutions_name = request.POST.get('solutions_name')
+        subsolution.solutions_title = request.POST.get('solutions_title')
         subsolution.solutions_description = request.POST.get('solutions_description')
         
         if request.FILES.get('solutions_image'):
