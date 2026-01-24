@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
+    'cloudinary',
     #  for api 
     'rest_framework',
 
@@ -65,6 +67,29 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
+# ==================== CLOUDINARY CONFIGURATION ====================
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', 'dfaffsfs9'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY', '623497361319142'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', '6SACYNN2DE2Pzdxty-vy8_cAWX4'),
+}
+
+# Configure cloudinary
+cloudinary.config(
+    cloud_name=CLOUDINARY_STORAGE['CLOUD_NAME'],
+    api_key=CLOUDINARY_STORAGE['API_KEY'],
+    api_secret=CLOUDINARY_STORAGE['API_SECRET'],
+    secure=True
+)
+
+# Use Cloudinary for media files storage
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# ==================== END CLOUDINARY CONFIGURATION ====================
 
 
 # REST Framework Configuration - Public API (No Authentication Required)

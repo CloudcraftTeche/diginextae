@@ -1,26 +1,30 @@
 from django.db import models
-from .base import BaseModel
+from cloudinary.models import CloudinaryField
 
-class Home(BaseModel):
+# Note: If you have a base.py with BaseModel, keep that import
+# from .base import BaseModel
+
+
+class Home(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     order_number = models.PositiveIntegerField()
-    image = models.ImageField(upload_to='home_images/', blank=True, null=True)
+    image = CloudinaryField('image', folder='home_images', blank=True, null=True)
     display_order = models.PositiveIntegerField(default=0, help_text="Controls the display order on the homepage.")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.order_number} - {self.title}"
 
 
-# --------------------- from her on use ------------------------>
-
-# --------------------home ------------------------>
-
+# ==================== HOME SECTION ====================
 
 class HomeBanner(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='banners/')
+    image = CloudinaryField('image', folder='banners')
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -43,7 +47,7 @@ class HomeText1(models.Model):
 class HomeBanner2(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='banners2/')
+    image = CloudinaryField('image', folder='banners2')
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -63,11 +67,10 @@ class HomeText2(models.Model):
         return self.title
     
 
-
 class Conncepts(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='concepts/')
+    image = CloudinaryField('image', folder='concepts')
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -76,11 +79,10 @@ class Conncepts(models.Model):
         return self.title
     
 
-
 class HomeBanner3(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='banners3/')
+    image = CloudinaryField('image', folder='banners3')
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -100,11 +102,10 @@ class HomeText3(models.Model):
         return self.title
     
 
-
 class HomeAvailableWorks(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='home_available_works/')
+    image = CloudinaryField('image', folder='home_available_works')
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -113,13 +114,10 @@ class HomeAvailableWorks(models.Model):
         return self.title
     
 
-
-  
-    
 class HomeBanner4(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='banners4/')
+    image = CloudinaryField('image', folder='banners4')
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -140,11 +138,10 @@ class Contents(models.Model):
         return self.title
     
 
-    
 class HomeAboutUs(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
-    image = models.ImageField(upload_to='home_about_us/', blank=True, null=True)
+    image = CloudinaryField('image', folder='home_about_us', blank=True, null=True)
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -152,6 +149,7 @@ class HomeAboutUs(models.Model):
     def __str__(self):
         return self.title
     
+
 class HomeQuestions(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -175,7 +173,6 @@ class Question(models.Model):
         return self.question_text
     
 
-
 class Footer(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -191,15 +188,14 @@ class HomeDigitalMarketing(models.Model):
     meta_title = models.CharField(max_length=200, blank=True, null=True)
     meta_description = models.TextField(blank=True, null=True)
     meta_keywords = models.CharField(max_length=500, blank=True, null=True)
-    banner_image = models.ImageField(upload_to='home_digital_marketing/', blank=True, null=True)
+    banner_image = CloudinaryField('image', folder='home_digital_marketing', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-   
-
     def __str__(self):
         return "Home Page SEO / Marketing"
+
 
 class HomeVision(models.Model):
     title = models.CharField(max_length=200)
@@ -214,8 +210,7 @@ class HomeVision(models.Model):
 
 class HomeFeatures(models.Model):
     """Home Features Section"""
-    
-    image = models.ImageField(upload_to='home_features/', blank=True, null=True)
+    image = CloudinaryField('image', folder='home_features', blank=True, null=True)
     main_feature = models.TextField(blank=True, null=True)
     
     text1 = models.CharField(max_length=200, blank=True, null=True)
@@ -242,8 +237,9 @@ class HomeFeatures(models.Model):
 
     def __str__(self):
         return f"Home Features - {self.id}"
-# ==================================  contacts ===============================>
 
+
+# ==================== CONTACTS SECTION ====================
 
 class ContactSA(models.Model):
     title = models.CharField(max_length=255)
@@ -261,36 +257,32 @@ class Leads(models.Model):
     company_name = models.CharField(max_length=255, null=True, blank=True)
     solution = models.CharField(max_length=255, null=True, blank=True)
     message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.fullname
     
 
 class ContactDigitalMarketing(models.Model):
     meta_title = models.CharField(max_length=200, blank=True, null=True)
     meta_description = models.TextField(blank=True, null=True)
     meta_keywords = models.CharField(max_length=500, blank=True, null=True)
-    banner_image = models.ImageField(upload_to='home_digital_marketing/', blank=True, null=True)
+    banner_image = CloudinaryField('image', folder='contact_digital_marketing', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-   
-
     def __str__(self):
-        return "Home Page SEO / Marketing"
-    
+        return "Contact Page SEO / Marketing"
 
 
-
-
-
-
-# =========================== abouts us ==========================>
-
+# ==================== ABOUT US SECTION ====================
 
 class AboutUsBanner1(models.Model):
     title = models.CharField(max_length=255)
     subtitle = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='about_us/banners/')
+    image = CloudinaryField('image', folder='about_us/banners')
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -310,19 +302,16 @@ class AboutUsText1(models.Model):
         return self.heading
     
 
-
-
 class AboutUsMission(models.Model):
     title = models.CharField(max_length=255)
     mission_text = models.TextField()
-    icon = models.ImageField(upload_to='about_us/mission/', blank=True, null=True)
+    icon = CloudinaryField('image', folder='about_us/mission', blank=True, null=True)
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
-
 
 
 class AboutUsText2(models.Model):
@@ -340,40 +329,33 @@ class AboutUsDigitalMarketing(models.Model):
     meta_title = models.CharField(max_length=200, blank=True, null=True)
     meta_description = models.TextField(blank=True, null=True)
     meta_keywords = models.CharField(max_length=500, blank=True, null=True)
-    banner_image = models.ImageField(upload_to='about_digital_marketing/', blank=True, null=True)
+    banner_image = CloudinaryField('image', folder='about_digital_marketing', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return "About Us Page SEO / Marketing"
 
 
-
-
-
-
-
-# ================================= services ===========================>
-
-
+# ==================== SERVICES SECTION ====================
 
 class Service(models.Model):
-
     banner_description_title = models.CharField(max_length=255, blank=True, null=True)
     banner_description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='service_images/', blank=True, null=True)
+    image = CloudinaryField('image', folder='service_images', blank=True, null=True)
 
     def __str__(self):
-        return self.banner_description_title
+        return self.banner_description_title or "Service"
 
 
 class ServiceName(models.Model):
     service_name = models.CharField(max_length=255)
     service_description = models.TextField()
-    service_image = models.ImageField(upload_to='service_images/')
+    service_image = CloudinaryField('image', folder='service_images')
 
     def __str__(self):
         return self.service_name
-
 
 
 class Subservice(models.Model):
@@ -381,8 +363,7 @@ class Subservice(models.Model):
     subservice_name = models.CharField(max_length=255)
     subservice_title = models.CharField(max_length=255, blank=True, null=True)
     subservice_description = models.TextField(blank=True, null=True)
-    sub_service_image =models.ImageField(upload_to='sub_service_images/')
-
+    sub_service_image = CloudinaryField('image', folder='sub_service_images')
 
     def __str__(self):
         return self.subservice_name
@@ -392,36 +373,33 @@ class ServiceDigitalMarketing(models.Model):
     meta_title = models.CharField(max_length=200, blank=True, null=True)
     meta_description = models.TextField(blank=True, null=True)
     meta_keywords = models.CharField(max_length=500, blank=True, null=True)
-    banner_image = models.ImageField(upload_to='home_digital_marketing/', blank=True, null=True)
+    banner_image = CloudinaryField('image', folder='service_digital_marketing', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return "Service Page SEO / Marketing"
 
 
-# ===================== solution ===========================>
-
+# ==================== SOLUTIONS SECTION ====================
 
 class Solutions(models.Model):
-
     banner_description_title = models.CharField(max_length=255, blank=True, null=True)
     banner_description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='Solutions/', blank=True, null=True)
+    image = CloudinaryField('image', folder='solutions', blank=True, null=True)
 
     def __str__(self):
-        return self.banner_description_title
+        return self.banner_description_title or "Solutions"
 
 
 class SolutionsName(models.Model):
     solutions_name = models.CharField(max_length=255)
     solutions_description = models.TextField()
-    solutions_image = models.ImageField(upload_to='SolutionsName/')
+    solutions_image = CloudinaryField('image', folder='solutions_name')
 
     def __str__(self):
         return self.solutions_name
-
-        
-
 
 
 class Subsolutions(models.Model):
@@ -429,8 +407,7 @@ class Subsolutions(models.Model):
     solutions_name = models.CharField(max_length=255)
     solutions_title = models.CharField(max_length=255, blank=True, null=True)
     solutions_description = models.TextField(blank=True, null=True)
-    solutions_image =models.ImageField(upload_to='Subsolutions/')
-
+    solutions_image = CloudinaryField('image', folder='subsolutions')
 
     def __str__(self):
         return self.solutions_name
@@ -440,14 +417,16 @@ class solutionsDigitalMarketing(models.Model):
     meta_title = models.CharField(max_length=200, blank=True, null=True)
     meta_description = models.TextField(blank=True, null=True)
     meta_keywords = models.CharField(max_length=500, blank=True, null=True)
-    banner_image = models.ImageField(upload_to='solution_digital_marketing/', blank=True, null=True)
+    banner_image = CloudinaryField('image', folder='solution_digital_marketing', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-   
+    def __str__(self):
+        return "Solutions Page SEO / Marketing"
 
-# ===================== OUR WORKS SECTION ===========================>
+
+# ==================== OUR WORKS SECTION ====================
 
 class Industry(models.Model):
     """Industries for Our Works"""
@@ -482,26 +461,15 @@ class Expertise(models.Model):
 class OurWorks(models.Model):
     """Our Works Portfolio"""
 
-    # ================= Banner Section =================
-    banner_image = models.ImageField(
-        upload_to='our_works/banners/',
-        null=True,
-        blank=True
-    )
-    banner_heading = models.CharField(
-        max_length=255,
-        null=True,
-        blank=True
-    )
-    banner_description = models.TextField(
-        null=True,
-        blank=True
-    )
+    # Banner Section
+    banner_image = CloudinaryField('image', folder='our_works/banners', null=True, blank=True)
+    banner_heading = models.CharField(max_length=255, null=True, blank=True)
+    banner_description = models.TextField(null=True, blank=True)
 
-    # ================= Work Details =================
+    # Work Details
     title = models.CharField(max_length=200)
     description = models.TextField()
-    image = models.ImageField(upload_to='our_works/')
+    image = CloudinaryField('image', folder='our_works')
 
     industry = models.ForeignKey(
         'Industry',
@@ -518,40 +486,16 @@ class OurWorks(models.Model):
         related_name='works'
     )
 
-    language = models.CharField(
-        max_length=100,
-        null=True,
-        blank=True
-    )
-    time_scale = models.CharField(
-        max_length=100,
-        null=True,
-        blank=True
-    )
-    launch_date = models.CharField(   # text because form uses text
-        max_length=100,
-        null=True,
-        blank=True
-    )
-    system = models.CharField(
-        max_length=150,
-        null=True,
-        blank=True
-    )
+    language = models.CharField(max_length=100, null=True, blank=True)
+    time_scale = models.CharField(max_length=100, null=True, blank=True)
+    launch_date = models.CharField(max_length=100, null=True, blank=True)
+    system = models.CharField(max_length=150, null=True, blank=True)
 
-    # ================= Banner 2 =================
-    banner2_image = models.ImageField(
-        upload_to='our_works/banners/',
-        null=True,
-        blank=True
-    )
-    banner2_title = models.CharField(
-        max_length=255,
-        null=True,
-        blank=True
-    )
+    # Banner 2
+    banner2_image = CloudinaryField('image', folder='our_works/banners', null=True, blank=True)
+    banner2_title = models.CharField(max_length=255, null=True, blank=True)
 
-    # ================= Status & Timestamps =================
+    # Status & Timestamps
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -563,11 +507,12 @@ class OurWorks(models.Model):
     def __str__(self):
         return self.title
 
+
 class OurWorksDigitalMarketing(models.Model):
     meta_title = models.CharField(max_length=200, blank=True, null=True)
     meta_description = models.TextField(blank=True, null=True)
     meta_keywords = models.CharField(max_length=500, blank=True, null=True)
-    banner_image = models.ImageField(upload_to='ourworks_digital_marketing/', blank=True, null=True)
+    banner_image = CloudinaryField('image', folder='ourworks_digital_marketing', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -575,14 +520,15 @@ class OurWorksDigitalMarketing(models.Model):
     def __str__(self):
         return "Our Works Page SEO / Marketing"         
 
-# ===================== INSIGHTS SECTION ===========================>
+
+# ==================== INSIGHTS SECTION ====================
 
 class Insights(models.Model):
     """Insights/Blog Section"""
     title = models.CharField(max_length=200)
     subtitle = models.CharField(max_length=200, blank=True, null=True)
     description = models.TextField()
-    banner_image = models.ImageField(upload_to='insights/')
+    banner_image = CloudinaryField('image', folder='insights')
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -594,11 +540,12 @@ class Insights(models.Model):
     def __str__(self):
         return self.title    
 
+
 class InsightsDigitalMarketing(models.Model):
     meta_title = models.CharField(max_length=200, blank=True, null=True)
     meta_description = models.TextField(blank=True, null=True)
     meta_keywords = models.CharField(max_length=500, blank=True, null=True)
-    banner_image = models.ImageField(upload_to='insights_digital_marketing/', blank=True, null=True)
+    banner_image = CloudinaryField('image', folder='insights_digital_marketing', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -606,35 +553,28 @@ class InsightsDigitalMarketing(models.Model):
     def __str__(self):
         return "Insights Page SEO / Marketing"      
 
+
 class OurInsights(models.Model):
     """Our Insights Model"""
-
     category = models.CharField(
         max_length=150,
         null=True,
         blank=True,
         help_text="e.g., Technology, Business, Marketing"
     )
-
     title = models.CharField(max_length=200)
-
     description = models.TextField()
-
     services = models.TextField(
         null=True,
         blank=True,
         help_text="Comma separated values. Example: Web Development, SEO, UI/UX Design"
     )
-
-    image = models.ImageField(upload_to='our_insights/')
-
+    image = CloudinaryField('image', folder='our_insights')
     insight_date = models.CharField(
         max_length=100,
         help_text="e.g., 6 months, 1 week, 1 year"
     )
-
     is_active = models.BooleanField(default=False)
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -647,7 +587,7 @@ class OurInsights(models.Model):
         return self.title  
 
 
-# ================= Challenge Section for Our Insights ===========================>
+# ==================== CHALLENGE SECTION FOR INSIGHTS ====================
 
 class InsightChallengeSection(models.Model):
     insight = models.ForeignKey(
@@ -657,13 +597,11 @@ class InsightChallengeSection(models.Model):
     )
     title = models.CharField(max_length=255)
     description = models.TextField()
-
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
    
-# ================= Challenge Items for Each Section ===========================>
 
 class InsightChallengeItem(models.Model):
     section = models.ForeignKey(
@@ -672,7 +610,6 @@ class InsightChallengeItem(models.Model):
         related_name="items"
     )
     text = models.CharField(max_length=255)
-
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
