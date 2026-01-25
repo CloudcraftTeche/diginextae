@@ -1779,6 +1779,11 @@ def project_goals_section_create(request):
         work_id = request.POST.get('ourwork')
         work = get_object_or_404(OurWorks, pk=work_id)
         
+        # Check if Project Goals Section already exists for this OurWork
+        if ProjectGoalsSection.objects.filter(ourwork=work).exists():
+            messages.warning(request, f'Project Goals Section already exists for "{work.title}". Please edit the existing section or choose a different Our Work.')
+            return redirect('project_goals_page')
+        
         ProjectGoalsSection.objects.create(
             ourwork=work,
             main_heading=request.POST.get('main_heading', 'PROJECT GOALS'),
@@ -1797,7 +1802,14 @@ def project_goals_section_edit(request, pk):
     
     if request.method == 'POST':
         work_id = request.POST.get('ourwork')
-        section.ourwork = get_object_or_404(OurWorks, pk=work_id)
+        new_work = get_object_or_404(OurWorks, pk=work_id)
+        
+        # Check if changing to a different OurWork that already has Project Goals Section
+        if new_work != section.ourwork and ProjectGoalsSection.objects.filter(ourwork=new_work).exists():
+            messages.warning(request, f'Project Goals Section already exists for "{new_work.title}". Please choose a different Our Work.')
+            return redirect('project_goals_page')
+        
+        section.ourwork = new_work
         section.main_heading = request.POST.get('main_heading', 'PROJECT GOALS')
         section.main_title = request.POST.get('main_title', 'Objectives')
         section.main_description = request.POST.get('main_description')
@@ -1883,6 +1895,11 @@ def challenges_section_create(request):
         work_id = request.POST.get('ourwork')
         work = get_object_or_404(OurWorks, pk=work_id)
         
+        # Check if Challenges Section already exists for this OurWork
+        if ChallengesSection.objects.filter(ourwork=work).exists():
+            messages.warning(request, f'Challenges Section already exists for "{work.title}". Please edit the existing section or choose a different Our Work.')
+            return redirect('challenges_page')
+        
         ChallengesSection.objects.create(
             ourwork=work,
             banner_image=request.FILES.get('banner_image'),
@@ -1903,7 +1920,14 @@ def challenges_section_edit(request, pk):
     
     if request.method == 'POST':
         work_id = request.POST.get('ourwork')
-        section.ourwork = get_object_or_404(OurWorks, pk=work_id)
+        new_work = get_object_or_404(OurWorks, pk=work_id)
+        
+        # Check if changing to a different OurWork that already has Challenges Section
+        if new_work != section.ourwork and ChallengesSection.objects.filter(ourwork=new_work).exists():
+            messages.warning(request, f'Challenges Section already exists for "{new_work.title}". Please choose a different Our Work.')
+            return redirect('challenges_page')
+        
+        section.ourwork = new_work
         section.main_heading = request.POST.get('main_heading', 'WHAT WE SOLVED')
         section.main_title = request.POST.get('main_title', 'Challenges')
         section.main_description = request.POST.get('main_description')
@@ -2003,6 +2027,11 @@ def creative_direction_section_create(request):
         work_id = request.POST.get('ourwork')
         work = get_object_or_404(OurWorks, pk=work_id)
         
+        # Check if Creative Direction Section already exists for this OurWork
+        if CreativeDirectionSection.objects.filter(ourwork=work).exists():
+            messages.warning(request, f'Creative Direction Section already exists for "{work.title}". Please edit the existing section or choose a different Our Work.')
+            return redirect('creative_direction_page')
+        
         CreativeDirectionSection.objects.create(
             ourwork=work,
             main_title=request.POST.get('main_title'),
@@ -2020,7 +2049,14 @@ def creative_direction_section_edit(request, pk):
     
     if request.method == 'POST':
         work_id = request.POST.get('ourwork')
-        section.ourwork = get_object_or_404(OurWorks, pk=work_id)
+        new_work = get_object_or_404(OurWorks, pk=work_id)
+        
+        # Check if changing to a different OurWork that already has Creative Direction Section
+        if new_work != section.ourwork and CreativeDirectionSection.objects.filter(ourwork=new_work).exists():
+            messages.warning(request, f'Creative Direction Section already exists for "{new_work.title}". Please choose a different Our Work.')
+            return redirect('creative_direction_page')
+        
+        section.ourwork = new_work
         section.main_title = request.POST.get('main_title')
         section.main_description = request.POST.get('main_description')
         section.is_active = request.POST.get('is_active') == 'on'
@@ -2118,6 +2154,11 @@ def mobile_section_create(request):
         work_id = request.POST.get('ourwork')
         work = get_object_or_404(OurWorks, pk=work_id)
         
+        # Check if Mobile Section already exists for this OurWork
+        if MobileSection.objects.filter(ourwork=work).exists():
+            messages.warning(request, f'Mobile Section already exists for "{work.title}". Please edit the existing section or choose a different Our Work.')
+            return redirect('mobile_section_page')
+        
         MobileSection.objects.create(
             ourwork=work,
             label=request.POST.get('label', 'INTERACTIVE EXPERIENCE'),
@@ -2140,7 +2181,14 @@ def mobile_section_edit(request, pk):
     
     if request.method == 'POST':
         work_id = request.POST.get('ourwork')
-        section.ourwork = get_object_or_404(OurWorks, pk=work_id)
+        new_work = get_object_or_404(OurWorks, pk=work_id)
+        
+        # Check if changing to a different OurWork that already has Mobile Section
+        if new_work != section.ourwork and MobileSection.objects.filter(ourwork=new_work).exists():
+            messages.warning(request, f'Mobile Section already exists for "{new_work.title}". Please choose a different Our Work.')
+            return redirect('mobile_section_page')
+        
+        section.ourwork = new_work
         section.label = request.POST.get('label', 'INTERACTIVE EXPERIENCE')
         section.title = request.POST.get('title')
         section.description = request.POST.get('description')
@@ -2176,6 +2224,177 @@ def mobile_section_delete(request, pk):
     section.delete()
     messages.success(request, 'Mobile Section deleted successfully!')
     return redirect('mobile_section_page')    
+
+# ==================== SECTION 4 CRUD ====================
+
+@login_required
+def section4_page(request):
+    """Main page to manage all Section 4 entries"""
+    sections = Section4.objects.all().select_related('ourwork').order_by('-created_at')
+    ourworks = OurWorks.objects.all().order_by('title')
+    
+    context = {
+        'sections': sections,
+        'sections_count': sections.count(),
+        'ourworks': ourworks,
+    }
+    return render(request, 'section4.html', context)
+
+
+@login_required
+def section4_create(request):
+    """Create Section 4"""
+    if request.method == 'POST':
+        work_id = request.POST.get('ourwork')
+        work = get_object_or_404(OurWorks, pk=work_id)
+        
+        # Check if Section 4 already exists for this OurWork
+        if Section4.objects.filter(ourwork=work).exists():
+            messages.warning(request, f'Section 4 already exists for "{work.title}". Please edit the existing section or choose a different Our Work.')
+            return redirect('section4_page')
+        
+        Section4.objects.create(
+            ourwork=work,
+            heading=request.POST.get('heading'),
+            description=request.POST.get('description'),
+            image_1=request.FILES.get('image_1'),
+            image_2=request.FILES.get('image_2'),
+            image_3=request.FILES.get('image_3'),
+            is_active=request.POST.get('is_active') == 'on'
+        )
+        messages.success(request, 'Section 4 created successfully!')
+    return redirect('section4_page')
+
+
+@login_required
+def section4_edit(request, pk):
+    """Edit Section 4"""
+    section = get_object_or_404(Section4, pk=pk)
+    old_image_1 = section.image_1
+    old_image_2 = section.image_2
+    old_image_3 = section.image_3
+    
+    if request.method == 'POST':
+        work_id = request.POST.get('ourwork')
+        new_work = get_object_or_404(OurWorks, pk=work_id)
+        
+        # Check if changing to a different OurWork that already has Section 4
+        if new_work != section.ourwork and Section4.objects.filter(ourwork=new_work).exists():
+            messages.warning(request, f'Section 4 already exists for "{new_work.title}". Please choose a different Our Work.')
+            return redirect('section4_page')
+        
+        section.ourwork = new_work
+        section.heading = request.POST.get('heading')
+        section.description = request.POST.get('description')
+        section.is_active = request.POST.get('is_active') == 'on'
+        
+        # Handle image_1
+        if request.FILES.get('image_1'):
+            if old_image_1:
+                delete_cloudinary_image(old_image_1)
+            section.image_1 = request.FILES.get('image_1')
+        
+        # Handle image_2
+        if request.FILES.get('image_2'):
+            if old_image_2:
+                delete_cloudinary_image(old_image_2)
+            section.image_2 = request.FILES.get('image_2')
+        
+        # Handle image_3
+        if request.FILES.get('image_3'):
+            if old_image_3:
+                delete_cloudinary_image(old_image_3)
+            section.image_3 = request.FILES.get('image_3')
+        
+        section.save()
+        messages.success(request, 'Section 4 updated successfully!')
+    return redirect('section4_page')
+
+
+@login_required
+def section4_delete(request, pk):
+    """Delete Section 4"""
+    section = get_object_or_404(Section4, pk=pk)
+    
+    if section.image_1:
+        delete_cloudinary_image(section.image_1)
+    if section.image_2:
+        delete_cloudinary_image(section.image_2)
+    if section.image_3:
+        delete_cloudinary_image(section.image_3)
+    
+    section.delete()
+    messages.success(request, 'Section 4 deleted successfully!')
+    return redirect('section4_page')
+
+# ==================== SECTION 5 CRUD ====================
+
+@login_required
+def section5_page(request):
+    """Main page to manage all Section 5 entries"""
+    sections = Section5.objects.all().select_related('ourwork').order_by('-created_at')
+    ourworks = OurWorks.objects.all().order_by('title')
+    
+    context = {
+        'sections': sections,
+        'sections_count': sections.count(),
+        'ourworks': ourworks,
+    }
+    return render(request, 'section5.html', context)
+
+
+@login_required
+def section5_create(request):
+    """Create Section 5"""
+    if request.method == 'POST':
+        work_id = request.POST.get('ourwork')
+        work = get_object_or_404(OurWorks, pk=work_id)
+        
+        Section5.objects.create(
+            ourwork=work,
+            heading=request.POST.get('heading'),
+            description=request.POST.get('description'),
+            image=request.FILES.get('image'),
+            is_active=request.POST.get('is_active') == 'on'
+        )
+        messages.success(request, 'Section 5 created successfully!')
+    return redirect('section5_page')
+
+
+@login_required
+def section5_edit(request, pk):
+    """Edit Section 5"""
+    section = get_object_or_404(Section5, pk=pk)
+    old_image = section.image
+    
+    if request.method == 'POST':
+        work_id = request.POST.get('ourwork')
+        section.ourwork = get_object_or_404(OurWorks, pk=work_id)
+        section.heading = request.POST.get('heading')
+        section.description = request.POST.get('description')
+        section.is_active = request.POST.get('is_active') == 'on'
+        
+        if request.FILES.get('image'):
+            if old_image:
+                delete_cloudinary_image(old_image)
+            section.image = request.FILES.get('image')
+        
+        section.save()
+        messages.success(request, 'Section 5 updated successfully!')
+    return redirect('section5_page')
+
+
+@login_required
+def section5_delete(request, pk):
+    """Delete Section 5"""
+    section = get_object_or_404(Section5, pk=pk)
+    
+    if section.image:
+        delete_cloudinary_image(section.image)
+    
+    section.delete()
+    messages.success(request, 'Section 5 deleted successfully!')
+    return redirect('section5_page')        
 # ==================== OUR WORKS DIGITAL MARKETING SECTION ====================    
 
 @login_required

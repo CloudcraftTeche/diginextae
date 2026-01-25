@@ -698,7 +698,58 @@ class MobileSection(models.Model):
     def __str__(self):
         return f"Mobile Section - {self.ourwork.title}"
 
+# ==================== SECTION 4 - THREE IMAGES ====================
 
+class Section4(models.Model):
+    """Section 4 for Our Works - heading, description, and 3 images"""
+    ourwork = models.OneToOneField(
+        OurWorks,
+        on_delete=models.CASCADE,
+        related_name='section4'
+    )
+    heading = models.CharField(max_length=200, help_text="Section heading")
+    description = models.TextField(help_text="Section description")
+    
+    # Three images
+    image_1 = CloudinaryField('image', folder='section4', help_text="First image")
+    image_2 = CloudinaryField('image', folder='section4', help_text="Second image")
+    image_3 = CloudinaryField('image', folder='section4', help_text="Third image")
+    
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Section 4"
+        verbose_name_plural = "Section 4"
+
+    def __str__(self):
+        return f"Section 4 - {self.ourwork.title}"
+
+
+# ==================== SECTION 5 - SINGLE IMAGE ====================
+
+class Section5(models.Model):
+    """Section 5 for Our Works - heading, description, and single image"""
+    ourwork = models.OneToOneField(
+        OurWorks,
+        on_delete=models.CASCADE,
+        related_name='section5'
+    )
+    heading = models.CharField(max_length=200, help_text="Section heading")
+    description = models.TextField(help_text="Section description")
+    image = CloudinaryField('image', folder='section5', help_text="Main section image")
+    
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Section 5"
+        verbose_name_plural = "Section 5"
+
+    def __str__(self):
+        return f"Section 5 - {self.ourwork.title}"
 # ==================== OUR WORKS DIGITAL MARKETING SECTION ====================
 class OurWorksDigitalMarketing(models.Model):
     meta_title = models.CharField(max_length=200, blank=True, null=True)

@@ -1,0 +1,353 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Section 4 Management - Diginext{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Section 4 (3 Images)</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'ourwork_page' %}">Our Works</a></li>
+                        <li class="breadcrumb-item active">Section 4</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Display Messages -->
+    {% if messages %}
+    <div class="container-fluid">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            
+            <!-- Statistics Card -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="small-box bg-teal">
+                        <div class="inner">
+                            <h3>{{ sections_count }}</h3>
+                            <p>Total Section 4 Entries</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-images"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4 List -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">All Section 4 Entries</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-teal btn-sm" data-toggle="modal" data-target="#createSection4Modal" style="background-color: #20c997; border-color: #20c997; color: white;">
+                                    <i class="fas fa-plus"></i> Add Section 4
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {% if sections %}
+                            {% for section in sections %}
+                            <div class="card mb-4" style="border-left: 4px solid #20c997;">
+                                <div class="card-header bg-light">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="mb-1">
+                                                <i class="fas fa-briefcase" style="color: #20c997;"></i> 
+                                                {{ section.ourwork.title }}
+                                            </h5>
+                                            {% if section.is_active %}
+                                            <span class="badge badge-success">Active</span>
+                                            {% else %}
+                                            <span class="badge badge-secondary">Inactive</span>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-sm btn-info"
+                                                onclick="editSection(
+                                                    {{ section.pk }},
+                                                    {{ section.ourwork.pk }},
+                                                    '{{ section.heading|escapejs }}',
+                                                    '{{ section.description|escapejs }}',
+                                                    {{ section.is_active|yesno:'true,false' }},
+                                                    '{% if section.image_1 %}{{ section.image_1.url }}{% endif %}',
+                                                    '{% if section.image_2 %}{{ section.image_2.url }}{% endif %}',
+                                                    '{% if section.image_3 %}{{ section.image_3.url }}{% endif %}'
+                                                )"
+                                            >
+                                                <i class="fas fa-edit"></i> Edit
+                                            </button>
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-sm btn-danger" 
+                                                onclick="deleteSection('{% url 'section4_delete' section.pk %}')"
+                                            >
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-4">
+                                        <h4 class="text-dark">{{ section.heading }}</h4>
+                                        <p class="text-muted">{{ section.description }}</p>
+                                    </div>
+
+                                    <!-- Three Images -->
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            {% if section.image_1 %}
+                                            <img src="{{ section.image_1.url }}" alt="Image 1" class="img-fluid rounded shadow-sm mb-3">
+                                            {% else %}
+                                            <div class="bg-secondary d-flex align-items-center justify-content-center rounded" style="height: 250px;">
+                                                <i class="fas fa-image fa-3x text-white"></i>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-4">
+                                            {% if section.image_2 %}
+                                            <img src="{{ section.image_2.url }}" alt="Image 2" class="img-fluid rounded shadow-sm mb-3">
+                                            {% else %}
+                                            <div class="bg-secondary d-flex align-items-center justify-content-center rounded" style="height: 250px;">
+                                                <i class="fas fa-image fa-3x text-white"></i>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-4">
+                                            {% if section.image_3 %}
+                                            <img src="{{ section.image_3.url }}" alt="Image 3" class="img-fluid rounded shadow-sm mb-3">
+                                            {% else %}
+                                            <div class="bg-secondary d-flex align-items-center justify-content-center rounded" style="height: 250px;">
+                                                <i class="fas fa-image fa-3x text-white"></i>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> No Section 4 entries found. Click "Add Section 4" to create one.
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<!-- Create Section 4 Modal -->
+<div class="modal fade" id="createSection4Modal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'section4_create' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="modal-header" style="background-color: #20c997;">
+                    <h5 class="modal-title text-white">Create Section 4 (3 Images)</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="ourwork">Select Our Work <span class="text-danger">*</span></label>
+                        <select class="form-control" id="ourwork" name="ourwork" required>
+                            <option value="">-- Select Our Work --</option>
+                            {% for work in ourworks %}
+                            <option value="{{ work.pk }}">{{ work.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="heading">Heading <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="heading" name="heading" placeholder="Section Heading" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="description" name="description" rows="3" placeholder="Section description..." required></textarea>
+                    </div>
+
+                    <hr>
+                    <h5>Images</h5>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="image_1">Image 1 <span class="text-danger">*</span></label>
+                                <input type="file" class="form-control" id="image_1" name="image_1" accept="image/*" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="image_2">Image 2 <span class="text-danger">*</span></label>
+                                <input type="file" class="form-control" id="image_2" name="image_2" accept="image/*" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="image_3">Image 3 <span class="text-danger">*</span></label>
+                                <input type="file" class="form-control" id="image_3" name="image_3" accept="image/*" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="is_active" name="is_active" checked>
+                        <label class="form-check-label" for="is_active">Active</label>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn" style="background-color: #20c997; border-color: #20c997; color: white;">Create Section 4</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Section 4 Modal -->
+<div class="modal fade" id="editSection4Modal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" id="editSection4Form" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title text-white">Edit Section 4</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="edit_ourwork">Select Our Work <span class="text-danger">*</span></label>
+                        <select class="form-control" id="edit_ourwork" name="ourwork" required>
+                            <option value="">-- Select Our Work --</option>
+                            {% for work in ourworks %}
+                            <option value="{{ work.pk }}">{{ work.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_heading">Heading <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="edit_heading" name="heading" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_description">Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="edit_description" name="description" rows="3" required></textarea>
+                    </div>
+
+                    <hr>
+                    <h5>Images (leave empty to keep current)</h5>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div id="edit_image1_preview" class="mb-2"></div>
+                            <div class="form-group">
+                                <label for="edit_image_1">Image 1</label>
+                                <input type="file" class="form-control" id="edit_image_1" name="image_1" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="edit_image2_preview" class="mb-2"></div>
+                            <div class="form-group">
+                                <label for="edit_image_2">Image 2</label>
+                                <input type="file" class="form-control" id="edit_image_2" name="image_2" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="edit_image3_preview" class="mb-2"></div>
+                            <div class="form-group">
+                                <label for="edit_image_3">Image 3</label>
+                                <input type="file" class="form-control" id="edit_image_3" name="image_3" accept="image/*">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="edit_is_active" name="is_active">
+                        <label class="form-check-label" for="edit_is_active">Active</label>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info">Update Section 4</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Edit Section
+function editSection(id, ourworkId, heading, description, isActive, image1Url, image2Url, image3Url) {
+    document.getElementById('editSection4Form').action = "{% url 'section4_edit' 0 %}".replace('0', id);
+    document.getElementById('edit_ourwork').value = ourworkId;
+    document.getElementById('edit_heading').value = heading;
+    document.getElementById('edit_description').value = description;
+    document.getElementById('edit_is_active').checked = isActive;
+    
+    // Image previews
+    document.getElementById('edit_image1_preview').innerHTML = image1Url 
+        ? `<img src="${image1Url}" class="img-thumbnail" style="max-width:100px;">` : '';
+    document.getElementById('edit_image2_preview').innerHTML = image2Url 
+        ? `<img src="${image2Url}" class="img-thumbnail" style="max-width:100px;">` : '';
+    document.getElementById('edit_image3_preview').innerHTML = image3Url 
+        ? `<img src="${image3Url}" class="img-thumbnail" style="max-width:100px;">` : '';
+    
+    $('#editSection4Modal').modal('show');
+}
+
+// Delete Section
+function deleteSection(url) {
+    if (confirm('Are you sure you want to delete this section?')) {
+        window.location.href = url;
+    }
+}
+
+// Auto-hide alerts
+setTimeout(function() {
+    $('.alert').fadeOut('slow');
+}, 5000);
+</script>
+
+{% endblock %}

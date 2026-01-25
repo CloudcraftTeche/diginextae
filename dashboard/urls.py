@@ -274,6 +274,20 @@ path('mobile-section/<int:pk>/edit/', views.mobile_section_edit, name='mobile_se
 path('mobile-section/<int:pk>/delete/', views.mobile_section_delete, name='mobile_section_delete'),
 
 
+
+# ==================== SECTION 4 URLs ====================
+path('section4/', views.section4_page, name='section4_page'),
+path('section4/create/', views.section4_create, name='section4_create'),
+path('section4/<int:pk>/edit/', views.section4_edit, name='section4_edit'),
+path('section4/<int:pk>/delete/', views.section4_delete, name='section4_delete'),
+
+# ==================== SECTION 5 URLs ====================
+path('section5/', views.section5_page, name='section5_page'),
+path('section5/create/', views.section5_create, name='section5_create'),
+path('section5/<int:pk>/edit/', views.section5_edit, name='section5_edit'),
+path('section5/<int:pk>/delete/', views.section5_delete, name='section5_delete'),
+
+
 # Our Works Digital Marketing
 path('ourworks/digital-marketing/', views.ourworks_digital_marketing_page, name='ourworks_digital_marketing_page'),
 path('ourworks/digital-marketing/update/', views.ourworks_digital_marketing_update, name='ourworks_digital_marketing_update'),
