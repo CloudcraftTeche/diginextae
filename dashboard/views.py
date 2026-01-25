@@ -1680,7 +1680,80 @@ def ourwork_delete(request, pk):
     work.delete()
     messages.success(request, 'Our Work deleted successfully!')
     return redirect('ourwork_page')
+# ==================== OUR WORK SECTION 2 CRUD ====================
 
+@login_required
+def ourwork_section2_page(request):
+    """Main page to manage all Section 2 entries"""
+    sections = OurWorkSection2.objects.all().select_related('ourwork').order_by('-created_at')
+    ourworks = OurWorks.objects.all().order_by('title')
+    
+    context = {
+        'sections': sections,
+        'sections_count': sections.count(),
+        'ourworks': ourworks,
+    }
+    return render(request, 'ourwork_section2.html', context)
+
+
+@login_required
+def ourwork_section2_create(request):
+    """Create Section 2"""
+    if request.method == 'POST':
+        work_id = request.POST.get('ourwork')
+        work = get_object_or_404(OurWorks, pk=work_id)
+        
+        OurWorkSection2.objects.create(
+            ourwork=work,
+            image=request.FILES.get('image'),
+            title=request.POST.get('title'),
+            description=request.POST.get('description'),
+            corporate_clients=request.POST.get('corporate_clients', '100+'),
+            custom_designs=request.POST.get('custom_designs', '500+'),
+            years_experience=request.POST.get('years_experience', '10+'),
+            is_active=request.POST.get('is_active') == 'on'
+        )
+        messages.success(request, 'Section 2 created successfully!')
+    return redirect('ourwork_section2_page')
+
+
+@login_required
+def ourwork_section2_edit(request, pk):
+    """Edit Section 2"""
+    section = get_object_or_404(OurWorkSection2, pk=pk)
+    old_image = section.image
+    
+    if request.method == 'POST':
+        work_id = request.POST.get('ourwork')
+        section.ourwork = get_object_or_404(OurWorks, pk=work_id)
+        section.title = request.POST.get('title')
+        section.description = request.POST.get('description')
+        section.corporate_clients = request.POST.get('corporate_clients', '100+')
+        section.custom_designs = request.POST.get('custom_designs', '500+')
+        section.years_experience = request.POST.get('years_experience', '10+')
+        section.is_active = request.POST.get('is_active') == 'on'
+        
+        if request.FILES.get('image'):
+            if old_image:
+                delete_cloudinary_image(old_image)
+            section.image = request.FILES.get('image')
+        
+        section.save()
+        messages.success(request, 'Section 2 updated successfully!')
+    return redirect('ourwork_section2_page')
+
+
+@login_required
+def ourwork_section2_delete(request, pk):
+    """Delete Section 2"""
+    section = get_object_or_404(OurWorkSection2, pk=pk)
+    
+    if section.image:
+        delete_cloudinary_image(section.image)
+    
+    section.delete()
+    messages.success(request, 'Section 2 deleted successfully!')
+    return redirect('ourwork_section2_page')
 
 @login_required
 def ourworks_digital_marketing_page(request):

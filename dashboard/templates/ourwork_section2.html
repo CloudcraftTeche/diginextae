@@ -1,0 +1,350 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Work Section 2 Management - Diginext{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Our Work Section 2 (Statistics)</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'ourwork_page' %}">Our Works</a></li>
+                        <li class="breadcrumb-item active">Section 2</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Display Messages -->
+    {% if messages %}
+    <div class="container-fluid">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            
+            <!-- Statistics Card -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>{{ sections_count }}</h3>
+                            <p>Total Section 2 Entries</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2 List -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">All Section 2 Entries (Statistics)</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#createSection2Modal">
+                                    <i class="fas fa-plus"></i> Add Section 2
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {% if sections %}
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Our Work</th>
+                                            <th>Title</th>
+                                            <th>Corporate Clients</th>
+                                            <th>Custom Designs</th>
+                                            <th>Years Experience</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for section in sections %}
+                                        <tr>
+                                            <td>
+                                                {% if section.image %}
+                                                <img src="{{ section.image.url }}" alt="{{ section.title }}" style="width: 80px; height: 60px; object-fit: cover;">
+                                                {% else %}
+                                                <span class="badge badge-secondary">No Image</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ section.ourwork.title }}</td>
+                                            <td>{{ section.title }}</td>
+                                            <td><strong class="text-primary">{{ section.corporate_clients }}</strong></td>
+                                            <td><strong class="text-success">{{ section.custom_designs }}</strong></td>
+                                            <td><strong class="text-warning">{{ section.years_experience }}</strong></td>
+                                            <td>
+                                                {% if section.is_active %}
+                                                <span class="badge badge-success">Active</span>
+                                                {% else %}
+                                                <span class="badge badge-secondary">Inactive</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <button 
+                                                    type="button" 
+                                                    class="btn btn-sm btn-info"
+                                                    onclick="editSection2(
+                                                        {{ section.pk }},
+                                                        {{ section.ourwork.pk }},
+                                                        '{{ section.title|escapejs }}',
+                                                        '{{ section.description|escapejs }}',
+                                                        '{{ section.corporate_clients|escapejs }}',
+                                                        '{{ section.custom_designs|escapejs }}',
+                                                        '{{ section.years_experience|escapejs }}',
+                                                        {{ section.is_active|yesno:'true,false' }},
+                                                        '{% if section.image %}{{ section.image.url }}{% endif %}'
+                                                    )"
+                                                >
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </button>
+                                                <button 
+                                                    type="button" 
+                                                    class="btn btn-sm btn-danger" 
+                                                    onclick="deleteSection2('{% url 'ourwork_section2_delete' section.pk %}')"
+                                                >
+                                                    <i class="fas fa-trash"></i> Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> No Section 2 entries found. Click "Add Section 2" to create one.
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<!-- Create Section 2 Modal -->
+<div class="modal fade" id="createSection2Modal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'ourwork_section2_create' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title">Create Section 2 (Statistics)</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="ourwork">Select Our Work <span class="text-danger">*</span></label>
+                        <select class="form-control" id="ourwork" name="ourwork" required>
+                            <option value="">-- Select Our Work --</option>
+                            {% for work in ourworks %}
+                            <option value="{{ work.pk }}">{{ work.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image">Image</label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="title">Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="title" name="title" placeholder="e.g., Designing Corporate Identity Through Print" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3" placeholder="Visual storytelling enhanced product value."></textarea>
+                    </div>
+
+                    <hr>
+                    <h5 class="text-info">Statistics</h5>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="corporate_clients">Corporate Clients</label>
+                                <input type="text" class="form-control" id="corporate_clients" name="corporate_clients" value="100+" placeholder="100+">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="custom_designs">Custom Designs</label>
+                                <input type="text" class="form-control" id="custom_designs" name="custom_designs" value="500+" placeholder="500+">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="years_experience">Years Experience</label>
+                                <input type="text" class="form-control" id="years_experience" name="years_experience" value="10+" placeholder="10+">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="is_active" name="is_active" checked>
+                        <label class="form-check-label" for="is_active">Active</label>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info">Create Section 2</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Section 2 Modal -->
+<div class="modal fade" id="editSection2Modal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" id="editSection2Form" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title">Edit Section 2 (Statistics)</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="edit_ourwork">Select Our Work <span class="text-danger">*</span></label>
+                        <select class="form-control" id="edit_ourwork" name="ourwork" required>
+                            <option value="">-- Select Our Work --</option>
+                            {% for work in ourworks %}
+                            <option value="{{ work.pk }}">{{ work.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div id="edit_image_preview" class="mb-2"></div>
+
+                    <div class="form-group">
+                        <label for="edit_image">Image (leave empty to keep current)</label>
+                        <input type="file" class="form-control" id="edit_image" name="image" accept="image/*">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_title">Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="edit_title" name="title" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_description">Description</label>
+                        <textarea class="form-control" id="edit_description" name="description" rows="3"></textarea>
+                    </div>
+
+                    <hr>
+                    <h5 class="text-info">Statistics</h5>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="edit_corporate_clients">Corporate Clients</label>
+                                <input type="text" class="form-control" id="edit_corporate_clients" name="corporate_clients" placeholder="100+">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="edit_custom_designs">Custom Designs</label>
+                                <input type="text" class="form-control" id="edit_custom_designs" name="custom_designs" placeholder="500+">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="edit_years_experience">Years Experience</label>
+                                <input type="text" class="form-control" id="edit_years_experience" name="years_experience" placeholder="10+">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="edit_is_active" name="is_active">
+                        <label class="form-check-label" for="edit_is_active">Active</label>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info">Update Section 2</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Edit Section 2
+function editSection2(id, ourworkId, title, description, corporateClients, customDesigns, yearsExperience, isActive, imageUrl) {
+    document.getElementById('editSection2Form').action = "{% url 'ourwork_section2_edit' 0 %}".replace('0', id);
+    
+    document.getElementById('edit_ourwork').value = ourworkId;
+    document.getElementById('edit_title').value = title;
+    document.getElementById('edit_description').value = description;
+    document.getElementById('edit_corporate_clients').value = corporateClients;
+    document.getElementById('edit_custom_designs').value = customDesigns;
+    document.getElementById('edit_years_experience').value = yearsExperience;
+    document.getElementById('edit_is_active').checked = isActive;
+    
+    // Image preview
+    const imagePreview = document.getElementById('edit_image_preview');
+    imagePreview.innerHTML = imageUrl 
+        ? `<img src="${imageUrl}" class="img-thumbnail mb-3" style="max-width:200px;">` 
+        : '';
+    
+    $('#editSection2Modal').modal('show');
+}
+
+// Delete Section 2
+function deleteSection2(url) {
+    if (confirm('Are you sure you want to delete this Section 2 entry?')) {
+        window.location.href = url;
+    }
+}
+
+// Auto-hide alerts
+setTimeout(function() {
+    $('.alert').fadeOut('slow');
+}, 5000);
+</script>
+
+{% endblock %}

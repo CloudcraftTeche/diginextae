@@ -222,6 +222,12 @@ path('ourworks/create/', views.ourwork_create, name='ourwork_create'),
 path('ourworks/<int:pk>/edit/', views.ourwork_edit, name='ourwork_edit'),
 path('ourworks/<int:pk>/delete/', views.ourwork_delete, name='ourwork_delete'),
 
+# ==================== OUR WORK SECTION 2 URLs ====================
+path('ourworks/section2/', views.ourwork_section2_page, name='ourwork_section2_page'),
+path('ourworks/section2/create/', views.ourwork_section2_create, name='ourwork_section2_create'),
+path('ourworks/section2/<int:pk>/edit/', views.ourwork_section2_edit, name='ourwork_section2_edit'),
+path('ourworks/section2/<int:pk>/delete/', views.ourwork_section2_delete, name='ourwork_section2_delete'),
+
 # Our Works Digital Marketing
 path('ourworks/digital-marketing/', views.ourworks_digital_marketing_page, name='ourworks_digital_marketing_page'),
 path('ourworks/digital-marketing/update/', views.ourworks_digital_marketing_update, name='ourworks_digital_marketing_update'),

@@ -506,6 +506,32 @@ class OurWorks(models.Model):
 
     def __str__(self):
         return self.title
+# ==================== OUR WORK SECTION 2 ====================
+
+class OurWorkSection2(models.Model):
+    """Statistics section for Our Works"""
+    ourwork = models.ForeignKey(
+        OurWorks,
+        on_delete=models.CASCADE,
+        related_name='section2_stats'
+    )
+    image = CloudinaryField('image', folder='our_works/section2', blank=True, null=True)
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)
+    corporate_clients = models.CharField(max_length=50, default="100+", help_text="e.g., 100+")
+    custom_designs = models.CharField(max_length=50, default="500+", help_text="e.g., 500+")
+    years_experience = models.CharField(max_length=50, default="10+", help_text="e.g., 10+")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Our Work Section 2"
+        verbose_name_plural = "Our Work Section 2"
+
+    def __str__(self):
+        return f"Section 2 - {self.title}"
+
 
 
 class OurWorksDigitalMarketing(models.Model):
