@@ -1755,6 +1755,232 @@ def ourwork_section2_delete(request, pk):
     messages.success(request, 'Section 2 deleted successfully!')
     return redirect('ourwork_section2_page')
 
+
+# ==================== PROJECT GOALS CRUD ====================
+
+@login_required
+def project_goals_page(request):
+    """Main page to manage all Project Goals"""
+    sections = ProjectGoalsSection.objects.all().select_related('ourwork').prefetch_related('goals').order_by('-created_at')
+    ourworks = OurWorks.objects.all().order_by('title')
+    
+    context = {
+        'sections': sections,
+        'sections_count': sections.count(),
+        'ourworks': ourworks,
+    }
+    return render(request, 'project_goals.html', context)
+
+
+@login_required
+def project_goals_section_create(request):
+    """Create Project Goals Section"""
+    if request.method == 'POST':
+        work_id = request.POST.get('ourwork')
+        work = get_object_or_404(OurWorks, pk=work_id)
+        
+        ProjectGoalsSection.objects.create(
+            ourwork=work,
+            main_heading=request.POST.get('main_heading', 'PROJECT GOALS'),
+            main_title=request.POST.get('main_title', 'Objectives'),
+            main_description=request.POST.get('main_description'),
+            is_active=request.POST.get('is_active') == 'on'
+        )
+        messages.success(request, 'Project Goals Section created successfully!')
+    return redirect('project_goals_page')
+
+
+@login_required
+def project_goals_section_edit(request, pk):
+    """Edit Project Goals Section"""
+    section = get_object_or_404(ProjectGoalsSection, pk=pk)
+    
+    if request.method == 'POST':
+        work_id = request.POST.get('ourwork')
+        section.ourwork = get_object_or_404(OurWorks, pk=work_id)
+        section.main_heading = request.POST.get('main_heading', 'PROJECT GOALS')
+        section.main_title = request.POST.get('main_title', 'Objectives')
+        section.main_description = request.POST.get('main_description')
+        section.is_active = request.POST.get('is_active') == 'on'
+        section.save()
+        messages.success(request, 'Project Goals Section updated successfully!')
+    return redirect('project_goals_page')
+
+
+@login_required
+def project_goals_section_delete(request, pk):
+    """Delete Project Goals Section"""
+    section = get_object_or_404(ProjectGoalsSection, pk=pk)
+    section.delete()
+    messages.success(request, 'Project Goals Section deleted successfully!')
+    return redirect('project_goals_page')
+
+
+# ==================== INDIVIDUAL GOALS CRUD ====================
+
+@login_required
+def project_goal_create(request):
+    """Create Individual Goal"""
+    if request.method == 'POST':
+        section_id = request.POST.get('section')
+        section = get_object_or_404(ProjectGoalsSection, pk=section_id)
+        
+        ProjectGoal.objects.create(
+            section=section,
+            heading=request.POST.get('heading'),
+            description=request.POST.get('description'),
+            display_order=request.POST.get('display_order', 0),
+            is_active=request.POST.get('is_active') == 'on'
+        )
+        messages.success(request, 'Goal added successfully!')
+    return redirect('project_goals_page')
+
+
+@login_required
+def project_goal_edit(request, pk):
+    """Edit Individual Goal"""
+    goal = get_object_or_404(ProjectGoal, pk=pk)
+    
+    if request.method == 'POST':
+        goal.heading = request.POST.get('heading')
+        goal.description = request.POST.get('description')
+        goal.display_order = request.POST.get('display_order', 0)
+        goal.is_active = request.POST.get('is_active') == 'on'
+        goal.save()
+        messages.success(request, 'Goal updated successfully!')
+    return redirect('project_goals_page')
+
+
+@login_required
+def project_goal_delete(request, pk):
+    """Delete Individual Goal"""
+    goal = get_object_or_404(ProjectGoal, pk=pk)
+    goal.delete()
+    messages.success(request, 'Goal deleted successfully!')
+    return redirect('project_goals_page')    
+
+
+# ==================== CHALLENGES / WHAT WE SOLVED CRUD ====================
+
+@login_required
+def challenges_page(request):
+    """Main page to manage all Challenges"""
+    sections = ChallengesSection.objects.all().select_related('ourwork').prefetch_related('challenges').order_by('-created_at')
+    ourworks = OurWorks.objects.all().order_by('title')
+    
+    context = {
+        'sections': sections,
+        'sections_count': sections.count(),
+        'ourworks': ourworks,
+    }
+    return render(request, 'challenges.html', context)
+
+
+@login_required
+def challenges_section_create(request):
+    """Create Challenges Section"""
+    if request.method == 'POST':
+        work_id = request.POST.get('ourwork')
+        work = get_object_or_404(OurWorks, pk=work_id)
+        
+        ChallengesSection.objects.create(
+            ourwork=work,
+            banner_image=request.FILES.get('banner_image'),
+            main_heading=request.POST.get('main_heading', 'WHAT WE SOLVED'),
+            main_title=request.POST.get('main_title', 'Challenges'),
+            main_description=request.POST.get('main_description'),
+            is_active=request.POST.get('is_active') == 'on'
+        )
+        messages.success(request, 'Challenges Section created successfully!')
+    return redirect('challenges_page')
+
+
+@login_required
+def challenges_section_edit(request, pk):
+    """Edit Challenges Section"""
+    section = get_object_or_404(ChallengesSection, pk=pk)
+    old_image = section.banner_image
+    
+    if request.method == 'POST':
+        work_id = request.POST.get('ourwork')
+        section.ourwork = get_object_or_404(OurWorks, pk=work_id)
+        section.main_heading = request.POST.get('main_heading', 'WHAT WE SOLVED')
+        section.main_title = request.POST.get('main_title', 'Challenges')
+        section.main_description = request.POST.get('main_description')
+        section.is_active = request.POST.get('is_active') == 'on'
+        
+        if request.FILES.get('banner_image'):
+            if old_image:
+                delete_cloudinary_image(old_image)
+            section.banner_image = request.FILES.get('banner_image')
+        
+        section.save()
+        messages.success(request, 'Challenges Section updated successfully!')
+    return redirect('challenges_page')
+
+
+@login_required
+def challenges_section_delete(request, pk):
+    """Delete Challenges Section"""
+    section = get_object_or_404(ChallengesSection, pk=pk)
+    
+    if section.banner_image:
+        delete_cloudinary_image(section.banner_image)
+    
+    section.delete()
+    messages.success(request, 'Challenges Section deleted successfully!')
+    return redirect('challenges_page')
+
+
+# ==================== INDIVIDUAL CHALLENGES CRUD ====================
+
+@login_required
+def challenge_create(request):
+    """Create Individual Challenge"""
+    if request.method == 'POST':
+        section_id = request.POST.get('section')
+        section = get_object_or_404(ChallengesSection, pk=section_id)
+        
+        Challenge.objects.create(
+            section=section,
+            heading=request.POST.get('heading'),
+            description=request.POST.get('description'),
+            display_order=request.POST.get('display_order', 0),
+            is_active=request.POST.get('is_active') == 'on'
+        )
+        messages.success(request, 'Challenge added successfully!')
+    return redirect('challenges_page')
+
+
+@login_required
+def challenge_edit(request, pk):
+    """Edit Individual Challenge"""
+    challenge = get_object_or_404(Challenge, pk=pk)
+    
+    if request.method == 'POST':
+        challenge.heading = request.POST.get('heading')
+        challenge.description = request.POST.get('description')
+        challenge.display_order = request.POST.get('display_order', 0)
+        challenge.is_active = request.POST.get('is_active') == 'on'
+        
+        challenge.save()
+        messages.success(request, 'Challenge updated successfully!')
+    return redirect('challenges_page')
+
+
+@login_required
+def challenge_delete(request, pk):
+    """Delete Individual Challenge"""
+    challenge = get_object_or_404(Challenge, pk=pk)
+    
+    if challenge.image:
+        delete_cloudinary_image(challenge.image)
+    
+    challenge.delete()
+    messages.success(request, 'Challenge deleted successfully!')
+    return redirect('challenges_page')
+# ==================== OUR WORKS DIGITAL MARKETING SECTION ====================    
+
 @login_required
 def ourworks_digital_marketing_page(request):
     digital_marketing = OurWorksDigitalMarketing.objects.first()

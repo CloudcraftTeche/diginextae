@@ -228,6 +228,33 @@ path('ourworks/section2/create/', views.ourwork_section2_create, name='ourwork_s
 path('ourworks/section2/<int:pk>/edit/', views.ourwork_section2_edit, name='ourwork_section2_edit'),
 path('ourworks/section2/<int:pk>/delete/', views.ourwork_section2_delete, name='ourwork_section2_delete'),
 
+# ==================== PROJECT GOALS URLs ====================
+path('project-goals/', views.project_goals_page, name='project_goals_page'),
+
+# Project Goals Section CRUD
+path('project-goals/section/create/', views.project_goals_section_create, name='project_goals_section_create'),
+path('project-goals/section/<int:pk>/edit/', views.project_goals_section_edit, name='project_goals_section_edit'),
+path('project-goals/section/<int:pk>/delete/', views.project_goals_section_delete, name='project_goals_section_delete'),
+
+# Individual Goals CRUD
+path('project-goals/goal/create/', views.project_goal_create, name='project_goal_create'),
+path('project-goals/goal/<int:pk>/edit/', views.project_goal_edit, name='project_goal_edit'),
+path('project-goals/goal/<int:pk>/delete/', views.project_goal_delete, name='project_goal_delete'),
+
+# ==================== CHALLENGES / WHAT WE SOLVED URLs ====================
+path('challenges/', views.challenges_page, name='challenges_page'),
+
+# Challenges Section CRUD
+path('challenges/section/create/', views.challenges_section_create, name='challenges_section_create'),
+path('challenges/section/<int:pk>/edit/', views.challenges_section_edit, name='challenges_section_edit'),
+path('challenges/section/<int:pk>/delete/', views.challenges_section_delete, name='challenges_section_delete'),
+
+# Individual Challenges CRUD
+path('challenges/challenge/create/', views.challenge_create, name='challenge_create'),
+path('challenges/challenge/<int:pk>/edit/', views.challenge_edit, name='challenge_edit'),
+path('challenges/challenge/<int:pk>/delete/', views.challenge_delete, name='challenge_delete'),
+
+
 # Our Works Digital Marketing
 path('ourworks/digital-marketing/', views.ourworks_digital_marketing_page, name='ourworks_digital_marketing_page'),
 path('ourworks/digital-marketing/update/', views.ourworks_digital_marketing_update, name='ourworks_digital_marketing_update'),

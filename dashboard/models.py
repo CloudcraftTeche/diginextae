@@ -531,7 +531,98 @@ class OurWorkSection2(models.Model):
 
     def __str__(self):
         return f"Section 2 - {self.title}"
+# ==================== PROJECT GOALS SECTION ====================
 
+class ProjectGoalsSection(models.Model):
+    """Main Project Goals Section"""
+    ourwork = models.OneToOneField(
+        OurWorks,
+        on_delete=models.CASCADE,
+        related_name='project_goals_section'
+    )
+    main_heading = models.CharField(max_length=200, default="PROJECT GOALS")
+    main_title = models.CharField(max_length=200, default="Objectives")
+    main_description = models.TextField(help_text="e.g., To visually highlight customization quality and brand reliability.")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Project Goals Section"
+        verbose_name_plural = "Project Goals Sections"
+
+    def __str__(self):
+        return f"Project Goals - {self.ourwork.title}"
+
+
+class ProjectGoal(models.Model):
+    """Individual Goals within Project Goals Section"""
+    section = models.ForeignKey(
+        ProjectGoalsSection,
+        on_delete=models.CASCADE,
+        related_name='goals'
+    )
+    heading = models.CharField(max_length=200, help_text="e.g., Product Showcase, Brand Value, Market Reach")
+    description = models.TextField(help_text="e.g., Highlight diary quality and finish.")
+    display_order = models.PositiveIntegerField(default=0, help_text="Order in which goals appear")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Project Goal"
+        verbose_name_plural = "Project Goals"
+        ordering = ['display_order', 'created_at']
+
+    def __str__(self):
+        return f"{self.heading}"
+
+# ==================== CHALLENGES / WHAT WE SOLVED SECTION ====================
+
+class ChallengesSection(models.Model):
+    """Main Challenges Section for Our Works"""
+    ourwork = models.OneToOneField(
+        OurWorks,
+        on_delete=models.CASCADE,
+        related_name='challenges_section'
+    )
+    banner_image = CloudinaryField('image', folder='challenges/banners', blank=True, null=True, help_text="Large banner image showcasing multiple designs")
+    main_heading = models.CharField(max_length=200, default="WHAT WE SOLVED")
+    main_title = models.CharField(max_length=200, default="Challenges")
+    main_description = models.TextField(help_text="e.g., Balancing informative content with engaging design.")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Challenges Section"
+        verbose_name_plural = "Challenges Sections"
+
+    def __str__(self):
+        return f"Challenges - {self.ourwork.title}"
+
+
+class Challenge(models.Model):
+    """Individual Challenges within Challenges Section"""
+    section = models.ForeignKey(
+        ChallengesSection,
+        on_delete=models.CASCADE,
+        related_name='challenges'
+    )
+    heading = models.CharField(max_length=200, help_text="e.g., Information Density, Student Engagement")
+    description = models.TextField(help_text="e.g., Presenting large amounts of data clearly.")
+    display_order = models.PositiveIntegerField(default=0, help_text="Order in which challenges appear")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Challenge"
+        verbose_name_plural = "Challenges"
+        ordering = ['display_order', 'created_at']
+
+    def __str__(self):
+        return f"{self.heading}"
 
 
 class OurWorksDigitalMarketing(models.Model):

@@ -323,9 +323,9 @@
               </a>
             </li>
             <li
-            class="nav-item {% if request.resolver_match.url_name == 'ourwork_page' or request.resolver_match.url_name == 'ourworks_digital_marketing_page' or request.resolver_match.url_name == 'ourwork_section2_page' %}menu-open{% endif %}">
+            class="nav-item {% if request.resolver_match.url_name == 'ourwork_page' or request.resolver_match.url_name == 'ourworks_digital_marketing_page' or request.resolver_match.url_name == 'ourwork_section2_page' or request.resolver_match.url_name == 'project_goals_page' or request.resolver_match.url_name == 'challenges_page' %}menu-open{% endif %}">
             <a href="#"
-              class="nav-link {% if request.resolver_match.url_name == 'ourwork_page' or request.resolver_match.url_name == 'ourworks_digital_marketing_page' or request.resolver_match.url_name == 'ourwork_section2_page' %}active{% endif %}">
+              class="nav-link {% if request.resolver_match.url_name == 'ourwork_page' or request.resolver_match.url_name == 'ourworks_digital_marketing_page' or request.resolver_match.url_name == 'ourwork_section2_page' or request.resolver_match.url_name == 'project_goals_page' or request.resolver_match.url_name == 'challenges_page' %}active{% endif %}">
               <i class="nav-icon fas fa-briefcase"></i>
               <p>
                 Our Works
@@ -345,6 +345,20 @@
                   class="nav-link {% if request.resolver_match.url_name == 'ourwork_section2_page' %}active{% endif %}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Section 2 (Statistics)</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'project_goals_page' %}"
+                  class="nav-link {% if request.resolver_match.url_name == 'project_goals_page' %}active{% endif %}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Project Goals</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'challenges_page' %}"
+                  class="nav-link {% if request.resolver_match.url_name == 'challenges_page' %}active{% endif %}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Challenges</p>
                 </a>
               </li>
               <li class="nav-item">

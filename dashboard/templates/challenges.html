@@ -1,0 +1,502 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Challenges Management - Diginext{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Challenges / What We Solved</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'ourwork_page' %}">Our Works</a></li>
+                        <li class="breadcrumb-item active">Challenges</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Display Messages -->
+    {% if messages %}
+    <div class="container-fluid">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            
+            <!-- Statistics Card -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="small-box bg-warning">
+                        <div class="inner">
+                            <h3>{{ sections_count }}</h3>
+                            <p>Total Challenges Sections</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Challenges Sections -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">All Challenges Sections</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#createSectionModal">
+                                    <i class="fas fa-plus"></i> Add Section
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {% if sections %}
+                            {% for section in sections %}
+                            <div class="card mb-4 border-warning">
+                                <div class="card-header bg-light">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="mb-1">
+                                                <i class="fas fa-briefcase text-warning"></i> 
+                                                {{ section.ourwork.title }}
+                                            </h5>
+                                            <span class="badge badge-secondary">{{ section.main_heading }}</span>
+                                            {% if section.is_active %}
+                                            <span class="badge badge-success">Active</span>
+                                            {% else %}
+                                            <span class="badge badge-secondary">Inactive</span>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-sm btn-info"
+                                                onclick="editSection(
+                                                    {{ section.pk }},
+                                                    {{ section.ourwork.pk }},
+                                                    '{{ section.main_heading|escapejs }}',
+                                                    '{{ section.main_title|escapejs }}',
+                                                    '{{ section.main_description|escapejs }}',
+                                                    {{ section.is_active|yesno:'true,false' }},
+                                                    '{% if section.banner_image %}{{ section.banner_image.url }}{% endif %}'
+                                                )"
+                                            >
+                                                <i class="fas fa-edit"></i> Edit Section
+                                            </button>
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-sm btn-danger" 
+                                                onclick="deleteSection('{% url 'challenges_section_delete' section.pk %}')"
+                                            >
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Banner Image -->
+                                    {% if section.banner_image %}
+                                    <div class="mb-3">
+                                        <img src="{{ section.banner_image.url }}" alt="{{ section.main_title }}" class="img-fluid rounded" style="max-height: 300px; width: 100%; object-fit: cover;">
+                                    </div>
+                                    {% endif %}
+
+                                    <!-- Main Section Info -->
+                                    <div class="mb-3 p-3 bg-light rounded">
+                                        <h4 class="text-warning">{{ section.main_title }}</h4>
+                                        <p class="mb-0">{{ section.main_description }}</p>
+                                    </div>
+
+                                    <!-- Individual Challenges -->
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5><i class="fas fa-list-ul"></i> Challenges ({{ section.challenges.count }})</h5>
+                                        <button 
+                                            type="button" 
+                                            class="btn btn-sm btn-warning" 
+                                            onclick="openAddChallengeModal({{ section.pk }})"
+                                        >
+                                            <i class="fas fa-plus"></i> Add Challenge
+                                        </button>
+                                    </div>
+
+                                    {% if section.challenges.all %}
+                                    <div class="row">
+                                        {% for challenge in section.challenges.all %}
+                                        <div class="col-md-6 mb-3">
+                                            <div class="card border-left-warning shadow h-100">
+                                                <div class="card-body">
+                                                    {% if challenge.image %}
+                                                    <img src="{{ challenge.image.url }}" alt="{{ challenge.heading }}" class="img-fluid rounded mb-3" style="max-height: 150px; width: 100%; object-fit: cover;">
+                                                    {% endif %}
+                                                    
+                                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                                        <h6 class="text-warning font-weight-bold">{{ challenge.heading }}</h6>
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-sm btn-link" type="button" data-toggle="dropdown">
+                                                                <i class="fas fa-ellipsis-v"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a 
+                                                                    class="dropdown-item" 
+                                                                    href="#"
+                                                                    onclick="editChallenge(
+                                                                        {{ challenge.pk }},
+                                                                        {{ challenge.section.pk }},
+                                                                        '{{ challenge.heading|escapejs }}',
+                                                                        '{{ challenge.description|escapejs }}',
+                                                                        {{ challenge.display_order }},
+                                                                        {{ challenge.is_active|yesno:'true,false' }},
+                                                                        '{% if challenge.image %}{{ challenge.image.url }}{% endif %}'
+                                                                    ); return false;"
+                                                                >
+                                                                    <i class="fas fa-edit text-info"></i> Edit
+                                                                </a>
+                                                                <a 
+                                                                    class="dropdown-item text-danger" 
+                                                                    href="#"
+                                                                    onclick="deleteChallenge('{% url 'challenge_delete' challenge.pk %}'); return false;"
+                                                                >
+                                                                    <i class="fas fa-trash"></i> Delete
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <p class="small mb-1">{{ challenge.description }}</p>
+                                                    <div class="mt-2">
+                                                        <span class="badge badge-light">Order: {{ challenge.display_order }}</span>
+                                                        {% if challenge.is_active %}
+                                                        <span class="badge badge-success">Active</span>
+                                                        {% else %}
+                                                        <span class="badge badge-secondary">Inactive</span>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle"></i> No challenges added yet. Click "Add Challenge" to create one.
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> No Challenges sections found. Click "Add Section" to create one.
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<!-- Create Section Modal -->
+<div class="modal fade" id="createSectionModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'challenges_section_create' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title text-white">Create Challenges Section</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="ourwork">Select Our Work <span class="text-danger">*</span></label>
+                        <select class="form-control" id="ourwork" name="ourwork" required>
+                            <option value="">-- Select Our Work --</option>
+                            {% for work in ourworks %}
+                            <option value="{{ work.pk }}">{{ work.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="banner_image">Banner Image</label>
+                        <input type="file" class="form-control" id="banner_image" name="banner_image" accept="image/*">
+                        <small class="form-text text-muted">Large banner image showcasing multiple designs</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="main_heading">Main Heading</label>
+                        <input type="text" class="form-control" id="main_heading" name="main_heading" value="WHAT WE SOLVED" placeholder="WHAT WE SOLVED">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="main_title">Main Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="main_title" name="main_title" value="Challenges" placeholder="Challenges" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="main_description">Main Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="main_description" name="main_description" rows="3" placeholder="Balancing informative content with engaging design." required></textarea>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="is_active" name="is_active" checked>
+                        <label class="form-check-label" for="is_active">Active</label>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-warning">Create Section</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Section Modal -->
+<div class="modal fade" id="editSectionModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" id="editSectionForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title text-white">Edit Challenges Section</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="edit_ourwork">Select Our Work <span class="text-danger">*</span></label>
+                        <select class="form-control" id="edit_ourwork" name="ourwork" required>
+                            <option value="">-- Select Our Work --</option>
+                            {% for work in ourworks %}
+                            <option value="{{ work.pk }}">{{ work.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div id="edit_banner_preview" class="mb-2"></div>
+
+                    <div class="form-group">
+                        <label for="edit_banner_image">Banner Image (leave empty to keep current)</label>
+                        <input type="file" class="form-control" id="edit_banner_image" name="banner_image" accept="image/*">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_main_heading">Main Heading</label>
+                        <input type="text" class="form-control" id="edit_main_heading" name="main_heading" placeholder="WHAT WE SOLVED">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_main_title">Main Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="edit_main_title" name="main_title" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_main_description">Main Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="edit_main_description" name="main_description" rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="edit_is_active" name="is_active">
+                        <label class="form-check-label" for="edit_is_active">Active</label>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info">Update Section</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Challenge Modal -->
+<div class="modal fade" id="addChallengeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'challenge_create' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" id="challenge_section_id" name="section">
+                
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title text-white">Add Challenge</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                   
+                    <div class="form-group">
+                        <label for="challenge_heading">Heading <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="challenge_heading" name="heading" placeholder="Information Density" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="challenge_description">Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="challenge_description" name="description" rows="3" placeholder="Presenting large amounts of data clearly." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="challenge_display_order">Display Order</label>
+                        <input type="number" class="form-control" id="challenge_display_order" name="display_order" value="0" min="0">
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="challenge_is_active" name="is_active" checked>
+                        <label class="form-check-label" for="challenge_is_active">Active</label>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-warning">Add Challenge</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Challenge Modal -->
+<div class="modal fade" id="editChallengeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" id="editChallengeForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" id="edit_challenge_section_id" name="section">
+                
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title text-white">Edit Challenge</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    
+
+                    <div class="form-group">
+                        <label for="edit_challenge_heading">Heading <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="edit_challenge_heading" name="heading" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_challenge_description">Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="edit_challenge_description" name="description" rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_challenge_display_order">Display Order</label>
+                        <input type="number" class="form-control" id="edit_challenge_display_order" name="display_order" min="0">
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="edit_challenge_is_active" name="is_active">
+                        <label class="form-check-label" for="edit_challenge_is_active">Active</label>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info">Update Challenge</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Edit Section
+function editSection(id, ourworkId, mainHeading, mainTitle, mainDescription, isActive, bannerImageUrl) {
+    document.getElementById('editSectionForm').action = "{% url 'challenges_section_edit' 0 %}".replace('0', id);
+    document.getElementById('edit_ourwork').value = ourworkId;
+    document.getElementById('edit_main_heading').value = mainHeading;
+    document.getElementById('edit_main_title').value = mainTitle;
+    document.getElementById('edit_main_description').value = mainDescription;
+    document.getElementById('edit_is_active').checked = isActive;
+    
+    const bannerPreview = document.getElementById('edit_banner_preview');
+    bannerPreview.innerHTML = bannerImageUrl 
+        ? `<img src="${bannerImageUrl}" class="img-thumbnail mb-3" style="max-width:300px;">` 
+        : '';
+    
+    $('#editSectionModal').modal('show');
+}
+
+// Delete Section
+function deleteSection(url) {
+    if (confirm('Are you sure you want to delete this section? All associated challenges will also be deleted.')) {
+        window.location.href = url;
+    }
+}
+
+// Open Add Challenge Modal
+function openAddChallengeModal(sectionId) {
+    document.getElementById('challenge_section_id').value = sectionId;
+    $('#addChallengeModal').modal('show');
+}
+
+// Edit Challenge
+function editChallenge(id, sectionId, heading, description, displayOrder, isActive) {
+    document.getElementById('editChallengeForm').action = "{% url 'challenge_edit' 0 %}".replace('0', id);
+    document.getElementById('edit_challenge_section_id').value = sectionId;
+    document.getElementById('edit_challenge_heading').value = heading;
+    document.getElementById('edit_challenge_description').value = description;
+    document.getElementById('edit_challenge_display_order').value = displayOrder;
+    document.getElementById('edit_challenge_is_active').checked = isActive;
+    
+
+    
+    $('#editChallengeModal').modal('show');
+}
+
+// Delete Challenge
+function deleteChallenge(url) {
+    if (confirm('Are you sure you want to delete this challenge?')) {
+        window.location.href = url;
+    }
+}
+
+// Auto-hide alerts
+setTimeout(function() {
+    $('.alert').fadeOut('slow');
+}, 5000);
+</script>
+
+<style>
+.border-left-warning {
+    border-left: 4px solid #ffc107 !important;
+}
+</style>
+
+{% endblock %}
