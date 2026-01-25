@@ -624,7 +624,82 @@ class Challenge(models.Model):
     def __str__(self):
         return f"{self.heading}"
 
+# ==================== CREATIVE DIRECTION SECTION ====================
 
+class CreativeDirectionSection(models.Model):
+    """Main Creative Direction Section for Our Works"""
+    ourwork = models.OneToOneField(
+        OurWorks,
+        on_delete=models.CASCADE,
+        related_name='creative_direction_section'
+    )
+    main_title = models.CharField(max_length=200, help_text="e.g., Wellness-Focused Visual Identity")
+    main_description = models.TextField(help_text="e.g., A clean, elegant design language that reflects peace and wellness.")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Creative Direction Section"
+        verbose_name_plural = "Creative Direction Sections"
+
+    def __str__(self):
+        return f"Creative Direction - {self.ourwork.title}"
+
+
+class CreativeItem(models.Model):
+    """Individual Creative Items within Creative Direction Section"""
+    section = models.ForeignKey(
+        CreativeDirectionSection,
+        on_delete=models.CASCADE,
+        related_name='creative_items'
+    )
+    image = CloudinaryField('image', folder='creative_direction', help_text="Creative item image")
+    title = models.CharField(max_length=200, help_text="e.g., SOCIAL MEDIA DESIGN, PROMOTIONAL CREATIVES")
+    description = models.TextField(help_text="e.g., Minimal and calming social creatives.")
+    display_order = models.PositiveIntegerField(default=0, help_text="Order in which items appear")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Creative Item"
+        verbose_name_plural = "Creative Items"
+        ordering = ['display_order', 'created_at']
+
+    def __str__(self):
+        return f"{self.title}"
+
+# ==================== MOBILE SECTION ====================
+
+class MobileSection(models.Model):
+    """Mobile Section for Our Works - displays mobile app/experience with 2 images"""
+    ourwork = models.OneToOneField(
+        OurWorks,
+        on_delete=models.CASCADE,
+        related_name='mobile_section'
+    )
+    label = models.CharField(max_length=100, default="INTERACTIVE EXPERIENCE", help_text="Small label above title")
+    title = models.CharField(max_length=200, help_text="e.g., 3D Visualization & Virtual Tours")
+    description = models.TextField(help_text="Long description about the mobile experience")
+    
+    # Two mobile images/screenshots
+    mobile_image_1 = CloudinaryField('image', folder='mobile_sections', help_text="First mobile image/screenshot")
+    mobile_image_2 = CloudinaryField('image', folder='mobile_sections', help_text="Second mobile image/screenshot")
+    
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Mobile Section"
+        verbose_name_plural = "Mobile Sections"
+
+    def __str__(self):
+        return f"Mobile Section - {self.ourwork.title}"
+
+
+# ==================== OUR WORKS DIGITAL MARKETING SECTION ====================
 class OurWorksDigitalMarketing(models.Model):
     meta_title = models.CharField(max_length=200, blank=True, null=True)
     meta_description = models.TextField(blank=True, null=True)

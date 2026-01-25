@@ -254,6 +254,25 @@ path('challenges/challenge/create/', views.challenge_create, name='challenge_cre
 path('challenges/challenge/<int:pk>/edit/', views.challenge_edit, name='challenge_edit'),
 path('challenges/challenge/<int:pk>/delete/', views.challenge_delete, name='challenge_delete'),
 
+# ==================== CREATIVE DIRECTION URLs ====================
+path('creative-direction/', views.creative_direction_page, name='creative_direction_page'),
+
+# Creative Direction Section CRUD
+path('creative-direction/section/create/', views.creative_direction_section_create, name='creative_direction_section_create'),
+path('creative-direction/section/<int:pk>/edit/', views.creative_direction_section_edit, name='creative_direction_section_edit'),
+path('creative-direction/section/<int:pk>/delete/', views.creative_direction_section_delete, name='creative_direction_section_delete'),
+
+# Individual Creative Items CRUD
+path('creative-direction/item/create/', views.creative_item_create, name='creative_item_create'),
+path('creative-direction/item/<int:pk>/edit/', views.creative_item_edit, name='creative_item_edit'),
+path('creative-direction/item/<int:pk>/delete/', views.creative_item_delete, name='creative_item_delete'),
+
+# ==================== MOBILE SECTION URLs ====================
+path('mobile-section/', views.mobile_section_page, name='mobile_section_page'),
+path('mobile-section/create/', views.mobile_section_create, name='mobile_section_create'),
+path('mobile-section/<int:pk>/edit/', views.mobile_section_edit, name='mobile_section_edit'),
+path('mobile-section/<int:pk>/delete/', views.mobile_section_delete, name='mobile_section_delete'),
+
 
 # Our Works Digital Marketing
 path('ourworks/digital-marketing/', views.ourworks_digital_marketing_page, name='ourworks_digital_marketing_page'),

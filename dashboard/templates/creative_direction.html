@@ -1,0 +1,467 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Creative Direction Management - Diginext{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Creative Direction</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'ourwork_page' %}">Our Works</a></li>
+                        <li class="breadcrumb-item active">Creative Direction</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Display Messages -->
+    {% if messages %}
+    <div class="container-fluid">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            
+            <!-- Statistics Card -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="small-box bg-primary">
+                        <div class="inner">
+                            <h3>{{ sections_count }}</h3>
+                            <p>Total Creative Direction Sections</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Creative Direction Sections -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">All Creative Direction Sections</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createSectionModal">
+                                    <i class="fas fa-plus"></i> Add Section
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {% if sections %}
+                            {% for section in sections %}
+                            <div class="card mb-4 border-primary">
+                                <div class="card-header bg-light">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="mb-1">
+                                                <i class="fas fa-briefcase text-primary"></i> 
+                                                {{ section.ourwork.title }}
+                                            </h5>
+                                            {% if section.is_active %}
+                                            <span class="badge badge-success">Active</span>
+                                            {% else %}
+                                            <span class="badge badge-secondary">Inactive</span>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-sm btn-info"
+                                                onclick="editSection(
+                                                    {{ section.pk }},
+                                                    {{ section.ourwork.pk }},
+                                                    '{{ section.main_title|escapejs }}',
+                                                    '{{ section.main_description|escapejs }}',
+                                                    {{ section.is_active|yesno:'true,false' }}
+                                                )"
+                                            >
+                                                <i class="fas fa-edit"></i> Edit Section
+                                            </button>
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-sm btn-danger" 
+                                                onclick="deleteSection('{% url 'creative_direction_section_delete' section.pk %}')"
+                                            >
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Main Section Info -->
+                                    <div class="text-center mb-4">
+                                        <h3 class="text-primary">{{ section.main_title }}</h3>
+                                        <p class="text-muted">{{ section.main_description }}</p>
+                                    </div>
+
+                                    <!-- Creative Items -->
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5><i class="fas fa-images"></i> Creative Items ({{ section.creative_items.count }})</h5>
+                                        <button 
+                                            type="button" 
+                                            class="btn btn-sm btn-primary" 
+                                            onclick="openAddItemModal({{ section.pk }})"
+                                        >
+                                            <i class="fas fa-plus"></i> Add Creative Item
+                                        </button>
+                                    </div>
+
+                                    {% if section.creative_items.all %}
+                                    <div class="row">
+                                        {% for item in section.creative_items.all %}
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                                            <div class="card h-100 shadow-sm">
+                                                {% if item.image %}
+                                                <img src="{{ item.image.url }}" alt="{{ item.title }}" class="card-img-top" style="height: 200px; object-fit: cover; border-radius: 15px 15px 0 0;">
+                                                {% else %}
+                                                <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                                                    <i class="fas fa-image fa-3x text-white"></i>
+                                                </div>
+                                                {% endif %}
+                                                
+                                                <div class="card-body">
+                                                    <h6 class="card-title font-weight-bold text-uppercase">{{ item.title }}</h6>
+                                                    <p class="card-text small">{{ item.description }}</p>
+                                                    
+                                                    <div class="mt-2 mb-2">
+                                                        <span class="badge badge-light">Order: {{ item.display_order }}</span>
+                                                        {% if item.is_active %}
+                                                        <span class="badge badge-success">Active</span>
+                                                        {% else %}
+                                                        <span class="badge badge-secondary">Inactive</span>
+                                                        {% endif %}
+                                                    </div>
+
+                                                    <div class="btn-group btn-block" role="group">
+                                                        <button 
+                                                            type="button" 
+                                                            class="btn btn-sm btn-info"
+                                                            onclick="editItem(
+                                                                {{ item.pk }},
+                                                                {{ item.section.pk }},
+                                                                '{{ item.title|escapejs }}',
+                                                                '{{ item.description|escapejs }}',
+                                                                {{ item.display_order }},
+                                                                {{ item.is_active|yesno:'true,false' }},
+                                                                '{% if item.image %}{{ item.image.url }}{% endif %}'
+                                                            )"
+                                                        >
+                                                            <i class="fas fa-edit"></i> Edit
+                                                        </button>
+                                                        <button 
+                                                            type="button" 
+                                                            class="btn btn-sm btn-danger"
+                                                            onclick="deleteItem('{% url 'creative_item_delete' item.pk %}')"
+                                                        >
+                                                            <i class="fas fa-trash"></i> Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle"></i> No creative items added yet. Click "Add Creative Item" to create one.
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> No Creative Direction sections found. Click "Add Section" to create one.
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<!-- Create Section Modal -->
+<div class="modal fade" id="createSectionModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'creative_direction_section_create' %}">
+                {% csrf_token %}
+                
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title text-white">Create Creative Direction Section</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="ourwork">Select Our Work <span class="text-danger">*</span></label>
+                        <select class="form-control" id="ourwork" name="ourwork" required>
+                            <option value="">-- Select Our Work --</option>
+                            {% for work in ourworks %}
+                            <option value="{{ work.pk }}">{{ work.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="main_title">Main Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="main_title" name="main_title" placeholder="Wellness-Focused Visual Identity" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="main_description">Main Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="main_description" name="main_description" rows="3" placeholder="A clean, elegant design language that reflects peace and wellness." required></textarea>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="is_active" name="is_active" checked>
+                        <label class="form-check-label" for="is_active">Active</label>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create Section</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Section Modal -->
+<div class="modal fade" id="editSectionModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" id="editSectionForm">
+                {% csrf_token %}
+                
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title text-white">Edit Creative Direction Section</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="edit_ourwork">Select Our Work <span class="text-danger">*</span></label>
+                        <select class="form-control" id="edit_ourwork" name="ourwork" required>
+                            <option value="">-- Select Our Work --</option>
+                            {% for work in ourworks %}
+                            <option value="{{ work.pk }}">{{ work.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_main_title">Main Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="edit_main_title" name="main_title" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_main_description">Main Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="edit_main_description" name="main_description" rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="edit_is_active" name="is_active">
+                        <label class="form-check-label" for="edit_is_active">Active</label>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info">Update Section</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Creative Item Modal -->
+<div class="modal fade" id="addItemModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'creative_item_create' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" id="item_section_id" name="section">
+                
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title text-white">Add Creative Item</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="item_image">Image <span class="text-danger">*</span></label>
+                        <input type="file" class="form-control" id="item_image" name="image" accept="image/*" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="item_title">Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="item_title" name="title" placeholder="SOCIAL MEDIA DESIGN" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="item_description">Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="item_description" name="description" rows="3" placeholder="Minimal and calming social creatives." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="item_display_order">Display Order</label>
+                        <input type="number" class="form-control" id="item_display_order" name="display_order" value="0" min="0">
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="item_is_active" name="is_active" checked>
+                        <label class="form-check-label" for="item_is_active">Active</label>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Creative Item Modal -->
+<div class="modal fade" id="editItemModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" id="editItemForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" id="edit_item_section_id" name="section">
+                
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title text-white">Edit Creative Item</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div id="edit_item_image_preview" class="mb-2"></div>
+
+                    <div class="form-group">
+                        <label for="edit_item_image">Image (leave empty to keep current)</label>
+                        <input type="file" class="form-control" id="edit_item_image" name="image" accept="image/*">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_item_title">Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="edit_item_title" name="title" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_item_description">Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="edit_item_description" name="description" rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_item_display_order">Display Order</label>
+                        <input type="number" class="form-control" id="edit_item_display_order" name="display_order" min="0">
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="edit_item_is_active" name="is_active">
+                        <label class="form-check-label" for="edit_item_is_active">Active</label>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info">Update Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Edit Section
+function editSection(id, ourworkId, mainTitle, mainDescription, isActive) {
+    document.getElementById('editSectionForm').action = "{% url 'creative_direction_section_edit' 0 %}".replace('0', id);
+    document.getElementById('edit_ourwork').value = ourworkId;
+    document.getElementById('edit_main_title').value = mainTitle;
+    document.getElementById('edit_main_description').value = mainDescription;
+    document.getElementById('edit_is_active').checked = isActive;
+    $('#editSectionModal').modal('show');
+}
+
+// Delete Section
+function deleteSection(url) {
+    if (confirm('Are you sure you want to delete this section? All associated creative items will also be deleted.')) {
+        window.location.href = url;
+    }
+}
+
+// Open Add Item Modal
+function openAddItemModal(sectionId) {
+    document.getElementById('item_section_id').value = sectionId;
+    $('#addItemModal').modal('show');
+}
+
+// Edit Item
+function editItem(id, sectionId, title, description, displayOrder, isActive, imageUrl) {
+    document.getElementById('editItemForm').action = "{% url 'creative_item_edit' 0 %}".replace('0', id);
+    document.getElementById('edit_item_section_id').value = sectionId;
+    document.getElementById('edit_item_title').value = title;
+    document.getElementById('edit_item_description').value = description;
+    document.getElementById('edit_item_display_order').value = displayOrder;
+    document.getElementById('edit_item_is_active').checked = isActive;
+    
+    const imagePreview = document.getElementById('edit_item_image_preview');
+    imagePreview.innerHTML = imageUrl 
+        ? `<img src="${imageUrl}" class="img-thumbnail mb-3" style="max-width:200px;">` 
+        : '';
+    
+    $('#editItemModal').modal('show');
+}
+
+// Delete Item
+function deleteItem(url) {
+    if (confirm('Are you sure you want to delete this creative item?')) {
+        window.location.href = url;
+    }
+}
+
+// Auto-hide alerts
+setTimeout(function() {
+    $('.alert').fadeOut('slow');
+}, 5000);
+</script>
+
+{% endblock %}

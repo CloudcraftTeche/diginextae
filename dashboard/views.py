@@ -1979,6 +1979,203 @@ def challenge_delete(request, pk):
     challenge.delete()
     messages.success(request, 'Challenge deleted successfully!')
     return redirect('challenges_page')
+
+# ==================== CREATIVE DIRECTION CRUD ====================
+
+@login_required
+def creative_direction_page(request):
+    """Main page to manage all Creative Direction sections"""
+    sections = CreativeDirectionSection.objects.all().select_related('ourwork').prefetch_related('creative_items').order_by('-created_at')
+    ourworks = OurWorks.objects.all().order_by('title')
+    
+    context = {
+        'sections': sections,
+        'sections_count': sections.count(),
+        'ourworks': ourworks,
+    }
+    return render(request, 'creative_direction.html', context)
+
+
+@login_required
+def creative_direction_section_create(request):
+    """Create Creative Direction Section"""
+    if request.method == 'POST':
+        work_id = request.POST.get('ourwork')
+        work = get_object_or_404(OurWorks, pk=work_id)
+        
+        CreativeDirectionSection.objects.create(
+            ourwork=work,
+            main_title=request.POST.get('main_title'),
+            main_description=request.POST.get('main_description'),
+            is_active=request.POST.get('is_active') == 'on'
+        )
+        messages.success(request, 'Creative Direction Section created successfully!')
+    return redirect('creative_direction_page')
+
+
+@login_required
+def creative_direction_section_edit(request, pk):
+    """Edit Creative Direction Section"""
+    section = get_object_or_404(CreativeDirectionSection, pk=pk)
+    
+    if request.method == 'POST':
+        work_id = request.POST.get('ourwork')
+        section.ourwork = get_object_or_404(OurWorks, pk=work_id)
+        section.main_title = request.POST.get('main_title')
+        section.main_description = request.POST.get('main_description')
+        section.is_active = request.POST.get('is_active') == 'on'
+        section.save()
+        messages.success(request, 'Creative Direction Section updated successfully!')
+    return redirect('creative_direction_page')
+
+
+@login_required
+def creative_direction_section_delete(request, pk):
+    """Delete Creative Direction Section"""
+    section = get_object_or_404(CreativeDirectionSection, pk=pk)
+    section.delete()
+    messages.success(request, 'Creative Direction Section deleted successfully!')
+    return redirect('creative_direction_page')
+
+
+# ==================== INDIVIDUAL CREATIVE ITEMS CRUD ====================
+
+@login_required
+def creative_item_create(request):
+    """Create Individual Creative Item"""
+    if request.method == 'POST':
+        section_id = request.POST.get('section')
+        section = get_object_or_404(CreativeDirectionSection, pk=section_id)
+        
+        CreativeItem.objects.create(
+            section=section,
+            image=request.FILES.get('image'),
+            title=request.POST.get('title'),
+            description=request.POST.get('description'),
+            display_order=request.POST.get('display_order', 0),
+            is_active=request.POST.get('is_active') == 'on'
+        )
+        messages.success(request, 'Creative Item added successfully!')
+    return redirect('creative_direction_page')
+
+
+@login_required
+def creative_item_edit(request, pk):
+    """Edit Individual Creative Item"""
+    item = get_object_or_404(CreativeItem, pk=pk)
+    old_image = item.image
+    
+    if request.method == 'POST':
+        item.title = request.POST.get('title')
+        item.description = request.POST.get('description')
+        item.display_order = request.POST.get('display_order', 0)
+        item.is_active = request.POST.get('is_active') == 'on'
+        
+        if request.FILES.get('image'):
+            if old_image:
+                delete_cloudinary_image(old_image)
+            item.image = request.FILES.get('image')
+        
+        item.save()
+        messages.success(request, 'Creative Item updated successfully!')
+    return redirect('creative_direction_page')
+
+
+@login_required
+def creative_item_delete(request, pk):
+    """Delete Individual Creative Item"""
+    item = get_object_or_404(CreativeItem, pk=pk)
+    
+    if item.image:
+        delete_cloudinary_image(item.image)
+    
+    item.delete()
+    messages.success(request, 'Creative Item deleted successfully!')
+    return redirect('creative_direction_page')    
+
+
+
+# ==================== MOBILE SECTION CRUD ====================
+
+@login_required
+def mobile_section_page(request):
+    """Main page to manage all Mobile Sections"""
+    sections = MobileSection.objects.all().select_related('ourwork').order_by('-created_at')
+    ourworks = OurWorks.objects.all().order_by('title')
+    
+    context = {
+        'sections': sections,
+        'sections_count': sections.count(),
+        'ourworks': ourworks,
+    }
+    return render(request, 'mobile_section.html', context)
+
+
+@login_required
+def mobile_section_create(request):
+    """Create Mobile Section"""
+    if request.method == 'POST':
+        work_id = request.POST.get('ourwork')
+        work = get_object_or_404(OurWorks, pk=work_id)
+        
+        MobileSection.objects.create(
+            ourwork=work,
+            label=request.POST.get('label', 'INTERACTIVE EXPERIENCE'),
+            title=request.POST.get('title'),
+            description=request.POST.get('description'),
+            mobile_image_1=request.FILES.get('mobile_image_1'),
+            mobile_image_2=request.FILES.get('mobile_image_2'),
+            is_active=request.POST.get('is_active') == 'on'
+        )
+        messages.success(request, 'Mobile Section created successfully!')
+    return redirect('mobile_section_page')
+
+
+@login_required
+def mobile_section_edit(request, pk):
+    """Edit Mobile Section"""
+    section = get_object_or_404(MobileSection, pk=pk)
+    old_image_1 = section.mobile_image_1
+    old_image_2 = section.mobile_image_2
+    
+    if request.method == 'POST':
+        work_id = request.POST.get('ourwork')
+        section.ourwork = get_object_or_404(OurWorks, pk=work_id)
+        section.label = request.POST.get('label', 'INTERACTIVE EXPERIENCE')
+        section.title = request.POST.get('title')
+        section.description = request.POST.get('description')
+        section.is_active = request.POST.get('is_active') == 'on'
+        
+        # Handle mobile_image_1
+        if request.FILES.get('mobile_image_1'):
+            if old_image_1:
+                delete_cloudinary_image(old_image_1)
+            section.mobile_image_1 = request.FILES.get('mobile_image_1')
+        
+        # Handle mobile_image_2
+        if request.FILES.get('mobile_image_2'):
+            if old_image_2:
+                delete_cloudinary_image(old_image_2)
+            section.mobile_image_2 = request.FILES.get('mobile_image_2')
+        
+        section.save()
+        messages.success(request, 'Mobile Section updated successfully!')
+    return redirect('mobile_section_page')
+
+
+@login_required
+def mobile_section_delete(request, pk):
+    """Delete Mobile Section"""
+    section = get_object_or_404(MobileSection, pk=pk)
+    
+    if section.mobile_image_1:
+        delete_cloudinary_image(section.mobile_image_1)
+    if section.mobile_image_2:
+        delete_cloudinary_image(section.mobile_image_2)
+    
+    section.delete()
+    messages.success(request, 'Mobile Section deleted successfully!')
+    return redirect('mobile_section_page')    
 # ==================== OUR WORKS DIGITAL MARKETING SECTION ====================    
 
 @login_required
