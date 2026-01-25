@@ -71,73 +71,90 @@
                         </div>
                         <div class="card-body">
                             {% if sections %}
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Image</th>
-                                            <th>Our Work</th>
-                                            <th>Title</th>
-                                            <th>Corporate Clients</th>
-                                            <th>Custom Designs</th>
-                                            <th>Years Experience</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for section in sections %}
-                                        <tr>
-                                            <td>
-                                                {% if section.image %}
-                                                <img src="{{ section.image.url }}" alt="{{ section.title }}" style="width: 80px; height: 60px; object-fit: cover;">
-                                                {% else %}
-                                                <span class="badge badge-secondary">No Image</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>{{ section.ourwork.title }}</td>
-                                            <td>{{ section.title }}</td>
-                                            <td><strong class="text-primary">{{ section.corporate_clients }}</strong></td>
-                                            <td><strong class="text-success">{{ section.custom_designs }}</strong></td>
-                                            <td><strong class="text-warning">{{ section.years_experience }}</strong></td>
-                                            <td>
-                                                {% if section.is_active %}
-                                                <span class="badge badge-success">Active</span>
-                                                {% else %}
-                                                <span class="badge badge-secondary">Inactive</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                <button 
-                                                    type="button" 
-                                                    class="btn btn-sm btn-info"
-                                                    onclick="editSection2(
-                                                        {{ section.pk }},
-                                                        {{ section.ourwork.pk }},
-                                                        '{{ section.title|escapejs }}',
-                                                        '{{ section.description|escapejs }}',
-                                                        '{{ section.corporate_clients|escapejs }}',
-                                                        '{{ section.custom_designs|escapejs }}',
-                                                        '{{ section.years_experience|escapejs }}',
-                                                        {{ section.is_active|yesno:'true,false' }},
-                                                        '{% if section.image %}{{ section.image.url }}{% endif %}'
-                                                    )"
-                                                >
-                                                    <i class="fas fa-edit"></i> Edit
-                                                </button>
-                                                <button 
-                                                    type="button" 
-                                                    class="btn btn-sm btn-danger" 
-                                                    onclick="deleteSection2('{% url 'ourwork_section2_delete' section.pk %}')"
-                                                >
-                                                    <i class="fas fa-trash"></i> Delete
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
+                            {% for section in sections %}
+                            <div class="card mb-4 border-info">
+                                <div class="card-header bg-light">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="mb-1">
+                                                <i class="fas fa-briefcase text-info"></i> 
+                                                {{ section.ourwork.title }}
+                                            </h5>
+                                            {% if section.is_active %}
+                                            <span class="badge badge-success">Active</span>
+                                            {% else %}
+                                            <span class="badge badge-secondary">Inactive</span>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-sm btn-info"
+                                                onclick="editSection2(
+                                                    {{ section.pk }},
+                                                    {{ section.ourwork.pk }},
+                                                    '{{ section.title|escapejs }}',
+                                                    '{{ section.description|escapejs }}',
+                                                    '{{ section.stat1_count|escapejs }}',
+                                                    '{{ section.stat1_text|escapejs }}',
+                                                    '{{ section.stat2_count|escapejs }}',
+                                                    '{{ section.stat2_text|escapejs }}',
+                                                    '{{ section.stat3_count|escapejs }}',
+                                                    '{{ section.stat3_text|escapejs }}',
+                                                    {{ section.is_active|yesno:'true,false' }},
+                                                    '{% if section.image %}{{ section.image.url }}{% endif %}'
+                                                )"
+                                            >
+                                                <i class="fas fa-edit"></i> Edit
+                                            </button>
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-sm btn-danger" 
+                                                onclick="deleteSection2('{% url 'ourwork_section2_delete' section.pk %}')"
+                                            >
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <!-- Image -->
+                                        <div class="col-md-6">
+                                            {% if section.image %}
+                                            <img src="{{ section.image.url }}" alt="{{ section.title }}" class="img-fluid rounded shadow">
+                                            {% else %}
+                                            <div class="bg-secondary d-flex align-items-center justify-content-center rounded" style="height: 300px;">
+                                                <i class="fas fa-image fa-4x text-white"></i>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Content -->
+                                        <div class="col-md-6">
+                                            <h3 class="mb-3">{{ section.title }}</h3>
+                                            <p class="text-muted mb-4">{{ section.description }}</p>
+
+                                            <!-- Statistics -->
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    <h2 class="text-primary mb-1">{{ section.stat1_count }}</h2>
+                                                    <p class="text-muted mb-0">{{ section.stat1_text }}</p>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <h2 class="text-primary mb-1">{{ section.stat2_count }}</h2>
+                                                    <p class="text-muted mb-0">{{ section.stat2_text }}</p>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <h2 class="text-primary mb-1">{{ section.stat3_count }}</h2>
+                                                    <p class="text-muted mb-0">{{ section.stat3_text }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                            {% endfor %}
                             {% else %}
                             <div class="alert alert-info">
                                 <i class="fas fa-info-circle"></i> No Section 2 entries found. Click "Add Section 2" to create one.
@@ -160,8 +177,8 @@
                 {% csrf_token %}
                 
                 <div class="modal-header bg-info">
-                    <h5 class="modal-title">Create Section 2 (Statistics)</h5>
-                    <button type="button" class="close" data-dismiss="modal">
+                    <h5 class="modal-title text-white">Create Section 2 (Statistics)</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">
                         <span>&times;</span>
                     </button>
                 </div>
@@ -184,12 +201,12 @@
 
                     <div class="form-group">
                         <label for="title">Title <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="title" name="title" placeholder="e.g., Designing Corporate Identity Through Print" required>
+                        <input type="text" class="form-control" id="title" name="title" placeholder="Building Trust Through Clear Communication" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="description">Description</label>
-                        <textarea class="form-control" id="description" name="description" rows="3" placeholder="Visual storytelling enhanced product value."></textarea>
+                        <label for="description">Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="description" name="description" rows="3" placeholder="Strong visuals and messaging helped position the brand..." required></textarea>
                     </div>
 
                     <hr>
@@ -198,20 +215,32 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="corporate_clients">Corporate Clients</label>
-                                <input type="text" class="form-control" id="corporate_clients" name="corporate_clients" value="100+" placeholder="100+">
+                                <label for="stat1_count">Statistic 1 Count</label>
+                                <input type="text" class="form-control" id="stat1_count" name="stat1_count" value="1000+" placeholder="1000+">
+                            </div>
+                            <div class="form-group">
+                                <label for="stat1_text">Statistic 1 Label</label>
+                                <input type="text" class="form-control" id="stat1_text" name="stat1_text" value="Students Guided" placeholder="Students Guided">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="custom_designs">Custom Designs</label>
-                                <input type="text" class="form-control" id="custom_designs" name="custom_designs" value="500+" placeholder="500+">
+                                <label for="stat2_count">Statistic 2 Count</label>
+                                <input type="text" class="form-control" id="stat2_count" name="stat2_count" value="15+" placeholder="15+">
+                            </div>
+                            <div class="form-group">
+                                <label for="stat2_text">Statistic 2 Label</label>
+                                <input type="text" class="form-control" id="stat2_text" name="stat2_text" value="Partner Universities" placeholder="Partner Universities">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="years_experience">Years Experience</label>
-                                <input type="text" class="form-control" id="years_experience" name="years_experience" value="10+" placeholder="10+">
+                                <label for="stat3_count">Statistic 3 Count</label>
+                                <input type="text" class="form-control" id="stat3_count" name="stat3_count" value="95%" placeholder="95%">
+                            </div>
+                            <div class="form-group">
+                                <label for="stat3_text">Statistic 3 Label</label>
+                                <input type="text" class="form-control" id="stat3_text" name="stat3_text" value="Application Success Rate" placeholder="Application Success Rate">
                             </div>
                         </div>
                     </div>
@@ -239,8 +268,8 @@
                 {% csrf_token %}
                 
                 <div class="modal-header bg-info">
-                    <h5 class="modal-title">Edit Section 2 (Statistics)</h5>
-                    <button type="button" class="close" data-dismiss="modal">
+                    <h5 class="modal-title text-white">Edit Section 2 (Statistics)</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">
                         <span>&times;</span>
                     </button>
                 </div>
@@ -269,8 +298,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="edit_description">Description</label>
-                        <textarea class="form-control" id="edit_description" name="description" rows="3"></textarea>
+                        <label for="edit_description">Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="edit_description" name="description" rows="3" required></textarea>
                     </div>
 
                     <hr>
@@ -279,20 +308,32 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="edit_corporate_clients">Corporate Clients</label>
-                                <input type="text" class="form-control" id="edit_corporate_clients" name="corporate_clients" placeholder="100+">
+                                <label for="edit_stat1_count">Statistic 1 Count</label>
+                                <input type="text" class="form-control" id="edit_stat1_count" name="stat1_count" placeholder="1000+">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_stat1_text">Statistic 1 Label</label>
+                                <input type="text" class="form-control" id="edit_stat1_text" name="stat1_text" placeholder="Students Guided">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="edit_custom_designs">Custom Designs</label>
-                                <input type="text" class="form-control" id="edit_custom_designs" name="custom_designs" placeholder="500+">
+                                <label for="edit_stat2_count">Statistic 2 Count</label>
+                                <input type="text" class="form-control" id="edit_stat2_count" name="stat2_count" placeholder="15+">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_stat2_text">Statistic 2 Label</label>
+                                <input type="text" class="form-control" id="edit_stat2_text" name="stat2_text" placeholder="Partner Universities">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="edit_years_experience">Years Experience</label>
-                                <input type="text" class="form-control" id="edit_years_experience" name="years_experience" placeholder="10+">
+                                <label for="edit_stat3_count">Statistic 3 Count</label>
+                                <input type="text" class="form-control" id="edit_stat3_count" name="stat3_count" placeholder="95%">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit_stat3_text">Statistic 3 Label</label>
+                                <input type="text" class="form-control" id="edit_stat3_text" name="stat3_text" placeholder="Application Success Rate">
                             </div>
                         </div>
                     </div>
@@ -314,15 +355,18 @@
 
 <script>
 // Edit Section 2
-function editSection2(id, ourworkId, title, description, corporateClients, customDesigns, yearsExperience, isActive, imageUrl) {
+function editSection2(id, ourworkId, title, description, stat1Count, stat1Text, stat2Count, stat2Text, stat3Count, stat3Text, isActive, imageUrl) {
     document.getElementById('editSection2Form').action = "{% url 'ourwork_section2_edit' 0 %}".replace('0', id);
     
     document.getElementById('edit_ourwork').value = ourworkId;
     document.getElementById('edit_title').value = title;
     document.getElementById('edit_description').value = description;
-    document.getElementById('edit_corporate_clients').value = corporateClients;
-    document.getElementById('edit_custom_designs').value = customDesigns;
-    document.getElementById('edit_years_experience').value = yearsExperience;
+    document.getElementById('edit_stat1_count').value = stat1Count;
+    document.getElementById('edit_stat1_text').value = stat1Text;
+    document.getElementById('edit_stat2_count').value = stat2Count;
+    document.getElementById('edit_stat2_text').value = stat2Text;
+    document.getElementById('edit_stat3_count').value = stat3Count;
+    document.getElementById('edit_stat3_text').value = stat3Text;
     document.getElementById('edit_is_active').checked = isActive;
     
     // Image preview

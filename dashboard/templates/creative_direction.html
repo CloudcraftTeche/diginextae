@@ -93,6 +93,7 @@
                                                 onclick="editSection(
                                                     {{ section.pk }},
                                                     {{ section.ourwork.pk }},
+                                                    '{{ section.main_heading|escapejs }}',
                                                     '{{ section.main_title|escapejs }}',
                                                     '{{ section.main_description|escapejs }}',
                                                     {{ section.is_active|yesno:'true,false' }}
@@ -113,9 +114,13 @@
                                 <div class="card-body">
                                     <!-- Main Section Info -->
                                     <div class="text-center mb-4">
+                                        <h6 class="text-uppercase text-muted font-weight-bold">
+                                            {{ section.main_heading }}
+                                        </h6>
                                         <h3 class="text-primary">{{ section.main_title }}</h3>
                                         <p class="text-muted">{{ section.main_description }}</p>
                                     </div>
+                                    
 
                                     <!-- Creative Items -->
                                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -230,6 +235,18 @@
                             {% endfor %}
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="main_heading">Main Heading <span class="text-danger">*</span></label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="main_heading"
+                            name="main_heading"
+                            placeholder="Creative Direction"
+                            required
+                        >
+                    </div>
+                    
 
                     <div class="form-group">
                         <label for="main_title">Main Title <span class="text-danger">*</span></label>
@@ -280,6 +297,17 @@
                             {% endfor %}
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="edit_main_heading">Main Heading <span class="text-danger">*</span></label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="edit_main_heading"
+                            name="main_heading"
+                            required
+                        >
+                    </div>
+                    
 
                     <div class="form-group">
                         <label for="edit_main_title">Main Title <span class="text-danger">*</span></label>
@@ -412,9 +440,10 @@
 
 <script>
 // Edit Section
-function editSection(id, ourworkId, mainTitle, mainDescription, isActive) {
+function editSection(id, ourworkId,mainHeading, mainTitle, mainDescription, isActive) {
     document.getElementById('editSectionForm').action = "{% url 'creative_direction_section_edit' 0 %}".replace('0', id);
     document.getElementById('edit_ourwork').value = ourworkId;
+    document.getElementById('edit_main_heading').value = mainHeading;
     document.getElementById('edit_main_title').value = mainTitle;
     document.getElementById('edit_main_description').value = mainDescription;
     document.getElementById('edit_is_active').checked = isActive;

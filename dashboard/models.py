@@ -509,18 +509,61 @@ class OurWorks(models.Model):
 # ==================== OUR WORK SECTION 2 ====================
 
 class OurWorkSection2(models.Model):
-    """Statistics section for Our Works"""
+    """Section 2 for Our Works - Image, Title, Description, and 3 customizable statistics"""
     ourwork = models.ForeignKey(
         OurWorks,
         on_delete=models.CASCADE,
         related_name='section2_stats'
     )
+    
+    # Main content
     image = CloudinaryField('image', folder='our_works/section2', blank=True, null=True)
-    title = models.CharField(max_length=200)
-    description = models.TextField(blank=True, null=True)
-    corporate_clients = models.CharField(max_length=50, default="100+", help_text="e.g., 100+")
-    custom_designs = models.CharField(max_length=50, default="500+", help_text="e.g., 500+")
-    years_experience = models.CharField(max_length=50, default="10+", help_text="e.g., 10+")
+    title = models.CharField(
+        max_length=200, 
+        default="Section Title",
+        help_text="e.g., Building Trust Through Clear Communication"
+    )
+    description = models.TextField(
+        default="Section description goes here.",
+        help_text="e.g., Strong visuals and messaging helped position the brand..."
+    )
+    
+    # Statistic 1
+    stat1_count = models.CharField(
+        max_length=50, 
+        default="1000+", 
+        help_text="e.g., 1000+, 95%, 15+"
+    )
+    stat1_text = models.CharField(
+        max_length=100, 
+        default="Students Guided", 
+        help_text="Label for statistic 1"
+    )
+    
+    # Statistic 2
+    stat2_count = models.CharField(
+        max_length=50, 
+        default="15+", 
+        help_text="e.g., 1000+, 95%, 15+"
+    )
+    stat2_text = models.CharField(
+        max_length=100, 
+        default="Partner Universities", 
+        help_text="Label for statistic 2"
+    )
+    
+    # Statistic 3
+    stat3_count = models.CharField(
+        max_length=50, 
+        default="95%", 
+        help_text="e.g., 1000+, 95%, 15+"
+    )
+    stat3_text = models.CharField(
+        max_length=100, 
+        default="Application Success Rate", 
+        help_text="Label for statistic 3"
+    )
+    
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -528,9 +571,11 @@ class OurWorkSection2(models.Model):
     class Meta:
         verbose_name = "Our Work Section 2"
         verbose_name_plural = "Our Work Section 2"
+        ordering = ['-created_at']
 
     def __str__(self):
-        return f"Section 2 - {self.title}"
+        return f"Section 2 - {self.ourwork.title}: {self.title}"
+
 # ==================== PROJECT GOALS SECTION ====================
 
 class ProjectGoalsSection(models.Model):
@@ -633,6 +678,7 @@ class CreativeDirectionSection(models.Model):
         on_delete=models.CASCADE,
         related_name='creative_direction_section'
     )
+    main_heading = models.CharField( max_length=200,default="Creative Direction",help_text="e.g., Creative Direction")
     main_title = models.CharField(max_length=200, help_text="e.g., Wellness-Focused Visual Identity")
     main_description = models.TextField(help_text="e.g., A clean, elegant design language that reflects peace and wellness.")
     is_active = models.BooleanField(default=True)

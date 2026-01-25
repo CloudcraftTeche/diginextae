@@ -1708,9 +1708,12 @@ def ourwork_section2_create(request):
             image=request.FILES.get('image'),
             title=request.POST.get('title'),
             description=request.POST.get('description'),
-            corporate_clients=request.POST.get('corporate_clients', '100+'),
-            custom_designs=request.POST.get('custom_designs', '500+'),
-            years_experience=request.POST.get('years_experience', '10+'),
+            stat1_count=request.POST.get('stat1_count', '1000+'),
+            stat1_text=request.POST.get('stat1_text', 'Students Guided'),
+            stat2_count=request.POST.get('stat2_count', '15+'),
+            stat2_text=request.POST.get('stat2_text', 'Partner Universities'),
+            stat3_count=request.POST.get('stat3_count', '95%'),
+            stat3_text=request.POST.get('stat3_text', 'Application Success Rate'),
             is_active=request.POST.get('is_active') == 'on'
         )
         messages.success(request, 'Section 2 created successfully!')
@@ -1728,9 +1731,12 @@ def ourwork_section2_edit(request, pk):
         section.ourwork = get_object_or_404(OurWorks, pk=work_id)
         section.title = request.POST.get('title')
         section.description = request.POST.get('description')
-        section.corporate_clients = request.POST.get('corporate_clients', '100+')
-        section.custom_designs = request.POST.get('custom_designs', '500+')
-        section.years_experience = request.POST.get('years_experience', '10+')
+        section.stat1_count = request.POST.get('stat1_count', '1000+')
+        section.stat1_text = request.POST.get('stat1_text', 'Students Guided')
+        section.stat2_count = request.POST.get('stat2_count', '15+')
+        section.stat2_text = request.POST.get('stat2_text', 'Partner Universities')
+        section.stat3_count = request.POST.get('stat3_count', '95%')
+        section.stat3_text = request.POST.get('stat3_text', 'Application Success Rate')
         section.is_active = request.POST.get('is_active') == 'on'
         
         if request.FILES.get('image'):
@@ -2034,6 +2040,7 @@ def creative_direction_section_create(request):
         
         CreativeDirectionSection.objects.create(
             ourwork=work,
+            main_heading=request.POST.get('main_heading'),
             main_title=request.POST.get('main_title'),
             main_description=request.POST.get('main_description'),
             is_active=request.POST.get('is_active') == 'on'
@@ -2057,6 +2064,7 @@ def creative_direction_section_edit(request, pk):
             return redirect('creative_direction_page')
         
         section.ourwork = new_work
+        section.main_heading = request.POST.get('main_heading')
         section.main_title = request.POST.get('main_title')
         section.main_description = request.POST.get('main_description')
         section.is_active = request.POST.get('is_active') == 'on'
