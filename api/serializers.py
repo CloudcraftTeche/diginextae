@@ -23,6 +23,9 @@ from dashboard.models import (
     Expertise,
     OurWorks,
     OurWorksDigitalMarketing,
+    ProjectGoalsSection, ProjectGoal,
+    ChallengesSection, Challenge, CreativeDirectionSection,
+    CreativeItem, MobileSection, Section4, Section5,
 
     # INSIGHTS
     Insights,
@@ -30,6 +33,65 @@ from dashboard.models import (
     OurInsights,
 )
 
+class ProjectGoalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectGoal
+        fields = '__all__'
+
+class ProjectGoalsSectionSerializer(serializers.ModelSerializer):
+    goals = ProjectGoalSerializer(many=True, read_only=True)
+    class Meta:
+        model = ProjectGoalsSection
+        fields = '__all__'
+
+class ChallengeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Challenge
+        fields = '__all__'
+
+class ChallengesSectionSerializer(serializers.ModelSerializer):
+    challenges = ChallengeSerializer(many=True, read_only=True)
+    class Meta:
+        model = ChallengesSection
+        fields = '__all__'
+
+class CreativeItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CreativeItem
+        fields = '__all__'
+
+class CreativeDirectionSectionSerializer(serializers.ModelSerializer):
+    creative_items = CreativeItemSerializer(many=True, read_only=True)
+    class Meta:
+        model = CreativeDirectionSection
+        fields = '__all__'
+
+class MobileSectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MobileSection
+        fields = '__all__'
+
+class Section4Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Section4
+        fields = '__all__'
+
+class Section5Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Section5
+        fields = '__all__'
+
+class OurWorksSerializer(serializers.ModelSerializer):
+    project_goals_section = ProjectGoalsSectionSerializer(read_only=True)
+    challenges_section = ChallengesSectionSerializer(read_only=True)
+    creative_direction_section = CreativeDirectionSectionSerializer(read_only=True)
+    mobile_section = MobileSectionSerializer(read_only=True)
+    section4 = Section4Serializer(read_only=True)
+    section5 = Section5Serializer(read_only=True)
+
+    class Meta:
+        model = OurWorks
+        fields = '__all__'
 
 class HomeBannerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -280,13 +342,7 @@ class ExpertiseSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class OurWorksSerializer(serializers.ModelSerializer):
-    industry_name = serializers.CharField(source='industry.name', read_only=True)
-    expertise_name = serializers.CharField(source='expertise.name', read_only=True)
-    
-    class Meta:
-        model = OurWorks
-        fields = '__all__'    
+ 
 
 class OurWorksDigitalMarketingSerializer(serializers.ModelSerializer):
     class Meta:
