@@ -1,6 +1,7 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
 
+
 # Note: If you have a base.py with BaseModel, keep that import
 # from .base import BaseModel
 
@@ -903,3 +904,37 @@ class InsightChallengeItem(models.Model):
 
     def __str__(self):
         return self.text
+    
+# ==================== Blog ====================
+class Blog(models.Model):
+    banner_image = CloudinaryField(
+        'banner_image',
+        blank=True,
+        null=True
+    )
+
+    title = models.CharField(max_length=255)
+
+    image = CloudinaryField(
+        'image',
+        blank=True,
+        null=True
+    )
+
+    category = models.CharField(max_length=100)
+
+    features = models.TextField(
+        null=True,
+        blank=True,
+        help_text="Comma separated features"
+    )
+
+    description = models.TextField()
+
+    content = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title

@@ -2686,3 +2686,42 @@ def save_challenge_section(request, insight_id):
         return redirect('our_insights_page')
     
     return redirect('our_insights_page')
+
+@login_required
+def blog_page(request):
+    blogs = Blog.objects.all().order_by('-created_at')
+    return render(request, 'blog.html', {'blogs': blogs})
+
+@login_required
+def blog_create(request):
+    if request.method == 'POST':
+        form = BlogForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('blog_page')  # change if needed
+    else:
+        form = BlogForm()
+
+    return redirect('blog_page')
+
+@login_required
+def blog_edit(request, pk):
+    blog = get_object_or_404(Blog, pk=pk)
+    if blog:
+        form = BlogForm(request.POST, request.FILES, instance=blog)
+        if form.is_valid():
+            form.save()
+            return redirect('blog_page')
+    else:
+        form = BlogForm(instance=blog)
+
+    return redirect('blog_page')
+
+
+@login_required
+def blog_delete(request, pk):
+    blog = get_object_or_404(Blog, pk=pk)
+    if request.method == 'POST':
+        blog.delete()
+        return redirect('blog_page')
+    return redirect('blog_page')

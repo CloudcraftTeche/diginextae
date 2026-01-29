@@ -29,6 +29,8 @@
   <link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}" />
   <!-- summernote -->
   <link rel="stylesheet" href="{% static 'plugins/summernote/summernote-bs4.min.css' %}" />
+   <!-- <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-bs4.min.css" rel="stylesheet"> -->
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -208,6 +210,7 @@
                     <p>About Us</p>
                   </a>
                 </li>
+                
                 <!-- <li class="nav-item">
                   <a href="{% url 'home_text1' %}"
                     class="nav-link {% if request.resolver_match.url_name == 'home_text1' %}active{% endif %}">
@@ -308,6 +311,15 @@
                 <p>About us</p>
               </a>
             </li>
+            <li class="nav-item">
+                  <a href="{% url 'blog_page' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'blog_page' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Blog</p>
+                  </a>
+            </li>
+
+
             <li class="nav-item">
               <a href="{% url 'service_management' %}"
                 class="nav-link {% if request.resolver_match.url_name == 'service_management' %}active{% endif %}">
@@ -505,6 +517,7 @@
   <script src="{% static 'dist/js/pages/dashboard.js' %}"></script>
   <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  {% block scripts %} {% endblock %}
 </body>
 
 </html>

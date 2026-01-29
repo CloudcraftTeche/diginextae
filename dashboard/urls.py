@@ -324,4 +324,10 @@ path('our-insights/<int:pk>/edit/', views.our_insights_edit, name='our_insights_
 path('our-insights/<int:pk>/delete/', views.our_insights_delete, name='our_insights_delete'),
 
 
+# ==================== Blog section====================
+path('blog/', views.blog_page, name='blog_page'),
+path('blog/create/', views.blog_create, name='blog_create'),
+path('blog/<int:pk>/edit/', views.blog_edit, name='blog_edit'),
+path('blog/<int:pk>/delete/', views.blog_delete, name='blog_delete'),
+
 ]

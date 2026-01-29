@@ -3,7 +3,7 @@ from .models import (
     HomeBanner, HomeText1, HomeBanner2, HomeText2, Conncepts,
     HomeBanner3, HomeText3, HomeAvailableWorks, HomeBanner4, 
     Contents, HomeAboutUs, HomeQuestions, Question, Footer,
-    HomeDigitalMarketing,  HomeVision,Insights,InsightsDigitalMarketing,OurWorksDigitalMarketing,OurInsights
+    HomeDigitalMarketing,  HomeVision,Insights,InsightsDigitalMarketing,OurWorksDigitalMarketing,OurInsights,Blog
 )
 
 
@@ -395,4 +395,21 @@ class OurInsightsForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Enter description'}),
             'insight_date': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., 6 months, 1 week, 2 years'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-        }        
+        }     
+        
+class BlogForm(forms.ModelForm):
+    class Meta:
+        model = Blog
+        fields = [
+            'banner_image',
+            'title',
+            'image',
+            'category',
+            'features',
+            'description',
+            'content',
+        ]
+        widgets = {
+            'content': forms.Textarea(attrs={'id': 'id_content'}),
+        }
+   

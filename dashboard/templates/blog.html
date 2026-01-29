@@ -1,0 +1,312 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Blog Management - Diginext{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+
+  <!-- Content Header -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0"><i class="fas fa-blog"></i> Blog Management</h1>
+          <p class="text-muted">Create, edit and manage blog posts</p>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item active">Blogs</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  {% if messages %}
+  <div class="container-fluid">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Main Content -->
+  <section class="content">
+    <div class="container-fluid">
+
+      <!-- Add Blog -->
+      <div class="mb-3">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#createBlogModal">
+          <i class="fas fa-plus-circle"></i> Add Blog
+        </button>
+      </div>
+
+      {% if blogs %}
+      <div class="row">
+        {% for blog in blogs %}
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm">
+
+            {% if blog.banner_image %}
+            <img src="{{ blog.image.url }}" class="card-img-top" style="height:220px;object-fit:cover;">
+            {% endif %}
+
+            <div class="card-body">
+              <h5 class="font-weight-bold">{{ blog.title }}</h5>
+              <span class="badge badge-info">{{ blog.category }}</span>
+
+              <p class="text-muted mt-2">
+                {{ blog.description|truncatewords:20 }}
+              </p>
+            </div>
+
+            <div class="card-footer bg-white d-flex justify-content-center">
+              {% comment %} <span class="badge {% if blog.is_active %}badge-success{% else %}badge-secondary{% endif %}">
+                {% if blog.is_active %}Active{% else %}Inactive{% endif %}
+              </span> {% endcomment %}
+
+              <div>
+                <button class="btn btn-sm btn-warning"
+                    onclick="editBlog(
+                        {{ blog.id }},
+                        '{{ blog.title|escapejs }}',
+                        '{{ blog.category|escapejs }}',
+                        '{{ blog.features|escapejs }}',
+                        '{{ blog.description|escapejs }}',
+                        `{{ blog.content|escapejs }}`,
+                        {{ blog.is_active|yesno:'true,false' }},
+                        {% if blog.banner_image %}'{{ blog.banner_image.url }}'{% else %}''{% endif %},
+                        {% if blog.image %}'{{ blog.image.url }}'{% else %}''{% endif %}
+                    )">
+                    <i class="fas fa-edit"></i>
+                </button>
+
+
+
+                <button class="btn btn-sm btn-danger"
+                  onclick="deleteItem('{% url 'blog_delete' blog.id %}')">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="alert alert-info">
+        No blogs found. Click “Add Blog” to create one.
+      </div>
+      {% endif %}
+
+    </div>
+  </section>
+</div>
+
+<!-- ================== CREATE BLOG MODAL ================== -->
+<div class="modal fade" id="createBlogModal">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form method="POST" action="{% url 'blog_create' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title"><i class="fas fa-plus"></i> Create Blog</h5>
+          <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="form-group">
+            <label>Title *</label>
+            <input type="text" class="form-control" name="title" required>
+          </div>
+
+          <div class="form-group">
+            <label>Category *</label>
+            <input type="text" class="form-control" name="category" required>
+          </div>
+
+          <div class="form-group">
+            <label>Features</label>
+            <input type="text" class="form-control" name="features"
+                   placeholder="Comma separated">
+          </div>
+
+          <div class="form-group">
+            <label>Description *</label>
+            <textarea class="form-control" name="description" rows="3" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Content *</label>
+            <textarea class="form-control summernote" name="content" rows="8" required></textarea>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <label>Banner Image</label>
+              <input type="file" class="form-control" name="banner_image">
+            </div>
+            <div class="col-md-6">
+              <label>Feature Image</label>
+              <input type="file" class="form-control" name="image">
+            </div>
+          </div>
+
+          {% comment %} <div class="custom-control custom-switch mt-3">
+            <input type="checkbox" class="custom-control-input" name="is_active" id="blog_active" checked>
+            <label class="custom-control-label" for="blog_active">Set as Active</label>
+          </div> {% endcomment %}
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save Blog</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ================== EDIT BLOG MODAL ================== -->
+<div class="modal fade" id="editBlogModal">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form method="POST" action="" enctype="multipart/form-data" id="editBlogForm">
+        {% csrf_token %}
+        <div class="modal-header bg-warning text-white">
+          <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Blog</h5>
+          <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="form-group">
+            <label>Title *</label>
+            <input type="text" class="form-control" name="title" required>
+          </div>
+
+          <div class="form-group">
+            <label>Category *</label>
+            <input type="text" class="form-control" name="category" required>
+          </div>
+
+          <div class="form-group">
+            <label>Features</label>
+            <input type="text" class="form-control" name="features" placeholder="Comma separated">
+          </div>
+
+          <div class="form-group">
+            <label>Description *</label>
+            <textarea class="form-control" name="description" rows="3" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Content *</label>
+            <textarea class="form-control summernote" name="content" rows="8" required></textarea>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <label>Banner Image</label>
+              <input type="file" class="form-control" name="banner_image">
+              <div id="bannerImagePreview" class="mt-2"></div>
+            </div>
+            <div class="col-md-6">
+              <label>Feature Image</label>
+              <input type="file" class="form-control" name="image">
+              <div id="featureImagePreview" class="mt-2"></div>
+            </div>
+          </div>
+{% comment %} 
+          <div class="custom-control custom-switch mt-3">
+            <input type="checkbox" class="custom-control-input" name="is_active" id="edit_blog_active">
+            <label class="custom-control-label" for="edit_blog_active">Set as Active</label>
+          </div> {% endcomment %}
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-warning">Update Blog</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ================== JS ================== -->
+<script>
+function editBlog(id, title, category, features, description, content, is_active, banner_image_url, feature_image_url) {
+    // Open the modal
+    $('#editBlogModal').modal('show');
+
+    // Set form action to update URL (adjust your URL pattern)
+    const form = $('#editBlogForm');
+    form.attr('action', "{% url 'blog_edit' 0 %}".replace('0', id));
+
+    // Populate fields
+    form.find('input[name="title"]').val(title);
+    form.find('input[name="category"]').val(category);
+    form.find('input[name="features"]').val(features);
+    form.find('textarea[name="description"]').val(description);
+
+    // Populate Summernote content
+    form.find('textarea[name="content"]').summernote('code', content);
+
+    // Set active switch
+    $('#edit_blog_active').prop('checked', is_active);
+
+    // Show existing images
+    if (banner_image_url) {
+        $('#bannerImagePreview').html(`<img src="${banner_image_url}" class="img-fluid rounded" style="max-height:150px;">`);
+    } else {
+        $('#bannerImagePreview').html('');
+    }
+
+    if (feature_image_url) {
+        $('#featureImagePreview').html(`<img src="${feature_image_url}" class="img-fluid rounded" style="max-height:150px;">`);
+    } else {
+        $('#featureImagePreview').html('');
+    }
+}
+
+// Reset modal when closed
+$('#editBlogModal').on('hidden.bs.modal', function () {
+    const form = $(this).find('form')[0];
+    form.reset();
+    $('#bannerImagePreview').html('');
+    $('#featureImagePreview').html('');
+    $('#edit_blog_active').prop('checked', true);
+    $(this).find('textarea[name="content"]').summernote('reset');
+});
+</script>
+
+<script>
+  function deleteItem(url) {
+    if (confirm("Are you sure you want to delete this blog?")) {
+      window.location.href = url;
+    }
+  }
+</script>
+
+{% endblock %}
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+    $('.summernote').summernote({
+      height: 250
+    });
+  });
+</script>
+
+{% endblock %}
