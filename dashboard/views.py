@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import cloudinary.uploader
+import json
 from .models import *
 from .forms import *
 
@@ -2135,7 +2136,7 @@ def creative_item_delete(request, pk):
     
     item.delete()
     messages.success(request, 'Creative Item deleted successfully!')
-    return redirect('creative_direction_page')    
+    return redirect('creative_direction_page')
 
 
 
@@ -2725,3 +2726,79 @@ def blog_delete(request, pk):
         blog.delete()
         return redirect('blog_page')
     return redirect('blog_page')
+
+
+@login_required
+def career_page(request):
+    careers = Career.objects.all().order_by('-created_at')
+    return render(request, 'careers.html', {'careers': careers})
+
+
+@login_required
+def career_create(request):
+    if request.method == 'POST':
+        Career.objects.create(
+            icon=request.POST.get('icon') or '',
+            heading=request.POST.get('heading') or '',
+            description=request.POST.get('description') or '',
+            experience=request.POST.get('experience') or '',
+            type=request.POST.get('type') or '',
+            job_type=request.POST.get('job_type') or ''
+        )
+        messages.success(request, 'Career created successfully!')
+    return redirect('career_page')
+
+
+@login_required
+def career_edit(request, pk):
+    career = get_object_or_404(Career, pk=pk)
+    if request.method == 'POST':
+        career.icon = request.POST.get('icon') or career.icon
+        career.heading = request.POST.get('heading') or career.heading
+        career.description = request.POST.get('description') or career.description
+        career.experience = request.POST.get('experience') or career.experience
+        career.type = request.POST.get('type') or career.type
+        career.job_type = request.POST.get('job_type') or career.job_type
+        career.save()
+        messages.success(request, 'Career updated successfully!')
+    return redirect('career_page')
+
+
+@login_required
+def career_delete(request, pk):
+    career = get_object_or_404(Career, pk=pk)
+    if request.method == 'GET':
+        career.delete()
+        messages.success(request, 'Career deleted successfully!')
+    return redirect('career_page')
+
+
+# ==================== CAREER SECTIONS ====================
+@login_required
+def career_sections_page(request):
+    careers = Career.objects.all().order_by('-created_at')
+    
+    # Convert sections to JSON strings for template
+    careers_with_json = []
+    for career in careers:
+        career.sections_json = json.dumps(career.sections if career.sections else [])
+        careers_with_json.append(career)
+    
+    return render(request, 'career_sections.html', {'careers': careers_with_json})
+
+
+@login_required
+def career_sections_manage(request, pk):
+    career = get_object_or_404(Career, pk=pk)
+    
+    if request.method == 'POST':
+        sections_json = request.POST.get('sections_json') or '[]'
+        try:
+            career.sections = json.loads(sections_json)
+            career.save()
+            messages.success(request, f'Sections updated for "{career.heading}"!')
+        except Exception as e:
+            messages.error(request, f'Error updating sections: {str(e)}')
+    
+    return redirect('career_sections_page')
+

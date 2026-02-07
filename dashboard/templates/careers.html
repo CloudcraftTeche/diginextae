@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Careers Management - Diginext{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+
+  <!-- Content Header -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0"><i class="fas fa-briefcase"></i> Careers Management</h1>
+          <p class="text-muted">Create, edit and manage career openings</p>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item active">Careers</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  {% if messages %}
+  <div class="container-fluid">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Main Content -->
+  <section class="content">
+    <div class="container-fluid">
+
+      <!-- Action Buttons -->
+      <div class="mb-3">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#createCareerModal">
+          <i class="fas fa-plus-circle"></i> Add Career
+        </button>
+        <a href="{% url 'career_sections_page' %}" class="btn btn-info">
+          <i class="fas fa-list-ul"></i> Manage Sections
+        </a>
+      </div>
+
+      {% if careers %}
+      <div class="row">
+        {% for career in careers %}
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm">
+
+            <div class="card-body">
+              <div class="d-flex align-items-start">
+                <div class="mr-3">
+                  {% if career.icon %}
+                    <i class="{{ career.icon }} fa-2x"></i>
+                  {% else %}
+                    <i class="fas fa-briefcase fa-2x"></i>
+                  {% endif %}
+                </div>
+                <div>
+                  <h5 class="font-weight-bold mb-0">{{ career.heading }}</h5>
+                  <small class="text-muted">{{ career.experience }} • {{ career.type }} • {{ career.job_type }}</small>
+                </div>
+              </div>
+
+              <p class="text-muted mt-2">{{ career.description|truncatewords:25 }}</p>
+
+              {% if career.sections %}
+                <div class="mt-3">
+                  <span class="badge badge-success">{{ career.sections|length }} Section{{ career.sections|length|pluralize }}</span>
+                </div>
+              {% endif %}
+
+            </div>
+
+            <div class="card-footer bg-white d-flex justify-content-center">
+              <div>
+                <button class="btn btn-sm btn-warning edit-career-btn"
+                  type="button"
+                  data-id="{{ career.id }}"
+                  data-icon="{{ career.icon|default_if_none:'' }}"
+                  data-heading="{{ career.heading }}"
+                  data-description="{{ career.description }}"
+                  data-experience="{{ career.experience }}"
+                  data-type="{{ career.type }}"
+                  data-job_type="{{ career.job_type }}">
+                  <i class="fas fa-edit"></i>
+                </button>
+
+                <button class="btn btn-sm btn-danger" type="button" data-url="{% url 'career_delete' career.id %}" onclick="deleteItemFromBtn(this)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="alert alert-info">
+        No careers found. Click "Add Career" to create one.
+      </div>
+      {% endif %}
+
+    </div>
+  </section>
+</div>
+
+<!-- ================== CREATE CAREER MODAL ================== -->
+<div class="modal fade" id="createCareerModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" action="{% url 'career_create' %}" id="createCareerForm">
+        {% csrf_token %}
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title"><i class="fas fa-plus"></i> Create Career</h5>
+          <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label>Icon</label>
+              <input type="text" class="form-control" name="icon" placeholder="e.g. fas fa-code">
+            </div>
+            <div class="form-group col-md-8">
+              <label>Heading *</label>
+              <input type="text" class="form-control" name="heading" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label>Experience *</label>
+              <input type="text" class="form-control" name="experience" placeholder="e.g. 0-1 Year" required>
+            </div>
+            <div class="form-group col-md-4">
+              <label>Type *</label>
+              <select class="form-control" name="type" required>
+                <option value="Remote">Remote</option>
+                <option value="Hybrid">Hybrid</option>
+                <option value="Onsite">Onsite</option>
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <label>Job Type *</label>
+              <select class="form-control" name="job_type" required>
+                <option value="Full Time">Full Time</option>
+                <option value="Part Time">Part Time</option>
+                <option value="Contract">Contract</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Description *</label>
+            <textarea class="form-control" name="description" rows="3" required></textarea>
+          </div>
+
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> After creating the career, you can add sections from the "Manage Sections" page.
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save Career</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ================== EDIT CAREER MODAL ================== -->
+<div class="modal fade" id="editCareerModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" action="" id="editCareerForm">
+        {% csrf_token %}
+        <div class="modal-header bg-warning text-white">
+          <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Career</h5>
+          <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label>Icon</label>
+              <input type="text" class="form-control" name="icon" placeholder="e.g. fas fa-code">
+            </div>
+            <div class="form-group col-md-8">
+              <label>Heading *</label>
+              <input type="text" class="form-control" name="heading" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label>Experience *</label>
+              <input type="text" class="form-control" name="experience" required>
+            </div>
+            <div class="form-group col-md-4">
+              <label>Type *</label>
+              <select class="form-control" name="type" required>
+                <option value="Remote">Remote</option>
+                <option value="Hybrid">Hybrid</option>
+                <option value="Onsite">Onsite</option>
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <label>Job Type *</label>
+              <select class="form-control" name="job_type" required>
+                <option value="Full Time">Full Time</option>
+                <option value="Part Time">Part Time</option>
+                <option value="Contract">Contract</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Description *</label>
+            <textarea class="form-control" name="description" rows="3" required></textarea>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-warning">Update Career</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+
+// Handle edit button click
+$(document).on('click', '.edit-career-btn', function() {
+    const btn = $(this);
+    const id = btn.data('id');
+    const icon = btn.data('icon') || '';
+    const heading = btn.data('heading') || '';
+    const description = btn.data('description') || '';
+    const experience = btn.data('experience') || '';
+    const type = btn.data('type') || '';
+    const job_type = btn.data('job_type') || '';
+    
+    // Open the modal
+    $('#editCareerModal').modal('show');
+
+    // Set form action to update URL
+    const form = $('#editCareerForm');
+    form.attr('action', "{% url 'career_edit' 0 %}".replace('0', id));
+
+    // Populate fields
+    form.find('input[name="icon"]').val(icon);
+    form.find('input[name="heading"]').val(heading);
+    form.find('input[name="experience"]').val(experience);
+    form.find('select[name="type"]').val(type);
+    form.find('select[name="job_type"]').val(job_type);
+    form.find('textarea[name="description"]').val(description);
+});
+
+function deleteItemFromBtn(btn) {
+    const url = $(btn).data('url');
+    deleteItem(url);
+}
+
+// Reset modal when closed
+$('#editCareerModal').on('hidden.bs.modal', function () {
+    const form = $(this).find('form')[0];
+    form.reset();
+});
+
+// Delete confirmation
+function deleteItem(url) {
+    if (confirm("Are you sure you want to delete this item?")) {
+      window.location.href = url;
+    }
+}
+
+// expose functions to global scope
+window.deleteItemFromBtn = deleteItemFromBtn;
+window.deleteItem = deleteItem;
+
+});
+</script>
+
+{% endblock %}

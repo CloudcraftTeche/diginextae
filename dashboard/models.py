@@ -938,3 +938,17 @@ class Blog(models.Model):
 
     def __str__(self):
         return self.title
+
+class Career(models.Model):
+    icon = models.CharField(max_length=255, blank=True, null=True)
+    heading = models.CharField(max_length=255)
+    description = models.TextField()
+    experience = models.CharField(max_length=100, blank=True, null=True)
+    type = models.CharField(max_length=50, blank=True, null=True)
+    job_type = models.CharField(max_length=50, blank=True, null=True)
+    sections = models.JSONField(blank=True, null=True, help_text='JSON list of sections: [{"heading": "...", "points": ["p1","p2"]}]')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.heading

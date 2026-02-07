@@ -1,0 +1,285 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Career Sections Management - Diginext{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+
+  <!-- Content Header -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0">
+            <i class="fas fa-list-ul"></i> Career Sections Management
+          </h1>
+          <p class="text-muted">Manage sections and bullet points for each career</p>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'career_page' %}">Careers</a></li>
+            <li class="breadcrumb-item active">Sections</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  {% if messages %}
+  <div class="container-fluid">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <section class="content">
+    <div class="container-fluid">
+
+      <div class="mb-3">
+        <a href="{% url 'career_page' %}" class="btn btn-secondary">
+          <i class="fas fa-arrow-left"></i> Back to Careers
+        </a>
+      </div>
+
+      {% if careers %}
+      <div class="row">
+        {% for career in careers %}
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm">
+
+            <div class="card-body">
+              <div class="d-flex mb-3">
+                <div class="mr-3">
+                  <i class="{{ career.icon|default:'fas fa-briefcase' }} fa-2x text-primary"></i>
+                </div>
+                <div>
+                  <h5 class="mb-0 font-weight-bold">{{ career.heading }}</h5>
+                  <small class="text-muted">{{ career.experience }}</small>
+                </div>
+              </div>
+
+              {% if career.sections %}
+              <div class="mb-3">
+                <h6 class="text-success">
+                  <i class="fas fa-check-circle"></i>
+                  {{ career.sections|length }} Section{{ career.sections|length|pluralize }}
+                </h6>
+
+                {% for section in career.sections %}
+                <div class="mb-2">
+                  <strong>{{ section.heading }}</strong>
+                  <ul class="pl-3 mb-0">
+                    {% for point in section.points %}
+                    <li class="small text-muted">{{ point }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="alert alert-warning py-2 px-3 small">
+                <i class="fas fa-exclamation-triangle"></i> No sections added
+              </div>
+              {% endif %}
+            </div>
+
+            <div class="card-footer text-center bg-white">
+              <button type="button"
+                      class="btn btn-primary btn-sm manage-sections-btn"
+                      data-id="{{ career.id }}"
+                      data-heading="{{ career.heading }}">
+                <i class="fas fa-edit"></i> Manage Sections
+              </button>
+            </div>
+
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      {% for career in careers %}
+        <script type="application/json" id="sections-{{ career.id }}">
+          {{ career.sections_json|safe }}
+        </script>
+      {% endfor %}
+
+      {% else %}
+        <div class="alert alert-info">No careers found.</div>
+      {% endif %}
+
+    </div>
+  </section>
+</div>
+
+<!-- ================= MODAL ================= -->
+<div class="modal fade" id="manageSectionsModal">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+
+      <form method="POST" id="manageSectionsForm">
+        {% csrf_token %}
+
+        <div class="modal-header bg-info text-white">
+          <h5 class="modal-title">
+            Manage Sections - <span id="careerHeading"></span>
+          </h5>
+          <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="alert alert-info">
+            Add one or more sections. Each section can contain multiple bullet points.
+          </div>
+
+          <div id="sectionsContainer"></div>
+
+          <button type="button" class="btn btn-outline-primary mt-2" onclick="addSection()">
+            <i class="fas fa-plus"></i> Add Section
+          </button>
+
+          <input type="hidden" name="sections_json" id="sections_json">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-info" onclick="serializeSections()">
+            <i class="fas fa-save"></i> Save Sections
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(function () {
+
+let sectionCounter = 0;
+let pointCounter = 0;
+
+/* ================= SECTION ================= */
+
+function addSection(data = null) {
+    const id = `section_${++sectionCounter}`;
+
+    $('#sectionsContainer').append(`
+      <div class="card mb-3 border-primary" id="${id}">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-md-10">
+              <input type="text" class="form-control section-heading"
+                     placeholder="Section Heading">
+            </div>
+            <div class="col-md-2 text-right">
+              <button type="button" class="btn btn-danger btn-sm remove-section">
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="points-list mb-2"></div>
+          <button type="button" class="btn btn-sm btn-outline-secondary add-point">
+            + Add Point
+          </button>
+        </div>
+      </div>
+    `);
+
+    const $sec = $('#' + id);
+
+    $sec.find('.remove-section').click(() => $sec.remove());
+    $sec.find('.add-point').click(() => addPoint(id));
+
+    if (data) {
+        $sec.find('.section-heading').val(data.heading || '');
+        (data.points || []).forEach(p => addPoint(id, p));
+    }
+}
+
+/* ================= POINT ================= */
+
+function addPoint(sectionId, text = '') {
+    const pid = sectionId + '_point_' + (++pointCounter);
+
+    $('#' + sectionId).find('.points-list').append(`
+      <div class="input-group mb-2" id="${pid}">
+        <input type="text" class="form-control section-point"
+               placeholder="Enter bullet point">
+        <div class="input-group-append">
+          <button class="btn btn-danger remove-point" type="button">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+    `);
+
+    const $pt = $('#' + pid);
+    $pt.find('.section-point').val(text);
+    $pt.find('.remove-point').click(() => $pt.remove());
+}
+
+/* ================= SERIALIZE ================= */
+
+function serializeSections() {
+    const sections = [];
+
+    $('#sectionsContainer > .card').each(function () {
+        const heading = $(this).find('.section-heading').val().trim();
+        const points = [];
+
+        $(this).find('.section-point').each(function () {
+            const v = $(this).val().trim();
+            if (v) points.push(v);
+        });
+
+        if (heading || points.length) {
+            sections.push({ heading, points });
+        }
+    });
+
+    $('#sections_json').val(JSON.stringify(sections));
+}
+
+/* ================= OPEN MODAL ================= */
+
+$('.manage-sections-btn').click(function () {
+    const id = $(this).data('id');
+    const heading = $(this).data('heading');
+
+    $('#careerHeading').text(heading);
+    $('#sectionsContainer').empty();
+    sectionCounter = 0;
+    pointCounter = 0;
+
+    $('#manageSectionsForm')
+      .attr('action', "{% url 'career_sections_manage' 0 %}".replace('0', id));
+
+    const tag = document.getElementById('sections-' + id);
+    if (tag && tag.textContent.trim()) {
+        JSON.parse(tag.textContent).forEach(s => addSection(s));
+    }
+
+    $('#manageSectionsModal').modal('show');
+});
+
+window.addSection = addSection;
+window.serializeSections = serializeSections;
+
+});
+</script>
+{% endblock %}

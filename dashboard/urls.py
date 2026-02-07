@@ -330,4 +330,14 @@ path('blog/create/', views.blog_create, name='blog_create'),
 path('blog/<int:pk>/edit/', views.blog_edit, name='blog_edit'),
 path('blog/<int:pk>/delete/', views.blog_delete, name='blog_delete'),
 
+# ==================== CAREER SECTION ====================
+path('career/', views.career_page, name='career_page'),
+path('career/create/', views.career_create, name='career_create'),
+path('career/<int:pk>/edit/', views.career_edit, name='career_edit'),
+path('career/<int:pk>/delete/', views.career_delete, name='career_delete'),
+
+# ==================== CAREER SECTIONS ====================
+path('career/sections/', views.career_sections_page, name='career_sections_page'),
+path('career/sections/<int:pk>/manage/', views.career_sections_manage, name='career_sections_manage'),
+
 ]
