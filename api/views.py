@@ -33,6 +33,7 @@ from dashboard.models import (
     Insights,
     InsightsDigitalMarketing,
     OurInsights,
+    Blog,Career,Location
 )
 from .serializers import (
     HomeBannerSerializer, HomeText1Serializer, HomeBanner2Serializer,
@@ -70,6 +71,9 @@ from .serializers import (
     InsightsSerializer,
     InsightsDigitalMarketingSerializer,
     OurInsightsSerializer,
+    BlogSerializer,
+    CareerSerializer,
+    LocationSerializer,
 
 )
 
@@ -1226,3 +1230,59 @@ class InsightsDigitalMarketingView(APIView):
                 message=f"Error retrieving insights digital marketing: {str(e)}",
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )        
+#blog section
+class BlogListView(APIView):
+    """GET: Retrieve all active Blog posts"""
+    def get(self, request):
+        try:
+            blogs = Blog.objects.order_by('-created_at')
+            serializer = BlogSerializer(blogs, many=True)
+            return custom_response(
+                success=True,
+                message="Blog posts retrieved successfully",
+                data=serializer.data
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving blog posts: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+            
+#Career
+class CareerListView(APIView):
+    """GET: Retrieve all active Career posts"""
+    def get(self, request):
+        try:
+            careers = Career.objects.order_by('-created_at')
+            serializer = CareerSerializer(careers, many=True)
+            return custom_response(
+                success=True,
+                message="Career posts retrieved successfully",
+                data=serializer.data
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving career posts: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+            
+#Location
+class LocationListView(APIView):
+    """GET: Retrieve all active Locations"""
+    def get(self, request):
+        try:
+            locations = Location.objects.order_by('-created_at')
+            serializer = LocationSerializer(locations, many=True)
+            return custom_response(
+                success=True,
+                message="Locations retrieved successfully",
+                data=serializer.data
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving locations: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

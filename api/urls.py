@@ -33,6 +33,7 @@ from .views import (
     # INSIGHTS SECTION
     InsightsListView, OurInsightsListView,
     OurInsightsDetailView, InsightsDigitalMarketingView,
+    BlogListView, CareerListView, LocationListView
 )
 
 urlpatterns = [
@@ -104,6 +105,16 @@ urlpatterns = [
 
     # subscribe 
     path('api/subscribe/', subscribe, name='subscribe'),
+    
+    # blog
+    path('blog/', BlogListView.as_view(), name='blog-list'),
+    
+    #Career
+    path('career/', CareerListView.as_view(), name='career-list'),
+    
+    
+    #Location
+    path('locations/', LocationListView.as_view(), name='location-list'),
     
     
 ]

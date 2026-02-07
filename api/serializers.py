@@ -31,6 +31,7 @@ from dashboard.models import (
     Insights,
     InsightsDigitalMarketing,
     OurInsights,
+    Blog,Career,Location
 )
 
 class ProjectGoalSerializer(serializers.ModelSerializer):
@@ -362,4 +363,19 @@ class InsightsDigitalMarketingSerializer(serializers.ModelSerializer):
 class OurInsightsSerializer(serializers.ModelSerializer):
     class Meta:
         model = OurInsights
+        fields = '__all__'
+        
+class BlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Blog
+        fields = '__all__'
+        
+class CareerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Career
+        fields = '__all__'
+        
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
         fields = '__all__'
