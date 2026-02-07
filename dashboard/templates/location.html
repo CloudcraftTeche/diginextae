@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Location Management - Diginext{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+
+  <div class="content-header">
+    <div class="container-fluid">
+      <h1><i class="fas fa-map-marker-alt"></i> Location Management</h1>
+      <p class="text-muted">Create and manage locations</p>
+    </div>
+  </div>
+
+  {% if messages %}
+  <div class="container-fluid">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <section class="content">
+    <div class="container-fluid">
+
+      <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#createLocationModal">
+        <i class="fas fa-plus"></i> Add Location
+      </button>
+
+      {% if locations %}
+      <div class="row">
+        {% for loc in locations %}
+        <div class="col-md-4 mb-4">
+          <div class="card h-100">
+
+            {% if loc.image %}
+            <img src="{{ loc.image.url }}" class="card-img-top" style="height:200px;object-fit:cover;">
+            {% endif %}
+
+            <div class="card-body">
+              <h5 class="font-weight-bold">{{ loc.heading }}</h5>
+              <span class="badge badge-info">{{ loc.location }}</span>
+              <p class="text-muted mt-2">{{ loc.description|truncatewords:20 }}</p>
+            </div>
+
+            <div class="card-footer text-center">
+              <button class="btn btn-sm btn-warning"
+                onclick="editLocation(
+                  {{ loc.id }},
+                  '{{ loc.location|escapejs }}',
+                  '{{ loc.heading|escapejs }}',
+                  '{{ loc.description|escapejs }}',
+                  {% if loc.image %}'{{ loc.image.url }}'{% else %}''{% endif %}
+                )">
+                <i class="fas fa-edit"></i>
+              </button>
+
+              <a href="{% url 'location_delete' loc.id %}"
+                 class="btn btn-sm btn-danger"
+                 onclick="return confirm('Delete this location?')">
+                 <i class="fas fa-trash"></i>
+              </a>
+            </div>
+
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="alert alert-info">No locations found</div>
+      {% endif %}
+
+    </div>
+  </section>
+</div>
+
+<!-- CREATE MODAL -->
+<div class="modal fade" id="createLocationModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="{% url 'location_create' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-header bg-primary text-white">
+          <h5>Add Location</h5>
+          <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <input type="text" name="location" class="form-control mb-2" placeholder="Location" required>
+          <input type="text" name="heading" class="form-control mb-2" placeholder="Heading" required>
+          <textarea name="description" class="form-control mb-2" rows="3" placeholder="Description" required></textarea>
+          <input type="file" name="image" class="form-control">
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal fade" id="editLocationModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" enctype="multipart/form-data" id="editLocationForm">
+        {% csrf_token %}
+        <div class="modal-header bg-warning">
+          <h5>Edit Location</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <input type="text" name="location" class="form-control mb-2" required>
+          <input type="text" name="heading" class="form-control mb-2" required>
+          <textarea name="description" class="form-control mb-2" rows="3" required></textarea>
+          <input type="file" name="image" class="form-control">
+          <div id="editImagePreview" class="mt-2"></div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-warning">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function editLocation(id, location, heading, description, image) {
+  $('#editLocationModal').modal('show');
+
+  $('#editLocationForm').attr(
+    'action',
+    "{% url 'location_edit' 0 %}".replace('0', id)
+  );
+
+  $('#editLocationForm').find('[name="location"]').val(location);
+  $('#editLocationForm').find('[name="heading"]').val(heading);
+  $('#editLocationForm').find('[name="description"]').val(description);
+
+  if (image) {
+    $('#editImagePreview').html(`<img src="${image}" class="img-fluid" style="max-height:150px;">`);
+  } else {
+    $('#editImagePreview').html('');
+  }
+}
+</script>
+
+{% endblock %}

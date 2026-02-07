@@ -340,4 +340,10 @@ path('career/<int:pk>/delete/', views.career_delete, name='career_delete'),
 path('career/sections/', views.career_sections_page, name='career_sections_page'),
 path('career/sections/<int:pk>/manage/', views.career_sections_manage, name='career_sections_manage'),
 
+
+# ==================== LOCATIONS SECTION ====================
+path('locations/', views.location_list, name='location_list'),
+path('locations/create/', views.location_create, name='location_create'),
+path('locations/edit/<int:id>/', views.location_edit, name='location_edit'),
+path('locations/delete/<int:id>/', views.location_delete, name='location_delete'),
 ]

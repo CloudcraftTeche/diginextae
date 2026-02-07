@@ -104,4 +104,6 @@ urlpatterns = [
 
     # subscribe 
     path('api/subscribe/', subscribe, name='subscribe'),
+    
+    
 ]

@@ -952,3 +952,15 @@ class Career(models.Model):
 
     def __str__(self):
         return self.heading
+    
+class Location(models.Model):
+    location = models.CharField(max_length=150)
+    heading = models.CharField(max_length=200)
+    description = models.TextField()
+    image = CloudinaryField(
+            'image',
+            blank=True,
+            null=True
+        )
+    def __str__(self):
+        return self.location

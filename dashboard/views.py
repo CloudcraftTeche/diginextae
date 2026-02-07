@@ -2802,3 +2802,47 @@ def career_sections_manage(request, pk):
     
     return redirect('career_sections_page')
 
+
+# ==================== LOCATION CRUD ====================
+def location_list(request):
+    locations = Location.objects.all().order_by('-id')
+    return render(request, 'location.html', {'locations': locations})
+
+
+def location_create(request):
+    if request.method == 'POST':
+        Location.objects.create(
+            location=request.POST.get('location'),
+            heading=request.POST.get('heading'),
+            description=request.POST.get('description'),
+            image=request.FILES.get('image')
+        )
+        messages.success(request, "Location added successfully")
+    return redirect('location_list')
+
+
+def location_edit(request, id):
+    location = get_object_or_404(Location, id=id)
+
+    if request.method == 'POST':
+        location.location = request.POST.get('location')
+        location.heading = request.POST.get('heading')
+        location.description = request.POST.get('description')
+
+        if request.FILES.get('image'):
+            if location.image:
+                delete_cloudinary_image(location.image)
+            location.image = request.FILES.get('image')
+        location.save()
+        messages.success(request, "Location updated successfully")
+
+    return redirect('location_list')
+
+
+def location_delete(request, id):
+    location = get_object_or_404(Location, id=id)
+    if location.image:
+        delete_cloudinary_image(location.image)
+    location.delete()
+    messages.success(request, "Location deleted successfully")
+    return redirect('location_list')
