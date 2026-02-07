@@ -2721,7 +2721,7 @@ def blog_edit(request, pk):
 @login_required
 def blog_delete(request, pk):
     blog = get_object_or_404(Blog, pk=pk)
-    if request.method == 'POST':
+    if request.method == 'GET':
         blog.delete()
         return redirect('blog_page')
     return redirect('blog_page')
