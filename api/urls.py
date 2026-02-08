@@ -7,7 +7,7 @@ from .views import (
     HomeText3ListView, HomeAvailableWorksListView, HomeBanner4ListView,
     HomeAboutUsListView, HomeQuestionsListView, FooterListView,
     HomeDigitalMarketingListView,  HomeVisionListView,
-    HomeFeaturesListView,
+    HomeFeaturesListView,BlogDetailView,
 
     # CONTACTS SECTION
     ContactSAListView, LeadsListCreateView, ContactDigitalMarketingListView,
@@ -33,7 +33,7 @@ from .views import (
     # INSIGHTS SECTION
     InsightsListView, OurInsightsListView,
     OurInsightsDetailView, InsightsDigitalMarketingView,
-    BlogListView, CareerListView, LocationListView
+    BlogListView, CareerListView, LocationListView,LocationDetailView
 )
 
 urlpatterns = [
@@ -108,6 +108,8 @@ urlpatterns = [
     
     # blog
     path('blog/', BlogListView.as_view(), name='blog-list'),
+    path('blog/<int:id>/', BlogDetailView.as_view(), name='blog-detail'),
+
     
     #Career
     path('career/', CareerListView.as_view(), name='career-list'),
@@ -115,6 +117,6 @@ urlpatterns = [
     
     #Location
     path('locations/', LocationListView.as_view(), name='location-list'),
-    
+    path('locations/<int:id>/', LocationDetailView.as_view(), name='location-detail'),
     
 ]

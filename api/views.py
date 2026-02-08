@@ -3,6 +3,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 from dashboard.models import (
     HomeBanner, HomeText1, HomeBanner2, HomeText2, Conncepts,
     HomeBanner3, HomeText3, HomeAvailableWorks, HomeBanner4,
@@ -1249,6 +1250,29 @@ class BlogListView(APIView):
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
             
+            
+class BlogDetailView(APIView):
+    """GET: Retrieve a single Blog post by ID"""
+
+    def get(self, request, id):
+        try:
+            blog = get_object_or_404(Blog, id=id)
+            serializer = BlogSerializer(blog)
+
+            return custom_response(
+                success=True,
+                message="Blog post retrieved successfully",
+                data=serializer.data
+            )
+
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving blog post: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+            
 #Career
 class CareerListView(APIView):
     """GET: Retrieve all active Career posts"""
@@ -1284,5 +1308,26 @@ class LocationListView(APIView):
             return custom_response(
                 success=False,
                 message=f"Error retrieving locations: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class LocationDetailView(APIView):
+    """GET: Retrieve a single Location by ID"""
+
+    def get(self, request, id):
+        try:
+            location = get_object_or_404(Location, id=id)
+            serializer = LocationSerializer(location)
+
+            return custom_response(
+                success=True,
+                message="Location retrieved successfully",
+                data=serializer.data
+            )
+
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving location: {str(e)}",
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
