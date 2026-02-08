@@ -1297,7 +1297,7 @@ class LocationListView(APIView):
     """GET: Retrieve all active Locations"""
     def get(self, request):
         try:
-            locations = Location.objects.order_by('-created_at')
+            locations = Location.objects.order_by('heading')
             serializer = LocationSerializer(locations, many=True)
             return custom_response(
                 success=True,
