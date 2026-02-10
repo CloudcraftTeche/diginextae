@@ -265,7 +265,7 @@ class ServiceSerializer(serializers.ModelSerializer):
 class SubserviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subservice
-        fields = ('id', 'subservice_name', 'subservice_description', 'sub_service_image')
+        fields = ('id', 'subservice_name', 'subservice_description', 'sub_service_image','slug', 'meta_title', 'meta_description', 'meta_keywords')
         # optionally: read_only_fields = ('id',)
 
 class ServiceNameSerializer(serializers.ModelSerializer):
