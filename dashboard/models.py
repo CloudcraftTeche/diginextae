@@ -367,8 +367,8 @@ class Subservice(models.Model):
     subservice_description = models.TextField(blank=True, null=True)
     sub_service_image = CloudinaryField('image', folder='sub_service_images')
     
-    # New fields
-    slug = models.SlugField(max_length=255, unique=True, blank=True)
+    # New fields - slug without unique constraint initially
+    slug = models.SlugField(max_length=255, blank=True, null=True)  # Remove unique=True
     meta_title = models.CharField(max_length=255, blank=True, null=True)
     meta_description = models.TextField(blank=True, null=True)
     meta_keywords = models.CharField(max_length=500, blank=True, null=True)
@@ -377,7 +377,6 @@ class Subservice(models.Model):
         return self.subservice_name
     
     def save(self, *args, **kwargs):
-        # Auto-generate slug from subservice_name if not provided
         if not self.slug:
             base_slug = slugify(self.subservice_name)
             slug = base_slug
