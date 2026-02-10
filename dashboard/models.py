@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 from cloudinary.models import CloudinaryField
 
 
@@ -365,9 +366,27 @@ class Subservice(models.Model):
     subservice_title = models.CharField(max_length=255, blank=True, null=True)
     subservice_description = models.TextField(blank=True, null=True)
     sub_service_image = CloudinaryField('image', folder='sub_service_images')
-
+    
+    # New fields
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
+    meta_title = models.CharField(max_length=255, blank=True, null=True)
+    meta_description = models.TextField(blank=True, null=True)
+    meta_keywords = models.CharField(max_length=500, blank=True, null=True)
+    
     def __str__(self):
         return self.subservice_name
+    
+    def save(self, *args, **kwargs):
+        # Auto-generate slug from subservice_name if not provided
+        if not self.slug:
+            base_slug = slugify(self.subservice_name)
+            slug = base_slug
+            counter = 1
+            while Subservice.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
     
     
 class ServiceDigitalMarketing(models.Model):
