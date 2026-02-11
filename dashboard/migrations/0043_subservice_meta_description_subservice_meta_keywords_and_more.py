@@ -28,6 +28,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='subservice',
             name='slug',
-            field=models.SlugField(blank=True, max_length=255, unique=True),
+            field=models.SlugField(blank=True, max_length=255, null=True),
         ),
     ]
