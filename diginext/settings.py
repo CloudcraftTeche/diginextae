@@ -200,30 +200,25 @@ WSGI_APPLICATION = 'diginext.wsgi.application'
 # }
 
 # Database Configuration
-ENVIRONMENT = os.getenv('DJANGO_ENV', 'local')
+database_url = os.getenv('DATABASE_URL')
 
-if ENVIRONMENT == 'production':
-    # Use Render's DATABASE_URL
+if database_url:
+    # Production: Use DATABASE_URL (Render automatically provides this)
     DATABASES = {
         'default': dj_database_url.config(
-            default=os.environ.get('DATABASE_URL'),
+            default=database_url,
             conn_max_age=600
         )
     }
-elif ENVIRONMENT == 'live':
-    from env_file import live as constant
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': constant.DB_NAME,
-            'USER': constant.DB_USER,
-            'PASSWORD': constant.DB_PASSWORD,
-            'HOST': constant.DB_HOST,
-            'PORT': constant.DB_PORT,
-        }
-    }
 else:
-    from env_file import local as constant
+    # Local development
+    ENVIRONMENT = os.getenv('DJANGO_ENV', 'local')
+    
+    if ENVIRONMENT == 'live':
+        from env_file import live as constant
+    else:
+        from env_file import local as constant
+    
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
