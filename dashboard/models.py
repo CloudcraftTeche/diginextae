@@ -900,12 +900,6 @@ class Insights(models.Model):
     description = models.TextField()
     banner_image = CloudinaryField('image', folder='insights')
 
-    # ✅ SEO fields (nullable)
-    slug = models.SlugField(max_length=255, blank=True, null=True)
-    meta_title = models.CharField(max_length=255, blank=True, null=True)
-    meta_description = models.TextField(blank=True, null=True)
-    meta_keywords = models.CharField(max_length=500, blank=True, null=True)
-
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -966,6 +960,11 @@ class OurInsights(models.Model):
         max_length=100,
         help_text="e.g., 6 months, 1 week, 1 year"
     )
+    # ✅ SEO fields (nullable)
+    slug = models.SlugField(max_length=255, blank=True, null=True)
+    meta_title = models.CharField(max_length=255, blank=True, null=True)
+    meta_description = models.TextField(blank=True, null=True)
+    meta_keywords = models.CharField(max_length=500, blank=True, null=True)
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

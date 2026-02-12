@@ -95,6 +95,12 @@ class OurWorksSerializer(serializers.ModelSerializer):
     section4 = Section4Serializer(read_only=True)
     section5 = Section5Serializer(read_only=True)
     section2 = Section2Serializer(read_only=True)
+    
+    section2 = Section2Serializer(
+        source="section2_stats",  # ← actual relation name
+        many=True,                # because it's ForeignKey relation
+        read_only=True
+    )
 
     class Meta:
         model = OurWorks
