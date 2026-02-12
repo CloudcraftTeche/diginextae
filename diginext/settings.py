@@ -206,7 +206,8 @@ if database_url:
     # Production: Use DATABASE_URL (Render automatically provides this)
     DATABASES = {
         'default': dj_database_url.config(
-            default=database_url,
+            # default=database_url,
+            default = 'postgresql://diginext:pTeZ8hRxGUp2B5YTde7nWw7ViON8M2Ka@dpg-d5n6ael6ubrc73algg2g-a/diginext',
             conn_max_age=600
         )
     }
