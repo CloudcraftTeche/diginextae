@@ -959,12 +959,27 @@ class SolutionsListView(APIView):
 
 
 # ================== names under the solutions ========
+
 class SolutionsNameListView(APIView):
     """GET: Retrieve all SolutionsName records, each with its subsolutions"""
 
     def get(self, request):
         try:
             solutions = SolutionsName.objects.all().prefetch_related('solutions')
+
+            # Generate slug if missing
+            subsolutions_to_update = []
+
+            for solution in solutions:
+                for subsolution in solution.solutions.all():
+                    if not subsolution.slug:
+                        subsolution.slug = slugify(subsolution.subsolution_name)
+                        subsolutions_to_update.append(subsolution)
+
+            # Bulk update to reduce DB queries
+            if subsolutions_to_update:
+                Subsolution.objects.bulk_update(subsolutions_to_update, ["slug"])
+
             serializer = SolutionsNameSerializer(solutions, many=True)
 
             return custom_response(
@@ -972,6 +987,7 @@ class SolutionsNameListView(APIView):
                 message="Solution names and their subsolutions retrieved successfully",
                 data=serializer.data
             )
+
         except Exception as e:
             return custom_response(
                 success=False,
