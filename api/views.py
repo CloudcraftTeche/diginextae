@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from django.utils.text import slugify
 from dashboard.models import (
     HomeBanner, HomeText1, HomeBanner2, HomeText2, Conncepts,
     HomeBanner3, HomeText3, HomeAvailableWorks, HomeBanner4,
@@ -815,6 +816,14 @@ class ServiceNameListView(APIView):
     def get(self, request):
         try:
             services = ServiceName.objects.all().prefetch_related('subservices')
+
+            # Generate slug if missing
+            for service in services:
+                for subservice in service.subservices.all():
+                    if not subservice.slug:
+                        subservice.slug = slugify(subservice.subservice_name)
+                        subservice.save(update_fields=["slug"])
+
             serializer = ServiceNameSerializer(services, many=True)
 
             return custom_response(
@@ -822,6 +831,7 @@ class ServiceNameListView(APIView):
                 message="Service names and their subservices retrieved successfully",
                 data=serializer.data
             )
+
         except Exception as e:
             return custom_response(
                 success=False,
