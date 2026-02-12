@@ -575,6 +575,13 @@ class OurWorks(models.Model):
     banner2_image = CloudinaryField('image', folder='our_works/banners', null=True, blank=True)
     banner2_title = models.CharField(max_length=255, null=True, blank=True)
 
+    # ✅ SEO fields (nullable)
+    slug = models.SlugField(max_length=255, blank=True, null=True)
+    meta_title = models.CharField(max_length=255, blank=True, null=True)
+    meta_description = models.TextField(blank=True, null=True)
+    meta_keywords = models.CharField(max_length=500, blank=True, null=True)
+    
+    
     # Status & Timestamps
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -611,11 +618,6 @@ class OurWorkSection2(models.Model):
         help_text="e.g., Strong visuals and messaging helped position the brand..."
     )
 
-    # ✅ SEO fields (nullable)
-    slug = models.SlugField(max_length=255, blank=True, null=True)
-    meta_title = models.CharField(max_length=255, blank=True, null=True)
-    meta_description = models.TextField(blank=True, null=True)
-    meta_keywords = models.CharField(max_length=500, blank=True, null=True)
 
     # Statistic 1
     stat1_count = models.CharField(max_length=50, default="1000+")

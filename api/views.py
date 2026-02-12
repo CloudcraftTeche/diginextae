@@ -1097,17 +1097,36 @@ class ExpertiseListView(APIView):
             )
 
 
+
 class OurWorksListView(APIView):
     """GET: Retrieve all active Our Works"""
+
     def get(self, request):
         try:
-            ourworks = OurWorks.objects.filter(is_active=True).select_related('industry', 'expertise')
+            ourworks = OurWorks.objects.filter(
+                is_active=True
+            ).select_related('industry', 'expertise')
+
+            # Generate slug if missing
+            ourworks_to_update = []
+
+            for work in ourworks:
+                if not work.slug:
+                    work.slug = slugify(work.title)
+                    ourworks_to_update.append(work)
+
+            # Bulk update (single DB query)
+            if ourworks_to_update:
+                OurWorks.objects.bulk_update(ourworks_to_update, ["slug"])
+
             serializer = OurWorksSerializer(ourworks, many=True)
+
             return custom_response(
                 success=True,
                 message="Our works retrieved successfully",
                 data=serializer.data
             )
+
         except Exception as e:
             return custom_response(
                 success=False,
