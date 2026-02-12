@@ -973,7 +973,7 @@ class SolutionsNameListView(APIView):
             for solution in solutions:
                 for subsolution in solution.solutions.all():
                     if not subsolution.slug:
-                        subsolution.slug = slugify(subsolution.subsolution_name)
+                        subsolution.slug = slugify(subsolution.solutions_name)
                         subsolutions_to_update.append(subsolution)
 
             # Bulk update to reduce DB queries
