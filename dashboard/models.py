@@ -399,6 +399,41 @@ class ServiceDigitalMarketing(models.Model):
 
     def __str__(self):
         return "Service Page SEO / Marketing"
+    
+    
+class ServiceSection1(models.Model):
+    service_heading = models.ForeignKey(
+        'ServiceName',
+        on_delete=models.CASCADE,
+        related_name='service_section1'
+    )
+
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+
+class ServiceSection2(models.Model):
+    service_heading = models.ForeignKey(
+        'ServiceName',
+        on_delete=models.CASCADE,
+        related_name='service_section2'
+    )
+
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
 
 
 # ==================== SOLUTIONS SECTION ====================
@@ -422,14 +457,40 @@ class SolutionsName(models.Model):
 
 
 class Subsolutions(models.Model):
-    solutions_heading = models.ForeignKey(SolutionsName, on_delete=models.CASCADE, related_name='solutions')
+    solutions_heading = models.ForeignKey(
+        SolutionsName,
+        on_delete=models.CASCADE,
+        related_name='solutions'
+    )
     solutions_name = models.CharField(max_length=255)
     solutions_title = models.CharField(max_length=255, blank=True, null=True)
     solutions_description = models.TextField(blank=True, null=True)
     solutions_image = CloudinaryField('image', folder='subsolutions')
 
+    # SEO fields
+    slug = models.SlugField(max_length=255, blank=True, null=True)
+    meta_title = models.CharField(max_length=255, blank=True, null=True)
+    meta_description = models.TextField(blank=True, null=True)
+    meta_keywords = models.CharField(max_length=500, blank=True, null=True)
+
     def __str__(self):
         return self.solutions_name
+
+    def save(self, *args, **kwargs):
+        # Generate slug only if empty
+        if not self.slug and self.solutions_name:
+            base_slug = slugify(self.solutions_name)
+            slug = base_slug
+            counter = 1
+
+            # Ensure slug is unique
+            while Subsolutions.objects.filter(slug=slug).exclude(id=self.id).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+            self.slug = slug
+
+        super().save(*args, **kwargs)
     
     
 class solutionsDigitalMarketing(models.Model):
@@ -529,60 +590,45 @@ class OurWorks(models.Model):
 
 class OurWorkSection2(models.Model):
     """Section 2 for Our Works - Image, Title, Description, and 3 customizable statistics"""
+
     ourwork = models.ForeignKey(
         OurWorks,
         on_delete=models.CASCADE,
         related_name='section2_stats'
     )
-    
+
     # Main content
     image = CloudinaryField('image', folder='our_works/section2', blank=True, null=True)
+
     title = models.CharField(
-        max_length=200, 
+        max_length=200,
         default="Section Title",
         help_text="e.g., Building Trust Through Clear Communication"
     )
+
     description = models.TextField(
         default="Section description goes here.",
         help_text="e.g., Strong visuals and messaging helped position the brand..."
     )
-    
+
+    # ✅ SEO fields (nullable)
+    slug = models.SlugField(max_length=255, blank=True, null=True)
+    meta_title = models.CharField(max_length=255, blank=True, null=True)
+    meta_description = models.TextField(blank=True, null=True)
+    meta_keywords = models.CharField(max_length=500, blank=True, null=True)
+
     # Statistic 1
-    stat1_count = models.CharField(
-        max_length=50, 
-        default="1000+", 
-        help_text="e.g., 1000+, 95%, 15+"
-    )
-    stat1_text = models.CharField(
-        max_length=100, 
-        default="Students Guided", 
-        help_text="Label for statistic 1"
-    )
-    
+    stat1_count = models.CharField(max_length=50, default="1000+")
+    stat1_text = models.CharField(max_length=100, default="Students Guided")
+
     # Statistic 2
-    stat2_count = models.CharField(
-        max_length=50, 
-        default="15+", 
-        help_text="e.g., 1000+, 95%, 15+"
-    )
-    stat2_text = models.CharField(
-        max_length=100, 
-        default="Partner Universities", 
-        help_text="Label for statistic 2"
-    )
-    
+    stat2_count = models.CharField(max_length=50, default="15+")
+    stat2_text = models.CharField(max_length=100, default="Partner Universities")
+
     # Statistic 3
-    stat3_count = models.CharField(
-        max_length=50, 
-        default="95%", 
-        help_text="e.g., 1000+, 95%, 15+"
-    )
-    stat3_text = models.CharField(
-        max_length=100, 
-        default="Application Success Rate", 
-        help_text="Label for statistic 3"
-    )
-    
+    stat3_count = models.CharField(max_length=50, default="95%")
+    stat3_text = models.CharField(max_length=100, default="Application Success Rate")
+
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -595,6 +641,21 @@ class OurWorkSection2(models.Model):
     def __str__(self):
         return f"Section 2 - {self.ourwork.title}: {self.title}"
 
+    # ✅ Auto generate slug
+    def save(self, *args, **kwargs):
+        if not self.slug and self.title:
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+
+            while OurWorkSection2.objects.filter(slug=slug).exclude(id=self.id).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+            self.slug = slug
+
+        super().save(*args, **kwargs)
+        
 # ==================== PROJECT GOALS SECTION ====================
 
 class ProjectGoalsSection(models.Model):
@@ -833,10 +894,18 @@ class OurWorksDigitalMarketing(models.Model):
 
 class Insights(models.Model):
     """Insights/Blog Section"""
+
     title = models.CharField(max_length=200)
     subtitle = models.CharField(max_length=200, blank=True, null=True)
     description = models.TextField()
     banner_image = CloudinaryField('image', folder='insights')
+
+    # ✅ SEO fields (nullable)
+    slug = models.SlugField(max_length=255, blank=True, null=True)
+    meta_title = models.CharField(max_length=255, blank=True, null=True)
+    meta_description = models.TextField(blank=True, null=True)
+    meta_keywords = models.CharField(max_length=500, blank=True, null=True)
+
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -846,7 +915,22 @@ class Insights(models.Model):
         verbose_name_plural = "Insights"
 
     def __str__(self):
-        return self.title    
+        return self.title
+
+    # ✅ Auto generate slug
+    def save(self, *args, **kwargs):
+        if not self.slug and self.title:
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+
+            while Insights.objects.filter(slug=slug).exclude(id=self.id).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+            self.slug = slug
+
+        super().save(*args, **kwargs)    
 
 
 class InsightsDigitalMarketing(models.Model):

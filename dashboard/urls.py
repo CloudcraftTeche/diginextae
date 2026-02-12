@@ -186,7 +186,17 @@ urlpatterns = [
       path('digital-marketing/create/', views.service_digital_marketing_create, name='digital_marketing_create'),
     path('digital-marketing/edit/<int:pk>/', views.service_digital_marketing_edit, name='digital_marketing_edit'),
     path('digital-marketing/delete/<int:pk>/', views.service_digital_marketing_delete, name='digital_marketing_delete'),
-
+    
+    path('service-section1/create/', views.section1_create, name='section1_create'),
+    path('service-section1/edit/<int:pk>/', views.section1_edit, name='section1_edit'),
+    path('service-section1/delete/<int:pk>/', views.section1_delete, name='section1_delete'),
+    
+    # Service Section 2 URLs
+    path('service-section2/create/', views.section2_create, name='section2_create'),
+    path('service-section2/edit/<int:pk>/', views.section2_edit, name='section2_edit'),
+    path('service-section2/delete/<int:pk>/', views.section2_delete, name='section2_delete'),
+    
+    
 
 
     # solutions ==========================

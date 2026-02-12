@@ -44,7 +44,7 @@
         
         <!-- Statistics Cards -->
         <div class="row mb-4">
-          <div class="col-lg-4 col-md-6 col-sm-6 mb-3">
+          <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
             <div class="small-box bg-info elevation-2">
               <div class="inner">
                 <h3>{{ service_count }}</h3>
@@ -59,7 +59,7 @@
             </div>
           </div>
 
-          <div class="col-lg-4 col-md-6 col-sm-6 mb-3">
+          <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
             <div class="small-box bg-success elevation-2">
               <div class="inner">
                 <h3>{{ service_name_count }}</h3>
@@ -74,7 +74,7 @@
             </div>
           </div>
 
-          <div class="col-lg-4 col-md-6 col-sm-6 mb-3">
+          <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
             <div class="small-box bg-warning elevation-2">
               <div class="inner">
                 <h3>{{ subservice_count }}</h3>
@@ -84,6 +84,21 @@
                 <i class="fas fa-sitemap"></i>
               </div>
               <a href="#subservice" class="small-box-footer" onclick="$('#subservice-tab').click()">
+                View Details <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+            <div class="small-box bg-purple elevation-2">
+              <div class="inner">
+                <h3>{{ section1_count|add:section2_count }}</h3>
+                <p>Service Sections</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-file-alt"></i>
+              </div>
+              <a href="#servicesections" class="small-box-footer" onclick="$('#servicesections-tab').click()">
                 View Details <i class="fas fa-arrow-circle-right"></i>
               </a>
             </div>
@@ -110,10 +125,15 @@
                 </a>
               </li>
               <li class="nav-item">
-  <a class="nav-link" id="digitalmarketing-tab" data-toggle="pill" href="#digitalmarketing" role="tab">
-    <i class="fas fa-bullhorn"></i> Digital Marketing
-  </a>
-</li>
+                <a class="nav-link" id="servicesections-tab" data-toggle="pill" href="#servicesections" role="tab">
+                  <i class="fas fa-file-alt"></i> Service Sections
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="digitalmarketing-tab" data-toggle="pill" href="#digitalmarketing" role="tab">
+                  <i class="fas fa-bullhorn"></i> Digital Marketing
+                </a>
+              </li>
             </ul>
           </div>
           <div class="card-body">
@@ -275,59 +295,197 @@
                 </div>
                 {% endif %}
               </div>
-              <!-- Digital Marketing Tab -->
-<div class="tab-pane fade" id="digitalmarketing" role="tabpanel">
-  <div class="mb-3 d-flex justify-content-between align-items-center">
-    <div>
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createDigitalMarketingModal">
-        <i class="fas fa-plus-circle"></i> Add Digital Marketing
-      </button>
-    </div>
-    <div class="text-muted small">Recommended banner size: 1920x600px</div>
-  </div>
 
-  {% if digital_marketing_list %}
-  <div class="row">
-    {% for dm in digital_marketing_list %}
-    <div class="col-lg-6 col-md-6 mb-4">
-      <div class="card shadow-sm h-100">
-        {% if dm.banner_image %}
-        <img src="{{ dm.banner_image.url }}" class="card-img-top" alt="{{ dm.meta_title|default:'Digital Marketing' }}" style="height:250px; object-fit:cover;">
-        {% else %}
-        <div class="bg-light d-flex align-items-center justify-content-center" style="height:250px;">
-          <span class="text-muted"><i class="fas fa-image fa-5x"></i></span>
-        </div>
-        {% endif %}
-        <div class="card-body">
-          <h5 class="card-title font-weight-bold">{{ dm.meta_title|default:"No title" }}</h5>
-          <p class="card-text text-muted">{{ dm.meta_description|truncatewords:25|default:"<em>No description</em>" }}</p>
-          <div class="small text-muted">Keywords: {{ dm.meta_keywords|default:"-" }}</div>
-          <div class="mt-2">
-            <span class="badge badge-{{ dm.is_active|yesno:'success,danger' }}">{{ dm.is_active|yesno:'Active,Inactive' }}</span>
+              <!-- Service Sections Tab (NEW) -->
+              <div class="tab-pane fade" id="servicesections" role="tabpanel">
+                <div class="mb-3">
+                  <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#createSection1Modal">
+                    <i class="fas fa-plus-circle"></i> Add Section 1
+                  </button>
+                  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createSection2Modal">
+                    <i class="fas fa-plus-circle"></i> Add Section 2
+                  </button>
+                </div>
+
+                {% if service_names %}
+                  <!-- Section 1 -->
+                  <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                      <h5 class="mb-0"><i class="fas fa-file-alt"></i> Service Section 1</h5>
+                    </div>
+                    <div class="card-body">
+                      {% if section1_list %}
+                      <div class="row">
+                        {% for sec1 in section1_list %}
+                        <div class="col-lg-6 col-md-6 mb-3">
+                          <div class="card shadow-sm h-100">
+                            <div class="card-body">
+                              <h6 class="card-title font-weight-bold text-primary">{{ sec1.service_heading.service_name }}</h6>
+                              <h5 class="card-subtitle mb-2">{{ sec1.title }}</h5>
+                              <p class="card-text text-muted">{{ sec1.description|truncatewords:30 }}</p>
+                              <small class="text-muted">Created: {{ sec1.created_at|date:"M d, Y" }}</small>
+                            </div>
+                            <div class="card-footer bg-white border-top">
+                              <div class="d-flex justify-content-end">
+                                <button class="btn btn-sm btn-warning mr-1" onclick="editSection1({{ sec1.pk }}, {{ sec1.service_heading.pk }}, '{{ sec1.title|escapejs }}', '{{ sec1.description|escapejs }}')">
+                                  <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'section1_delete' sec1.pk %}', 'section 1')">
+                                  <i class="fas fa-trash-alt"></i> Delete
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {% endfor %}
+                      </div>
+                      {% else %}
+                      <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> No Section 1 items added yet.
+                      </div>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                  <!-- Section 2 -->
+                  <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                      <h5 class="mb-0">
+                        <i class="fas fa-file-alt"></i> Service Section 2
+                      </h5>
+                    </div>
+
+                    <div class="card-body">
+
+                      {% if section2_list %}
+
+                        <!-- Group by Service Heading -->
+                        {% regroup section2_list by service_heading as grouped_section2 %}
+
+                        {% for group in grouped_section2 %}
+
+                        <!-- Category Title -->
+                        <div class="mb-3 mt-4">
+                          <h4 class="text-success border-bottom pb-2">
+                            {{ group.grouper.service_name }}
+                          </h4>
+                        </div>
+
+                        <div class="row">
+                          {% for sec2 in group.list %}
+                          <div class="col-lg-6 col-md-6 mb-3">
+                            <div class="card shadow-sm h-100">
+
+                              <div class="card-body">
+                                <h5 class="card-subtitle mb-2">{{ sec2.title }}</h5>
+
+                                <p class="card-text text-muted">
+                                  {{ sec2.description|truncatewords:30 }}
+                                </p>
+
+                                <small class="text-muted">
+                                  Created: {{ sec2.created_at|date:"M d, Y" }}
+                                </small>
+                              </div>
+
+                              <div class="card-footer bg-white border-top">
+                                <div class="d-flex justify-content-end">
+
+                                  <!-- Edit -->
+                                  <button class="btn btn-sm btn-warning mr-1"
+                                    onclick="editSection2(
+                                      {{ sec2.pk }},
+                                      {{ sec2.service_heading.pk }},
+                                      '{{ sec2.title|escapejs }}',
+                                      '{{ sec2.description|escapejs }}'
+                                    )">
+                  <i class="fas fa-edit"></i> Edit
+                </button>
+
+                <!-- Delete -->
+                <button class="btn btn-sm btn-danger"
+                  onclick="deleteItem('{% url 'section2_delete' sec2.pk %}', 'section 2')">
+                  <i class="fas fa-trash-alt"></i> Delete
+                </button>
+
+              </div>
+            </div>
+
           </div>
         </div>
-        <div class="card-footer bg-white border-top">
-          <div class="d-flex justify-content-end">
-            <button class="btn btn-sm btn-warning mr-1"
-                    onclick="editDigitalMarketing({{ dm.pk }}, '{{ dm.meta_title|escapejs }}', '{{ dm.meta_description|escapejs }}', '{{ dm.meta_keywords|escapejs }}', '{% if dm.banner_image %}{{ dm.banner_image.url }}{% endif %}', {{ dm.is_active|yesno:'true,false' }})">
-              <i class="fas fa-edit"></i> Edit
-            </button>
-            <button class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'digital_marketing_delete' dm.pk %}', 'digital marketing section')">
-              <i class="fas fa-trash-alt"></i> Delete
-            </button>
-          </div>
-        </div>
+        {% endfor %}
       </div>
-    </div>
-    {% endfor %}
+
+      {% endfor %}
+
+    {% else %}
+      <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> No Section 2 items added yet.
+      </div>
+    {% endif %}
+
   </div>
-  {% else %}
-  <div class="alert alert-info">
-    <i class="fas fa-info-circle"></i> No digital marketing sections created yet. Click the button above to add one.
-  </div>
-  {% endif %}
 </div>
 
+                {% else %}
+                <div class="alert alert-warning">
+                  <i class="fas fa-exclamation-triangle"></i> Please create service categories first before adding sections.
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Digital Marketing Tab -->
+              <div class="tab-pane fade" id="digitalmarketing" role="tabpanel">
+                <div class="mb-3 d-flex justify-content-between align-items-center">
+                  <div>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createDigitalMarketingModal">
+                      <i class="fas fa-plus-circle"></i> Add Digital Marketing
+                    </button>
+                  </div>
+                  <div class="text-muted small">Recommended banner size: 1920x600px</div>
+                </div>
+
+                {% if digital_marketing_list %}
+                <div class="row">
+                  {% for dm in digital_marketing_list %}
+                  <div class="col-lg-6 col-md-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                      {% if dm.banner_image %}
+                      <img src="{{ dm.banner_image.url }}" class="card-img-top" alt="{{ dm.meta_title|default:'Digital Marketing' }}" style="height:250px; object-fit:cover;">
+                      {% else %}
+                      <div class="bg-light d-flex align-items-center justify-content-center" style="height:250px;">
+                        <span class="text-muted"><i class="fas fa-image fa-5x"></i></span>
+                      </div>
+                      {% endif %}
+                      <div class="card-body">
+                        <h5 class="card-title font-weight-bold">{{ dm.meta_title|default:"No title" }}</h5>
+                        <p class="card-text text-muted">{{ dm.meta_description|truncatewords:25|default:"<em>No description</em>" }}</p>
+                        <div class="small text-muted">Keywords: {{ dm.meta_keywords|default:"-" }}</div>
+                        <div class="mt-2">
+                          <span class="badge badge-{{ dm.is_active|yesno:'success,danger' }}">{{ dm.is_active|yesno:'Active,Inactive' }}</span>
+                        </div>
+                      </div>
+                      <div class="card-footer bg-white border-top">
+                        <div class="d-flex justify-content-end">
+                          <button class="btn btn-sm btn-warning mr-1"
+                                  onclick="editDigitalMarketing({{ dm.pk }}, '{{ dm.meta_title|escapejs }}', '{{ dm.meta_description|escapejs }}', '{{ dm.meta_keywords|escapejs }}', '{% if dm.banner_image %}{{ dm.banner_image.url }}{% endif %}', {{ dm.is_active|yesno:'true,false' }})">
+                            <i class="fas fa-edit"></i> Edit
+                          </button>
+                          <button class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'digital_marketing_delete' dm.pk %}', 'digital marketing section')">
+                            <i class="fas fa-trash-alt"></i> Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No digital marketing sections created yet. Click the button above to add one.
+                </div>
+                {% endif %}
+              </div>
 
             </div>
           </div>
@@ -338,103 +496,257 @@
   </div>
 
   <!-- ===================== MODALS ===================== -->
-<!-- Create Digital Marketing Modal -->
-<div class="modal fade" id="createDigitalMarketingModal">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <form method="POST" action="{% url 'digital_marketing_create' %}" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Digital Marketing</h5>
-          <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label>Meta Title</label>
-            <input type="text" class="form-control" name="meta_title" placeholder="Enter meta title">
+
+  <!-- Create Section 1 Modal -->
+  <div class="modal fade" id="createSection1Modal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'section1_create' %}">
+          {% csrf_token %}
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Service Section 1</h5>
+            <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
           </div>
-          <div class="form-group">
-            <label>Meta Description</label>
-            <textarea class="form-control" name="meta_description" rows="4" placeholder="Enter meta description"></textarea>
-          </div>
-          <div class="form-group">
-            <label>Meta Keywords</label>
-            <input type="text" class="form-control" name="meta_keywords" placeholder="Enter meta keywords">
-          </div>
-          <div class="form-group">
-            <label>Banner Image</label>
-            <div class="custom-file">
-              <input type="file" class="custom-file-input" name="banner_image" id="create_dm_banner_image" accept="image/*">
-              <label class="custom-file-label" for="create_dm_banner_image">Choose file</label>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Service Category <span class="text-danger">*</span></label>
+              <select class="form-control" name="service_heading" required>
+                <option value="">Select Service Category</option>
+                {% for sn in service_names %}
+                <option value="{{ sn.pk }}">{{ sn.service_name }}</option>
+                {% endfor %}
+              </select>
             </div>
-            <small class="form-text text-muted">Recommended size: 1920x600px</small>
+            <div class="form-group">
+              <label>Title <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="title" placeholder="Enter section title" required>
+            </div>
+            <div class="form-group">
+              <label>Description <span class="text-danger">*</span></label>
+              <textarea class="form-control" name="description" rows="5" placeholder="Enter section description" required></textarea>
+            </div>
           </div>
-          <div class="form-group form-check">
-            <input type="checkbox" class="form-check-input" id="create_dm_is_active" name="is_active" checked>
-            <label class="form-check-label" for="create_dm_is_active">Active</label>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
-          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Edit Digital Marketing Modal -->
-<div class="modal fade" id="editDigitalMarketingModal">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <form method="POST" id="editDigitalMarketingForm" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="modal-header bg-warning">
-          <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Digital Marketing</h5>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label>Meta Title</label>
-            <input type="text" class="form-control" id="edit_dm_meta_title" name="meta_title">
+  <!-- Edit Section 1 Modal -->
+  <div class="modal fade" id="editSection1Modal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" id="editSection1Form">
+          {% csrf_token %}
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Service Section 1</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
           </div>
-          <div class="form-group">
-            <label>Meta Description</label>
-            <textarea class="form-control" id="edit_dm_meta_description" name="meta_description" rows="4"></textarea>
-          </div>
-          <div class="form-group">
-            <label>Meta Keywords</label>
-            <input type="text" class="form-control" id="edit_dm_meta_keywords" name="meta_keywords">
-          </div>
-
-          <div id="edit_dm_current_image_container" class="form-group" style="display:none;">
-            <label>Current Banner</label>
-            <div class="border p-2 text-center bg-light">
-              <img id="edit_dm_current_image" src="" alt="Current Banner" class="img-thumbnail" style="max-height:150px;">
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Service Category <span class="text-danger">*</span></label>
+              <select class="form-control" id="edit_section1_heading" name="service_heading" required>
+                {% for sn in service_names %}
+                <option value="{{ sn.pk }}">{{ sn.service_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Title <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="edit_section1_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label>Description <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="edit_section1_description" name="description" rows="5" required></textarea>
             </div>
           </div>
-
-          <div class="form-group">
-            <label>Change Banner <small class="text-muted">(leave empty to keep current)</small></label>
-            <div class="custom-file">
-              <input type="file" class="custom-file-input" name="banner_image" id="edit_dm_banner_image" accept="image/*">
-              <label class="custom-file-label" for="edit_dm_banner_image">Choose new file</label>
-            </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
           </div>
-
-          <div class="form-group form-check">
-            <input type="checkbox" class="form-check-input" id="edit_dm_is_active" name="is_active">
-            <label class="form-check-label" for="edit_dm_is_active">Active</label>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
-          <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
-</div>
+
+  <!-- Create Section 2 Modal -->
+  <div class="modal fade" id="createSection2Modal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'section2_create' %}">
+          {% csrf_token %}
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Service Section 2</h5>
+            <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Service Category <span class="text-danger">*</span></label>
+              <select class="form-control" name="service_heading" required>
+                <option value="">Select Service Category</option>
+                {% for sn in service_names %}
+                <option value="{{ sn.pk }}">{{ sn.service_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Title <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="title" placeholder="Enter section title" required>
+            </div>
+            <div class="form-group">
+              <label>Description <span class="text-danger">*</span></label>
+              <textarea class="form-control" name="description" rows="5" placeholder="Enter section description" required></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Section 2 Modal -->
+  <div class="modal fade" id="editSection2Modal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" id="editSection2Form">
+          {% csrf_token %}
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Service Section 2</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Service Category <span class="text-danger">*</span></label>
+              <select class="form-control" id="edit_section2_heading" name="service_heading" required>
+                {% for sn in service_names %}
+                <option value="{{ sn.pk }}">{{ sn.service_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Title <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="edit_section2_title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label>Description <span class="text-danger">*</span></label>
+              <textarea class="form-control" id="edit_section2_description" name="description" rows="5" required></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Digital Marketing Modal -->
+  <div class="modal fade" id="createDigitalMarketingModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'digital_marketing_create' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Digital Marketing</h5>
+            <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Meta Title</label>
+              <input type="text" class="form-control" name="meta_title" placeholder="Enter meta title">
+            </div>
+            <div class="form-group">
+              <label>Meta Description</label>
+              <textarea class="form-control" name="meta_description" rows="4" placeholder="Enter meta description"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Meta Keywords</label>
+              <input type="text" class="form-control" name="meta_keywords" placeholder="Enter meta keywords">
+            </div>
+            <div class="form-group">
+              <label>Banner Image</label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" name="banner_image" id="create_dm_banner_image" accept="image/*">
+                <label class="custom-file-label" for="create_dm_banner_image">Choose file</label>
+              </div>
+              <small class="form-text text-muted">Recommended size: 1920x600px</small>
+            </div>
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="create_dm_is_active" name="is_active" checked>
+              <label class="form-check-label" for="create_dm_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Digital Marketing Modal -->
+  <div class="modal fade" id="editDigitalMarketingModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form method="POST" id="editDigitalMarketingForm" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Digital Marketing</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Meta Title</label>
+              <input type="text" class="form-control" id="edit_dm_meta_title" name="meta_title">
+            </div>
+            <div class="form-group">
+              <label>Meta Description</label>
+              <textarea class="form-control" id="edit_dm_meta_description" name="meta_description" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Meta Keywords</label>
+              <input type="text" class="form-control" id="edit_dm_meta_keywords" name="meta_keywords">
+            </div>
+
+            <div id="edit_dm_current_image_container" class="form-group" style="display:none;">
+              <label>Current Banner</label>
+              <div class="border p-2 text-center bg-light">
+                <img id="edit_dm_current_image" src="" alt="Current Banner" class="img-thumbnail" style="max-height:150px;">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Change Banner <small class="text-muted">(leave empty to keep current)</small></label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" name="banner_image" id="edit_dm_banner_image" accept="image/*">
+                <label class="custom-file-label" for="edit_dm_banner_image">Choose new file</label>
+              </div>
+            </div>
+
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="edit_dm_is_active" name="is_active">
+              <label class="form-check-label" for="edit_dm_is_active">Active</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+            <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- [Keep all your existing modals: createServiceModal, editServiceModal, createServiceNameModal, etc.] -->
+  <!-- For brevity, I'll include just the key ones. You should keep ALL your existing modals. -->
 
   <!-- Create Service Modal -->
   <div class="modal fade" id="createServiceModal">
@@ -703,47 +1015,7 @@
   </div>
 
   <!-- JavaScript Functions -->
-<script>
-  // Reuse existing file input label code that you already have:
-  $('.custom-file-input').on('change', function() {
-    var fileName = $(this).val().split('\\').pop();
-    $(this).siblings('.custom-file-label').addClass('selected').html(fileName);
-  });
-
-  // Edit Digital Marketing
-  function editDigitalMarketing(id, metaTitle, metaDescription, metaKeywords, currentImage, isActive) {
-    // set form action
-    document.getElementById('editDigitalMarketingForm').action = "{% url 'digital_marketing_edit' 0 %}".replace('0', id);
-
-    // set fields
-    document.getElementById('edit_dm_meta_title').value = metaTitle || '';
-    document.getElementById('edit_dm_meta_description').value = metaDescription || '';
-    document.getElementById('edit_dm_meta_keywords').value = metaKeywords || '';
-
-    // active checkbox
-    document.getElementById('edit_dm_is_active').checked = Boolean(isActive);
-
-    // current image
-    if (currentImage) {
-      document.getElementById('edit_dm_current_image').src = currentImage;
-      document.getElementById('edit_dm_current_image_container').style.display = 'block';
-    } else {
-      document.getElementById('edit_dm_current_image_container').style.display = 'none';
-    }
-
-    // reset file input label
-    $('#edit_dm_banner_image').val('');
-    $('#edit_dm_banner_image').siblings('.custom-file-label').html('Choose new file');
-
-    $('#editDigitalMarketingModal').modal('show');
-  }
-
-  // You already have a deleteItem function; reuse the same for DM delete
-  // Auto-hide alerts already exists in your template.
-</script>
-
-<script>
-    
+  <script>
     // File input label update
     $('.custom-file-input').on('change', function() {
       var fileName = $(this).val().split('\\').pop();
@@ -789,7 +1061,7 @@
     }
 
     // Edit Subservice
-    function editSubservice(id, headingId, name,title, description, currentImage) {
+    function editSubservice(id, headingId, name, title, description, currentImage) {
       document.getElementById('editSubserviceForm').action = "{% url 'subservice_edit' 0 %}".replace('0', id);
       document.getElementById('edit_subservice_heading').value = headingId;
       document.getElementById('edit_subservice_name').value = name;
@@ -807,6 +1079,47 @@
       $('#edit_subservice_image').siblings('.custom-file-label').html('Choose new file');
       
       $('#editSubserviceModal').modal('show');
+    }
+
+    // Edit Section 1
+    function editSection1(id, headingId, title, description) {
+      document.getElementById('editSection1Form').action = "{% url 'section1_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_section1_heading').value = headingId;
+      document.getElementById('edit_section1_title').value = title;
+      document.getElementById('edit_section1_description').value = description;
+      
+      $('#editSection1Modal').modal('show');
+    }
+
+    // Edit Section 2
+    function editSection2(id, headingId, title, description) {
+      document.getElementById('editSection2Form').action = "{% url 'section2_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_section2_heading').value = headingId;
+      document.getElementById('edit_section2_title').value = title;
+      document.getElementById('edit_section2_description').value = description;
+      
+      $('#editSection2Modal').modal('show');
+    }
+
+    // Edit Digital Marketing
+    function editDigitalMarketing(id, metaTitle, metaDescription, metaKeywords, currentImage, isActive) {
+      document.getElementById('editDigitalMarketingForm').action = "{% url 'digital_marketing_edit' 0 %}".replace('0', id);
+      document.getElementById('edit_dm_meta_title').value = metaTitle || '';
+      document.getElementById('edit_dm_meta_description').value = metaDescription || '';
+      document.getElementById('edit_dm_meta_keywords').value = metaKeywords || '';
+      document.getElementById('edit_dm_is_active').checked = Boolean(isActive);
+
+      if (currentImage) {
+        document.getElementById('edit_dm_current_image').src = currentImage;
+        document.getElementById('edit_dm_current_image_container').style.display = 'block';
+      } else {
+        document.getElementById('edit_dm_current_image_container').style.display = 'none';
+      }
+
+      $('#edit_dm_banner_image').val('');
+      $('#edit_dm_banner_image').siblings('.custom-file-label').html('Choose new file');
+
+      $('#editDigitalMarketingModal').modal('show');
     }
 
     // Delete function

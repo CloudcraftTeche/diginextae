@@ -1208,6 +1208,10 @@ def service_management(request):
     service_names = ServiceName.objects.all().prefetch_related('subservices')
     digital_marketing_list = ServiceDigitalMarketing.objects.order_by('-created_at').all()
     
+    section1_list = ServiceSection1.objects.all().select_related('service_heading')
+    section2_list = ServiceSection2.objects.all().select_related('service_heading')
+    
+    
     context = {
         'services': services,
         'service_names': service_names,
@@ -1216,6 +1220,10 @@ def service_management(request):
         'subservice_count': Subservice.objects.count(),
         'digital_marketing_list': digital_marketing_list,
         'digital_marketing_count': digital_marketing_list.count(),
+        'section1_list': section1_list,
+        'section2_list': section2_list,
+        'section1_count': section1_list.count(),
+        'section2_count': section2_list.count(),
     }
     return render(request, 'service_management.html', context)
 
@@ -1387,6 +1395,145 @@ def service_digital_marketing_delete(request, pk):
     dm.delete()
     messages.success(request, "Digital Marketing section deleted!")
     return redirect('service_management')
+
+
+
+
+
+@login_required
+def section1_create(request):
+    """Create a new Service Section 1"""
+    if request.method == 'POST':
+        service_heading_id = request.POST.get('service_heading')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        
+        try:
+            service_heading = ServiceName.objects.get(pk=service_heading_id)
+            
+            ServiceSection1.objects.create(
+                service_heading=service_heading,
+                title=title,
+                description=description
+            )
+            
+            messages.success(request, 'Service Section 1 created successfully!')
+        except ServiceName.DoesNotExist:
+            messages.error(request, 'Selected service category does not exist.')
+        except Exception as e:
+            messages.error(request, f'Error creating section: {str(e)}')
+    
+    return redirect('service_management')  # Replace with your actual URL name
+
+
+@login_required
+def section1_edit(request, pk):
+    """Edit an existing Service Section 1"""
+    section = get_object_or_404(ServiceSection1, pk=pk)
+    
+    if request.method == 'POST':
+        service_heading_id = request.POST.get('service_heading')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        
+        try:
+            service_heading = ServiceName.objects.get(pk=service_heading_id)
+            
+            section.service_heading = service_heading
+            section.title = title
+            section.description = description
+            section.save()
+            
+            messages.success(request, 'Service Section 1 updated successfully!')
+        except ServiceName.DoesNotExist:
+            messages.error(request, 'Selected service category does not exist.')
+        except Exception as e:
+            messages.error(request, f'Error updating section: {str(e)}')
+    
+    return redirect('service_management')
+
+
+@login_required
+def section1_delete(request, pk):
+    """Delete a Service Section 1"""
+    try:
+        section = get_object_or_404(ServiceSection1, pk=pk)
+        section.delete()
+        messages.success(request, 'Service Section 1 deleted successfully!')
+    except Exception as e:
+        messages.error(request, f'Error deleting section: {str(e)}')
+    
+    return redirect('service_management')
+
+
+# ==================== SERVICE SECTION 2 VIEWS ====================
+
+@login_required
+def section2_create(request):
+    """Create a new Service Section 2"""
+    if request.method == 'POST':
+        service_heading_id = request.POST.get('service_heading')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        
+        try:
+            service_heading = ServiceName.objects.get(pk=service_heading_id)
+            
+            ServiceSection2.objects.create(
+                service_heading=service_heading,
+                title=title,
+                description=description
+            )
+            
+            messages.success(request, 'Service Section 2 created successfully!')
+        except ServiceName.DoesNotExist:
+            messages.error(request, 'Selected service category does not exist.')
+        except Exception as e:
+            messages.error(request, f'Error creating section: {str(e)}')
+    
+    return redirect('service_management')
+
+
+@login_required
+def section2_edit(request, pk):
+    """Edit an existing Service Section 2"""
+    section = get_object_or_404(ServiceSection2, pk=pk)
+    
+    if request.method == 'POST':
+        service_heading_id = request.POST.get('service_heading')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        
+        try:
+            service_heading = ServiceName.objects.get(pk=service_heading_id)
+            
+            section.service_heading = service_heading
+            section.title = title
+            section.description = description
+            section.save()
+            
+            messages.success(request, 'Service Section 2 updated successfully!')
+        except ServiceName.DoesNotExist:
+            messages.error(request, 'Selected service category does not exist.')
+        except Exception as e:
+            messages.error(request, f'Error updating section: {str(e)}')
+    
+    return redirect('service_management')
+
+
+@login_required
+def section2_delete(request, pk):
+    """Delete a Service Section 2"""
+    try:
+        section = get_object_or_404(ServiceSection2, pk=pk)
+        section.delete()
+        messages.success(request, 'Service Section 2 deleted successfully!')
+    except Exception as e:
+        messages.error(request, f'Error deleting section: {str(e)}')
+    
+    return redirect('service_management')
+
+
 
 
 # ==================== SOLUTIONS SECTION ====================
