@@ -1211,22 +1211,39 @@ class InsightsListView(APIView):
 
 class OurInsightsListView(APIView):
     """GET: Retrieve all active Our Insights"""
+
     def get(self, request):
         try:
-            our_insights = OurInsights.objects.filter(is_active=True).order_by('-created_at')
+            our_insights = OurInsights.objects.filter(
+                is_active=True
+            ).order_by('-created_at')
+
+            # Generate slug if missing
+            insights_to_update = []
+
+            for insight in our_insights:
+                if not insight.slug:
+                    insight.slug = slugify(insight.title)
+                    insights_to_update.append(insight)
+
+            # Bulk update (single DB query)
+            if insights_to_update:
+                OurInsights.objects.bulk_update(insights_to_update, ["slug"])
+
             serializer = OurInsightsSerializer(our_insights, many=True)
+
             return custom_response(
                 success=True,
                 message="Our insights retrieved successfully",
                 data=serializer.data
             )
+
         except Exception as e:
             return custom_response(
                 success=False,
                 message=f"Error retrieving our insights: {str(e)}",
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
 
 class OurInsightsDetailView(APIView):
     """GET: Retrieve a single Our Insight by ID"""
