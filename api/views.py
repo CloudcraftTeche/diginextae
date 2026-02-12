@@ -978,7 +978,7 @@ class SolutionsNameListView(APIView):
 
             # Bulk update to reduce DB queries
             if subsolutions_to_update:
-                Subsolution.objects.bulk_update(subsolutions_to_update, ["slug"])
+                Subsolutions.objects.bulk_update(subsolutions_to_update, ["slug"])
 
             serializer = SolutionsNameSerializer(solutions, many=True)
 
