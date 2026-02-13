@@ -1246,28 +1246,47 @@ class OurInsightsListView(APIView):
             )
 
 class OurInsightsDetailView(APIView):
-    """GET: Retrieve a single Our Insight by ID"""
+    """GET: Retrieve a single Our Insight by slug or ID"""
+
     def get(self, request, pk):
         try:
-            insight = OurInsights.objects.get(pk=pk, is_active=True)
+            insight = None
+
+            # 1️⃣ Try fetching by slug
+            insight = OurInsights.objects.filter(
+                slug=pk,
+                is_active=True
+            ).first()
+
+            # 2️⃣ If not found, try fetching by ID
+            if not insight:
+                insight = OurInsights.objects.get(
+                    pk=pk,
+                    is_active=True
+                )
+
             serializer = OurInsightsSerializer(insight)
+
             return custom_response(
                 success=True,
                 message="Our insight retrieved successfully",
                 data=serializer.data
             )
+
         except OurInsights.DoesNotExist:
             return custom_response(
                 success=False,
                 message="Our insight not found",
                 status_code=status.HTTP_404_NOT_FOUND
             )
+
         except Exception as e:
             return custom_response(
                 success=False,
                 message=f"Error retrieving our insight: {str(e)}",
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
 
 
 class InsightsDigitalMarketingView(APIView):

@@ -96,7 +96,7 @@ urlpatterns = [
     # ============= INSIGHTS SECTION =============
     path('insights/banner', InsightsListView.as_view(), name='insights-list'),
     path('insights/our-insights/', OurInsightsListView.as_view(), name='our-insights-list'),
-    path('insights/our-insights/<int:pk>/', OurInsightsDetailView.as_view(), name='our-insights-detail'),
+    path('insights/our-insights/<str:pk>/', OurInsightsDetailView.as_view(), name='our-insights-detail'),
     path('insights/digital-marketing/', InsightsDigitalMarketingView.as_view(), name='insights-digital-marketing'),
     
 
