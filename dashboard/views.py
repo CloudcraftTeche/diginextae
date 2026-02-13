@@ -1218,6 +1218,7 @@ def service_management(request):
         'service_count': services.count(),
         'service_name_count': service_names.count(),
         'subservice_count': Subservice.objects.count(),
+        'subservices': Subservice.objects.all(),
         'digital_marketing_list': digital_marketing_list,
         'digital_marketing_count': digital_marketing_list.count(),
         'section1_list': section1_list,

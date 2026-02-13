@@ -403,7 +403,7 @@ class ServiceDigitalMarketing(models.Model):
     
 class ServiceSection1(models.Model):
     service_heading = models.ForeignKey(
-        'ServiceName',
+        'Subservice',
         on_delete=models.CASCADE,
         related_name='service_section1'
     )
@@ -420,7 +420,7 @@ class ServiceSection1(models.Model):
 
 class ServiceSection2(models.Model):
     service_heading = models.ForeignKey(
-        'ServiceName',
+        'Subservice',
         on_delete=models.CASCADE,
         related_name='service_section2'
     )
