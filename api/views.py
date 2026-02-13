@@ -1005,7 +1005,11 @@ class SubsolutionsDetailView(APIView):
 
     def get(self, request, slug):
         try:
-            subsolution = Subsolutions.objects.get(slug=slug)
+            subsolution = Subsolutions.objects.prefetch_related(
+                'section1_items',
+                'section2_items'
+            ).get(slug=slug)
+
             serializer = SubsolutionsSerializer(subsolution)
 
             return custom_response(
@@ -1027,6 +1031,7 @@ class SubsolutionsDetailView(APIView):
                 message=f"Error retrieving subsolution: {str(e)}",
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
 
         
 
