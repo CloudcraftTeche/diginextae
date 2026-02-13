@@ -12,7 +12,7 @@
       <div class="row mb-2">
         <div class="col-sm-6">
           <h1 class="m-0"><i class="fas fa-lightbulb"></i> Solutions Management</h1>
-          <p class="text-muted">Manage your solutions, solution categories and subsolutions</p>
+          <p class="text-muted">Manage your solutions, solution categories, subsolutions and solution sections</p>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -90,15 +90,15 @@
         </div>
 
         <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
-          <div class="small-box bg-danger elevation-2">
+          <div class="small-box bg-purple elevation-2">
             <div class="inner">
-              <h3>{{ digital_marketing_count }}</h3>
-              <p>Digital Marketing</p>
+              <h3>{{ section1_count|add:section2_count }}</h3>
+              <p>Solution Sections</p>
             </div>
             <div class="icon">
-              <i class="fas fa-bullhorn"></i>
+              <i class="fas fa-file-alt"></i>
             </div>
-            <a href="#digitalmarketing" class="small-box-footer" onclick="$('#digitalmarketing-tab').click()">
+            <a href="#solutionssections" class="small-box-footer" onclick="$('#solutionssections-tab').click()">
               View Details <i class="fas fa-arrow-circle-right"></i>
             </a>
           </div>
@@ -122,6 +122,11 @@
             <li class="nav-item">
               <a class="nav-link" id="subsolutions-tab" data-toggle="pill" href="#subsolutions" role="tab">
                 <i class="fas fa-sitemap"></i> Subsolutions
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="solutionssections-tab" data-toggle="pill" href="#solutionssections" role="tab">
+                <i class="fas fa-file-alt"></i> Solution Sections
               </a>
             </li>
             <li class="nav-item">
@@ -156,9 +161,8 @@
                     </div>
                     {% endif %}
                     <div class="card-body">
-                      <h5 class="card-title font-weight-bold">{{ solution.banner_description_title|default:"No Title" }}
-                      </h5>
-                      <p class="card-text text-muted">{{ solution.banner_description|truncatewords:25|default:"<em>Nodescription</em>" }}</p>
+                      <h5 class="card-title font-weight-bold">{{ solution.banner_description_title|default:"No Title" }}</h5>
+                      <p class="card-text text-muted">{{ solution.banner_description|truncatewords:25|default:"<em>No description</em>" }}</p>
                     </div>
                     <div class="card-footer bg-white border-top">
                       <div class="d-flex justify-content-end">
@@ -178,8 +182,7 @@
               </div>
               {% else %}
               <div class="alert alert-info">
-                <i class="fas fa-info-circle"></i> No solution banners added yet. Click the button above to add your
-                first solution banner.
+                <i class="fas fa-info-circle"></i> No solution banners added yet. Click the button above to add your first solution banner.
               </div>
               {% endif %}
             </div>
@@ -229,8 +232,7 @@
               </div>
               {% else %}
               <div class="alert alert-info">
-                <i class="fas fa-info-circle"></i> No solution categories added yet. Click the button above to add your
-                first solution category.
+                <i class="fas fa-info-circle"></i> No solution categories added yet. Click the button above to add your first solution category.
               </div>
               {% endif %}
             </div>
@@ -294,14 +296,149 @@
 
               {% if subsolutions_count == 0 %}
               <div class="alert alert-info">
-                <i class="fas fa-info-circle"></i> No subsolutions added yet. Click the button above to add your first
-                subsolution.
+                <i class="fas fa-info-circle"></i> No subsolutions added yet. Click the button above to add your first subsolution.
               </div>
               {% endif %}
               {% else %}
               <div class="alert alert-warning">
-                <i class="fas fa-exclamation-triangle"></i> Please create solution categories first before adding
-                subsolutions.
+                <i class="fas fa-exclamation-triangle"></i> Please create solution categories first before adding subsolutions.
+              </div>
+              {% endif %}
+            </div>
+
+            <!-- Solution Sections Tab (NEW) -->
+            <div class="tab-pane fade" id="solutionssections" role="tabpanel">
+              <div class="mb-3">
+                <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#createSection1Modal">
+                  <i class="fas fa-plus-circle"></i> Add Section 1
+                </button>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createSection2Modal">
+                  <i class="fas fa-plus-circle"></i> Add Section 2
+                </button>
+              </div>
+
+              {% if solutions_names %}
+                <!-- Section 1 -->
+                <div class="card mb-4">
+                  <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-file-alt"></i> Solution Section 1</h5>
+                  </div>
+                  <div class="card-body">
+                    {% if section1_list %}
+                    <div class="row">
+                      {% for sec1 in section1_list %}
+                      <div class="col-lg-6 col-md-6 mb-3">
+                        <div class="card shadow-sm h-100">
+                          <div class="card-body">
+                            <h6 class="card-title font-weight-bold text-primary">{{ sec1.solutions_heading.solutions_name }}</h6>
+                            <h5 class="card-subtitle mb-2">{{ sec1.title }}</h5>
+                            <p class="card-text text-muted">{{ sec1.description|truncatewords:30 }}</p>
+                            <small class="text-muted">Created: {{ sec1.created_at|date:"M d, Y" }}</small>
+                          </div>
+                          <div class="card-footer bg-white border-top">
+                            <div class="d-flex justify-content-end">
+                              <button class="btn btn-sm btn-warning mr-1" onclick="editSection1({{ sec1.pk }}, {{ sec1.solutions_heading.pk }}, '{{ sec1.title|escapejs }}', '{{ sec1.description|escapejs }}')">
+                                <i class="fas fa-edit"></i> Edit
+                              </button>
+                              <button class="btn btn-sm btn-danger" onclick="deleteItem('{% url 'solutions_section1_delete' sec1.pk %}', 'section 1')">
+                                <i class="fas fa-trash-alt"></i> Delete
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                      <i class="fas fa-info-circle"></i> No Section 1 items added yet.
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <!-- Section 2 -->
+                <div class="card mb-4">
+                  <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                      <i class="fas fa-file-alt"></i> Solution Section 2
+                    </h5>
+                  </div>
+
+                  <div class="card-body">
+
+                    {% if section2_list %}
+
+                      <!-- Group by Solution Heading -->
+                      {% regroup section2_list by solutions_heading as grouped_section2 %}
+
+                      {% for group in grouped_section2 %}
+
+                      <!-- Category Title -->
+                      <div class="mb-3 mt-4">
+                        <h4 class="text-success border-bottom pb-2">
+                          {{ group.grouper.solutions_name }}
+                        </h4>
+                      </div>
+
+                      <div class="row">
+                        {% for sec2 in group.list %}
+                        <div class="col-lg-6 col-md-6 mb-3">
+                          <div class="card shadow-sm h-100">
+
+                            <div class="card-body">
+                              <h5 class="card-subtitle mb-2">{{ sec2.title }}</h5>
+
+                              <p class="card-text text-muted">
+                                {{ sec2.description|truncatewords:30 }}
+                              </p>
+
+                              <small class="text-muted">
+                                Created: {{ sec2.created_at|date:"M d, Y" }}
+                              </small>
+                            </div>
+
+                            <div class="card-footer bg-white border-top">
+                              <div class="d-flex justify-content-end">
+
+                                <!-- Edit -->
+                                <button class="btn btn-sm btn-warning mr-1"
+                                  onclick="editSection2(
+                                    {{ sec2.pk }},
+                                    {{ sec2.solutions_heading.pk }},
+                                    '{{ sec2.title|escapejs }}',
+                                    '{{ sec2.description|escapejs }}'
+                                  )">
+                                  <i class="fas fa-edit"></i> Edit
+                                </button>
+
+                                <!-- Delete -->
+                                <button class="btn btn-sm btn-danger"
+                                  onclick="deleteItem('{% url 'solutions_section2_delete' sec2.pk %}', 'section 2')">
+                                  <i class="fas fa-trash-alt"></i> Delete
+                                </button>
+
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                        {% endfor %}
+                      </div>
+                      {% endfor %}
+
+                    {% else %}
+                      <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> No Section 2 items added yet.
+                      </div>
+                    {% endif %}
+
+                  </div>
+                </div>
+
+              {% else %}
+              <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i> Please create solution categories first before adding sections.
               </div>
               {% endif %}
             </div>
@@ -374,6 +511,156 @@
 </div>
 
 <!-- ===================== MODALS ===================== -->
+
+<!-- Create Section 1 Modal -->
+<div class="modal fade" id="createSection1Modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" action="{% url 'solutions_section1_create' %}">
+        {% csrf_token %}
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Solution Section 1</h5>
+          <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Solution Category <span class="text-danger">*</span></label>
+            <select class="form-control" name="solutions_heading" required>
+              <option value="">Select Solution Category</option>
+              {% for sn in solutions_names %}
+              <option value="{{ sn.pk }}">{{ sn.solutions_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Title <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="title" placeholder="Enter section title" required>
+          </div>
+          <div class="form-group">
+            <label>Description <span class="text-danger">*</span></label>
+            <textarea class="form-control" name="description" rows="5" placeholder="Enter section description" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Section 1 Modal -->
+<div class="modal fade" id="editSection1Modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" id="editSection1Form">
+        {% csrf_token %}
+        <div class="modal-header bg-warning">
+          <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Solution Section 1</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Solution Category <span class="text-danger">*</span></label>
+            <select class="form-control" id="edit_section1_heading" name="solutions_heading" required>
+              {% for sn in solutions_names %}
+              <option value="{{ sn.pk }}">{{ sn.solutions_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Title <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="edit_section1_title" name="title" required>
+          </div>
+          <div class="form-group">
+            <label>Description <span class="text-danger">*</span></label>
+            <textarea class="form-control" id="edit_section1_description" name="description" rows="5" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+          <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Create Section 2 Modal -->
+<div class="modal fade" id="createSection2Modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" action="{% url 'solutions_section2_create' %}">
+        {% csrf_token %}
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title"><i class="fas fa-plus-circle"></i> Add Solution Section 2</h5>
+          <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Solution Category <span class="text-danger">*</span></label>
+            <select class="form-control" name="solutions_heading" required>
+              <option value="">Select Solution Category</option>
+              {% for sn in solutions_names %}
+              <option value="{{ sn.pk }}">{{ sn.solutions_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Title <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="title" placeholder="Enter section title" required>
+          </div>
+          <div class="form-group">
+            <label>Description <span class="text-danger">*</span></label>
+            <textarea class="form-control" name="description" rows="5" placeholder="Enter section description" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+          <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Section 2 Modal -->
+<div class="modal fade" id="editSection2Modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" id="editSection2Form">
+        {% csrf_token %}
+        <div class="modal-header bg-warning">
+          <h5 class="modal-title"><i class="fas fa-edit"></i> Edit Solution Section 2</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Solution Category <span class="text-danger">*</span></label>
+            <select class="form-control" id="edit_section2_heading" name="solutions_heading" required>
+              {% for sn in solutions_names %}
+              <option value="{{ sn.pk }}">{{ sn.solutions_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Title <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="edit_section2_title" name="title" required>
+          </div>
+          <div class="form-group">
+            <label>Description <span class="text-danger">*</span></label>
+            <textarea class="form-control" id="edit_section2_description" name="description" rows="5" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+          <button type="submit" class="btn btn-warning"><i class="fas fa-save"></i> Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <!-- Create Solutions Modal -->
 <div class="modal fade" id="createSolutionsModal">
@@ -767,7 +1054,7 @@
 <!-- JavaScript Functions -->
 <script>
   // File input label update
-  $('.custom-file-input').on('change', function () {
+  $('.custom-file-input').on('change', function() {
     var fileName = $(this).val().split('\\').pop();
     $(this).siblings('.custom-file-label').addClass('selected').html(fileName);
   });
@@ -811,7 +1098,7 @@
   }
 
   // Edit Subsolutions
-  function editSubsolutions(id, headingId, name,title, description, currentImage) {
+  function editSubsolutions(id, headingId, name, title, description, currentImage) {
     document.getElementById('editSubsolutionsForm').action = "{% url 'subsolutions_edit' 0 %}".replace('0', id);
     document.getElementById('edit_subsolutions_heading').value = headingId;
     document.getElementById('edit_subsolutions_name').value = name;
@@ -829,6 +1116,26 @@
     $('#edit_subsolutions_image').siblings('.custom-file-label').html('Choose new file');
 
     $('#editSubsolutionsModal').modal('show');
+  }
+
+  // Edit Section 1
+  function editSection1(id, headingId, title, description) {
+    document.getElementById('editSection1Form').action = "{% url 'solutions_section1_edit' 0 %}".replace('0', id);
+    document.getElementById('edit_section1_heading').value = headingId;
+    document.getElementById('edit_section1_title').value = title;
+    document.getElementById('edit_section1_description').value = description;
+    
+    $('#editSection1Modal').modal('show');
+  }
+
+  // Edit Section 2
+  function editSection2(id, headingId, title, description) {
+    document.getElementById('editSection2Form').action = "{% url 'solutions_section2_edit' 0 %}".replace('0', id);
+    document.getElementById('edit_section2_heading').value = headingId;
+    document.getElementById('edit_section2_title').value = title;
+    document.getElementById('edit_section2_description').value = description;
+    
+    $('#editSection2Modal').modal('show');
   }
 
   // Edit Digital Marketing
@@ -872,7 +1179,7 @@
   }
 
   // Auto-hide alerts after 5 seconds
-  setTimeout(function () {
+  setTimeout(function() {
     $('.alert').fadeOut('slow');
   }, 5000);
 </script>

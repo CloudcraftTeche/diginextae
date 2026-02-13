@@ -223,6 +223,15 @@ urlpatterns = [
     path('solutions-digital-marketing/edit/<int:pk>/', views.solutions_digital_marketing_edit, name='solutions_digital_marketing_edit'),
     path('solutions-digital-marketing/delete/<int:pk>/', views.solutions_digital_marketing_delete, name='solutions_digital_marketing_delete'),
 
+    # ============ Solutions Section 1 URLs ============
+    path('solutions/section1/create/', views.solutions_section1_create, name='solutions_section1_create'),
+    path('solutions/section1/<int:pk>/edit/', views.solutions_section1_edit, name='solutions_section1_edit'),
+    path('solutions/section1/<int:pk>/delete/', views.solutions_section1_delete, name='solutions_section1_delete'),
+
+    # ============ Solutions Section 2 URLs ============
+    path('solutions/section2/create/', views.solutions_section2_create, name='solutions_section2_create'),
+    path('solutions/section2/<int:pk>/edit/', views.solutions_section2_edit, name='solutions_section2_edit'),
+    path('solutions/section2/<int:pk>/delete/', views.solutions_section2_delete, name='solutions_section2_delete'),
 
 
 

@@ -506,6 +506,46 @@ class solutionsDigitalMarketing(models.Model):
         return "Solutions Page SEO / Marketing"
 
 
+class SolutionsSection1(models.Model):
+    solutions_heading = models.ForeignKey(
+        SolutionsName,
+        on_delete=models.CASCADE,
+        related_name='section1_items'
+    )
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Solution Section 1'
+        verbose_name_plural = 'Solution Section 1'
+    
+    def __str__(self):
+        return f"{self.title} - {self.solutions_heading.solutions_name}"
+
+
+class SolutionsSection2(models.Model):
+    solutions_heading = models.ForeignKey(
+        SolutionsName,
+        on_delete=models.CASCADE,
+        related_name='section2_items'
+    )
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Solution Section 2'
+        verbose_name_plural = 'Solution Section 2'
+    
+    def __str__(self):
+        return f"{self.title} - {self.solutions_heading.solutions_name}"
+    
+    
 # ==================== OUR WORKS SECTION ====================
 
 class Industry(models.Model):

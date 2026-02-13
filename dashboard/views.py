@@ -1543,6 +1543,9 @@ def solutions_management(request):
     solutions = Solutions.objects.all()
     solutions_names = SolutionsName.objects.all().prefetch_related('solutions')
     digital_marketing_list = solutionsDigitalMarketing.objects.order_by('-created_at').all()
+    subsolutions = Subsolutions.objects.all()
+    section1_list = SolutionsSection1.objects.all()
+    section2_list = SolutionsSection2.objects.all()
     
     context = {
         'solutions': solutions,
@@ -1552,6 +1555,13 @@ def solutions_management(request):
         'subsolutions_count': Subsolutions.objects.count(),
         'digital_marketing_list': digital_marketing_list,
         'digital_marketing_count': digital_marketing_list.count(),
+         # Solution Sections 1
+        'section1_list': section1_list,
+        'section1_count': section1_list.count(),
+        
+        # Solution Sections 2
+        'section2_list': section2_list,
+        'section2_count': section2_list.count(),
     }
     return render(request, 'solutions_management.html', context)
 
@@ -1723,6 +1733,165 @@ def solutions_digital_marketing_delete(request, pk):
     dm.delete()
     messages.success(request, "Solutions Digital Marketing section deleted!")
     return redirect('solutions_management')
+
+
+
+# ============ Solutions Section 1 Views ============
+
+def solutions_section1_create(request):
+    """Create a new Solutions Section 1"""
+    if request.method == 'POST':
+        solutions_heading_id = request.POST.get('solutions_heading')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        
+        if not all([solutions_heading_id, title, description]):
+            messages.error(request, 'All fields are required!')
+            return redirect('solutions_management')
+        
+        try:
+            solutions_heading = SolutionsName.objects.get(pk=solutions_heading_id)
+            section = SolutionsSection1.objects.create(
+                solutions_heading=solutions_heading,
+                title=title,
+                description=description
+            )
+            messages.success(request, 'Solution Section 1 created successfully!')
+        except SolutionsName.DoesNotExist:
+            messages.error(request, 'Solution category not found!')
+        except Exception as e:
+            messages.error(request, f'Error creating section: {str(e)}')
+    
+    return redirect('solutions_management')
+
+
+def solutions_section1_edit(request, pk):
+    """Edit a Solutions Section 1"""
+    from django.shortcuts import get_object_or_404
+    from django.contrib import messages
+    
+    section = get_object_or_404(SolutionsSection1, pk=pk)
+    
+    if request.method == 'POST':
+        solutions_heading_id = request.POST.get('solutions_heading')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        
+        if not all([solutions_heading_id, title, description]):
+            messages.error(request, 'All fields are required!')
+            return redirect('solutions_management')
+        
+        try:
+            solutions_heading = SolutionsName.objects.get(pk=solutions_heading_id)
+            section.solutions_heading = solutions_heading
+            section.title = title
+            section.description = description
+            section.save()
+            messages.success(request, 'Solution Section 1 updated successfully!')
+        except SolutionsName.DoesNotExist:
+            messages.error(request, 'Solution category not found!')
+        except Exception as e:
+            messages.error(request, f'Error updating section: {str(e)}')
+    
+    return redirect('solutions_management')
+
+
+def solutions_section1_delete(request, pk):
+    """Delete a Solutions Section 1"""
+    from django.shortcuts import get_object_or_404
+    from django.contrib import messages
+    
+    section = get_object_or_404(SolutionsSection1, pk=pk)
+    
+    try:
+        section_title = section.title
+        section.delete()
+        messages.success(request, f'Solution Section 1 "{section_title}" deleted successfully!')
+    except Exception as e:
+        messages.error(request, f'Error deleting section: {str(e)}')
+    
+    return redirect('solutions_management')
+
+
+# ============ Solutions Section 2 Views ============
+
+def solutions_section2_create(request):
+    """Create a new Solutions Section 2"""
+    from django.contrib import messages
+    
+    if request.method == 'POST':
+        solutions_heading_id = request.POST.get('solutions_heading')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        
+        if not all([solutions_heading_id, title, description]):
+            messages.error(request, 'All fields are required!')
+            return redirect('solutions_management')
+        
+        try:
+            solutions_heading = SolutionsName.objects.get(pk=solutions_heading_id)
+            section = SolutionsSection2.objects.create(
+                solutions_heading=solutions_heading,
+                title=title,
+                description=description
+            )
+            messages.success(request, 'Solution Section 2 created successfully!')
+        except SolutionsName.DoesNotExist:
+            messages.error(request, 'Solution category not found!')
+        except Exception as e:
+            messages.error(request, f'Error creating section: {str(e)}')
+    
+    return redirect('solutions_management')
+
+
+def solutions_section2_edit(request, pk):
+    """Edit a Solutions Section 2"""
+    from django.shortcuts import get_object_or_404
+    from django.contrib import messages
+    
+    section = get_object_or_404(SolutionsSection2, pk=pk)
+    
+    if request.method == 'POST':
+        solutions_heading_id = request.POST.get('solutions_heading')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        
+        if not all([solutions_heading_id, title, description]):
+            messages.error(request, 'All fields are required!')
+            return redirect('solutions_management')
+        
+        try:
+            solutions_heading = SolutionsName.objects.get(pk=solutions_heading_id)
+            section.solutions_heading = solutions_heading
+            section.title = title
+            section.description = description
+            section.save()
+            messages.success(request, 'Solution Section 2 updated successfully!')
+        except SolutionsName.DoesNotExist:
+            messages.error(request, 'Solution category not found!')
+        except Exception as e:
+            messages.error(request, f'Error updating section: {str(e)}')
+    
+    return redirect('solutions_management')
+
+
+def solutions_section2_delete(request, pk):
+    """Delete a Solutions Section 2"""
+    from django.shortcuts import get_object_or_404
+    from django.contrib import messages
+    
+    section = get_object_or_404(SolutionsSection2, pk=pk)
+    
+    try:
+        section_title = section.title
+        section.delete()
+        messages.success(request, f'Solution Section 2 "{section_title}" deleted successfully!')
+    except Exception as e:
+        messages.error(request, f'Error deleting section: {str(e)}')
+    
+    return redirect('solutions_management')
+
+
 # ==================== OUR WORKS SECTION ====================
 
 @login_required
