@@ -844,11 +844,11 @@ class ServiceNameListView(APIView):
 # =================== single subservice get ================>
 
 class SubserviceDetailView(APIView):
-    """GET: Retrieve a single Subservice by ID"""
+    """GET: Retrieve a single Subservice by slug"""
 
-    def get(self, request, pk):
+    def get(self, request, slug):
         try:
-            subservice = Subservice.objects.get(pk=pk)
+            subservice = Subservice.objects.get(slug=slug)
             serializer = SubserviceSerializer(subservice)
 
             return custom_response(
@@ -856,20 +856,21 @@ class SubserviceDetailView(APIView):
                 message="Subservice retrieved successfully",
                 data=serializer.data
             )
-        
+
         except Subservice.DoesNotExist:
             return custom_response(
                 success=False,
                 message="Subservice not found",
                 status_code=status.HTTP_404_NOT_FOUND
             )
-        
+
         except Exception as e:
             return custom_response(
                 success=False,
                 message=f"Error retrieving subservice: {str(e)}",
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
         
 
 class NavbarServiceListView(APIView):
@@ -1000,11 +1001,11 @@ class SolutionsNameListView(APIView):
 
 
 class SubsolutionsDetailView(APIView):
-    """GET: Retrieve a single Subsolution by ID"""
+    """GET: Retrieve a single Subsolution by slug"""
 
-    def get(self, request, pk):
+    def get(self, request, slug):
         try:
-            subsolution = Subsolutions.objects.get(pk=pk)
+            subsolution = Subsolutions.objects.get(slug=slug)
             serializer = SubsolutionsSerializer(subsolution)
 
             return custom_response(
@@ -1012,20 +1013,21 @@ class SubsolutionsDetailView(APIView):
                 message="Subsolution retrieved successfully",
                 data=serializer.data
             )
-        
+
         except Subsolutions.DoesNotExist:
             return custom_response(
                 success=False,
                 message="Subsolution not found",
                 status_code=status.HTTP_404_NOT_FOUND
             )
-        
+
         except Exception as e:
             return custom_response(
                 success=False,
                 message=f"Error retrieving subsolution: {str(e)}",
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
         
 
 class solutionDigitalMarket_view(APIView):

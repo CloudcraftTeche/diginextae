@@ -76,14 +76,14 @@ urlpatterns = [
 
     path('services/', ServiceListView.as_view(), name='service-list'),
     path('services/service-names/', ServiceNameListView.as_view(), name='service-name-list'),
-    path('services/subservice/<int:pk>/', SubserviceDetailView.as_view(), name='subservice-detail'),
+    path('services/subservice/<slug:slug>/', SubserviceDetailView.as_view(), name='subservice-detail'),
     path('services/serviceDigitalMarket', serviceDigitalMarket.as_view(), name='service-DigitalMarket'),
 
     # ============= solutions ==============
 
     path('solutions/', SolutionsListView.as_view(), name='solutions-list'),
     path('solutions/solutions-names/', SolutionsNameListView.as_view(), name='solutions-names-list'),
-    path('solutions/subsolutions/<int:pk>/', SubsolutionsDetailView.as_view(), name='subsolution-detail'),
+    path('solutions/subsolutions/<slug:slug>/', SubsolutionsDetailView.as_view(), name='subsolution-detail'),
     path('solutions/solutioinDigitalMarket', solutionDigitalMarket_view.as_view(), name='solution-DigitalMarket'),
 
     # ============= OUR WORKS SECTION =============
