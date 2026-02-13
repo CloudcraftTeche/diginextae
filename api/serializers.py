@@ -33,6 +33,7 @@ from dashboard.models import (
     OurInsights,
     Blog,Career,Location, OurWorkSection2,
     ServiceSection1, ServiceSection2,
+    SolutionsSection1, SolutionsSection2,
 )
 
 class ProjectGoalSerializer(serializers.ModelSerializer):
@@ -330,6 +331,16 @@ class ServiceDigitalSerializer(serializers.ModelSerializer):
 
 
 # SOLUTIONS =======================
+class SolutionsSection1Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = SolutionsSection1
+        fields = ['id', 'title', 'description', 'created_at', 'updated_at']
+
+
+class SolutionsSection2Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = SolutionsSection2
+        fields = ['id', 'title', 'description', 'created_at', 'updated_at']
 
 class SolutionsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -338,9 +349,29 @@ class SolutionsSerializer(serializers.ModelSerializer):
 
 
 class SubsolutionsSerializer(serializers.ModelSerializer):
+    latest_section1 = serializers.SerializerMethodField()
+    section2_items = SolutionsSection2Serializer(many=True, read_only=True)
+
     class Meta:
         model = Subsolutions
-        fields = ('id', 'solutions_name', 'solutions_description', 'solutions_image')
+        fields = (
+            'id',
+            'solutions_name',
+            'solutions_description',
+            'solutions_image',
+            'latest_section1',
+            'section2_items'
+        )
+
+    def get_latest_section1(self, obj):
+        # returns latest record because model ordering = ['-created_at']
+        latest = obj.section1_items.first()
+
+        if latest:
+            return SolutionsSection1Serializer(latest).data
+        
+        return None
+
 
 
 class SolutionsNameSerializer(serializers.ModelSerializer):
