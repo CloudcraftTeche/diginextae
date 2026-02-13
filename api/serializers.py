@@ -31,7 +31,8 @@ from dashboard.models import (
     Insights,
     InsightsDigitalMarketing,
     OurInsights,
-    Blog,Career,Location, OurWorkSection2
+    Blog,Career,Location, OurWorkSection2,
+    ServiceSection1, ServiceSection2,
 )
 
 class ProjectGoalSerializer(serializers.ModelSerializer):
@@ -267,6 +268,16 @@ class ContactDigitalMarketingSerializer(serializers.ModelSerializer):
 
 
 # SERVICES =======================
+class ServiceSection1Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceSection1
+        fields = ['id', 'title', 'description', 'created_at', 'updated_at']
+
+
+class ServiceSection2Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceSection2
+        fields = ['id', 'title', 'description', 'created_at', 'updated_at']
 
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -275,10 +286,33 @@ class ServiceSerializer(serializers.ModelSerializer):
 
 
 class SubserviceSerializer(serializers.ModelSerializer):
+    latest_service_section1 = serializers.SerializerMethodField()
+    service_section2 = ServiceSection2Serializer(many=True, read_only=True)
+
     class Meta:
         model = Subservice
-        fields = ('id', 'subservice_name', 'subservice_description', 'sub_service_image','slug', 'meta_title', 'meta_description', 'meta_keywords')
-        # optionally: read_only_fields = ('id',)
+        fields = (
+            'id',
+            'subservice_name',
+            'subservice_description',
+            'sub_service_image',
+            'slug',
+            'meta_title',
+            'meta_description',
+            'meta_keywords',
+            'latest_service_section1',
+            'service_section2'
+        )
+
+    def get_latest_service_section1(self, obj):
+        latest_section = obj.service_section1.order_by('-created_at').first()
+
+        if latest_section:
+            return ServiceSection1Serializer(latest_section).data
+        
+        return None
+
+
 
 class ServiceNameSerializer(serializers.ModelSerializer):
     # include nested subservices
