@@ -392,10 +392,10 @@ class SolutionsDigitalSerializer(serializers.ModelSerializer):
 
 # navbar  =================
 
-class SubsolutionsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Subsolutions
-        fields = "__all__"
+# class SubsolutionsSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Subsolutions
+#         fields = "__all__"
 
 
 class SolutionsNameSerializer(serializers.ModelSerializer):
