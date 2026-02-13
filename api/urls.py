@@ -88,7 +88,7 @@ urlpatterns = [
 
     # ============= OUR WORKS SECTION =============
     path('ourworks/', OurWorksListView.as_view(), name='ourworks-list'),
-    path('ourworks/<int:pk>/', OurWorkDetailView.as_view(), name='ourworks-detail'),
+    path('ourworks/<slug:slug>/', OurWorkDetailView.as_view(), name='ourworks-detail'),
     path('ourworks/industries/', IndustryListView.as_view(), name='industries-list'),
     path('ourworks/expertise/', ExpertiseListView.as_view(), name='expertise-list'),
     path('ourworks/digital-marketing/', OurWorksDigitalMarketingView.as_view(), name='ourworks-digital-marketing'),

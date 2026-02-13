@@ -1136,28 +1136,37 @@ class OurWorksListView(APIView):
 
 
 class OurWorkDetailView(APIView):
-    """GET: Retrieve single Our Work with all related sections"""
-    def get(self, request, pk):
+    """GET: Retrieve single Our Work by slug"""
+
+    def get(self, request, slug):
         try:
-            our_work = OurWorks.objects.get(pk=pk, is_active=True)
+            our_work = OurWorks.objects.get(
+                slug=slug,
+                is_active=True
+            )
+
             serializer = OurWorksSerializer(our_work)
+
             return custom_response(
                 success=True,
                 message="Our Work detail retrieved successfully",
                 data=serializer.data
             )
+
         except OurWorks.DoesNotExist:
             return custom_response(
                 success=False,
                 message="Our Work not found",
                 status_code=status.HTTP_404_NOT_FOUND
             )
+
         except Exception as e:
             return custom_response(
                 success=False,
                 message=f"Error retrieving Our Work detail: {str(e)}",
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
 
 
 
