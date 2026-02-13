@@ -1410,7 +1410,7 @@ def section1_create(request):
         description = request.POST.get('description')
         
         try:
-            service_heading = ServiceName.objects.get(pk=service_heading_id)
+            service_heading = Subservice.objects.get(pk=service_heading_id)
             
             ServiceSection1.objects.create(
                 service_heading=service_heading,
@@ -1419,7 +1419,7 @@ def section1_create(request):
             )
             
             messages.success(request, 'Service Section 1 created successfully!')
-        except ServiceName.DoesNotExist:
+        except Subservice.DoesNotExist:
             messages.error(request, 'Selected service category does not exist.')
         except Exception as e:
             messages.error(request, f'Error creating section: {str(e)}')
@@ -1438,7 +1438,7 @@ def section1_edit(request, pk):
         description = request.POST.get('description')
         
         try:
-            service_heading = ServiceName.objects.get(pk=service_heading_id)
+            service_heading = Subservice.objects.get(pk=service_heading_id)
             
             section.service_heading = service_heading
             section.title = title
@@ -1446,7 +1446,7 @@ def section1_edit(request, pk):
             section.save()
             
             messages.success(request, 'Service Section 1 updated successfully!')
-        except ServiceName.DoesNotExist:
+        except Subservice.DoesNotExist:
             messages.error(request, 'Selected service category does not exist.')
         except Exception as e:
             messages.error(request, f'Error updating section: {str(e)}')
@@ -1478,7 +1478,7 @@ def section2_create(request):
         description = request.POST.get('description')
         
         try:
-            service_heading = ServiceName.objects.get(pk=service_heading_id)
+            service_heading = Subservice.objects.get(pk=service_heading_id)
             
             ServiceSection2.objects.create(
                 service_heading=service_heading,
@@ -1487,7 +1487,7 @@ def section2_create(request):
             )
             
             messages.success(request, 'Service Section 2 created successfully!')
-        except ServiceName.DoesNotExist:
+        except Subservice.DoesNotExist:
             messages.error(request, 'Selected service category does not exist.')
         except Exception as e:
             messages.error(request, f'Error creating section: {str(e)}')
@@ -1506,7 +1506,7 @@ def section2_edit(request, pk):
         description = request.POST.get('description')
         
         try:
-            service_heading = ServiceName.objects.get(pk=service_heading_id)
+            service_heading = Subservice.objects.get(pk=service_heading_id)
             
             section.service_heading = service_heading
             section.title = title
@@ -1514,7 +1514,7 @@ def section2_edit(request, pk):
             section.save()
             
             messages.success(request, 'Service Section 2 updated successfully!')
-        except ServiceName.DoesNotExist:
+        except Subservice.DoesNotExist:
             messages.error(request, 'Selected service category does not exist.')
         except Exception as e:
             messages.error(request, f'Error updating section: {str(e)}')
@@ -1752,14 +1752,14 @@ def solutions_section1_create(request):
             return redirect('solutions_management')
         
         try:
-            solutions_heading = SolutionsName.objects.get(pk=solutions_heading_id)
+            solutions_heading = Subsolutions.objects.get(pk=solutions_heading_id)
             section = SolutionsSection1.objects.create(
                 solutions_heading=solutions_heading,
                 title=title,
                 description=description
             )
             messages.success(request, 'Solution Section 1 created successfully!')
-        except SolutionsName.DoesNotExist:
+        except Subsolutions.DoesNotExist:
             messages.error(request, 'Solution category not found!')
         except Exception as e:
             messages.error(request, f'Error creating section: {str(e)}')
@@ -1784,13 +1784,13 @@ def solutions_section1_edit(request, pk):
             return redirect('solutions_management')
         
         try:
-            solutions_heading = SolutionsName.objects.get(pk=solutions_heading_id)
+            solutions_heading = Subsolutions.objects.get(pk=solutions_heading_id)
             section.solutions_heading = solutions_heading
             section.title = title
             section.description = description
             section.save()
             messages.success(request, 'Solution Section 1 updated successfully!')
-        except SolutionsName.DoesNotExist:
+        except Subsolutions.DoesNotExist:
             messages.error(request, 'Solution category not found!')
         except Exception as e:
             messages.error(request, f'Error updating section: {str(e)}')
@@ -1831,14 +1831,14 @@ def solutions_section2_create(request):
             return redirect('solutions_management')
         
         try:
-            solutions_heading = SolutionsName.objects.get(pk=solutions_heading_id)
+            solutions_heading = Subsolutions.objects.get(pk=solutions_heading_id)
             section = SolutionsSection2.objects.create(
                 solutions_heading=solutions_heading,
                 title=title,
                 description=description
             )
             messages.success(request, 'Solution Section 2 created successfully!')
-        except SolutionsName.DoesNotExist:
+        except Subsolutions.DoesNotExist:
             messages.error(request, 'Solution category not found!')
         except Exception as e:
             messages.error(request, f'Error creating section: {str(e)}')
@@ -1863,13 +1863,13 @@ def solutions_section2_edit(request, pk):
             return redirect('solutions_management')
         
         try:
-            solutions_heading = SolutionsName.objects.get(pk=solutions_heading_id)
+            solutions_heading = Subsolutions.objects.get(pk=solutions_heading_id)
             section.solutions_heading = solutions_heading
             section.title = title
             section.description = description
             section.save()
             messages.success(request, 'Solution Section 2 updated successfully!')
-        except SolutionsName.DoesNotExist:
+        except Subsolutions.DoesNotExist:
             messages.error(request, 'Solution category not found!')
         except Exception as e:
             messages.error(request, f'Error updating section: {str(e)}')
