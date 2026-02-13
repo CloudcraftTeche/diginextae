@@ -527,7 +527,7 @@
             <label>Solution Category <span class="text-danger">*</span></label>
             <select class="form-control" name="solutions_heading" required>
               <option value="">Select Solution Category</option>
-              {% for sn in solutions_names %}
+              {% for sn in subsolutions %}
               <option value="{{ sn.pk }}">{{ sn.solutions_name }}</option>
               {% endfor %}
             </select>
@@ -564,7 +564,7 @@
           <div class="form-group">
             <label>Solution Category <span class="text-danger">*</span></label>
             <select class="form-control" id="edit_section1_heading" name="solutions_heading" required>
-              {% for sn in solutions_names %}
+              {% for sn in subsolutions %}
               <option value="{{ sn.pk }}">{{ sn.solutions_name }}</option>
               {% endfor %}
             </select>
@@ -602,7 +602,7 @@
             <label>Solution Category <span class="text-danger">*</span></label>
             <select class="form-control" name="solutions_heading" required>
               <option value="">Select Solution Category</option>
-              {% for sn in solutions_names %}
+              {% for sn in subsolutions %}
               <option value="{{ sn.pk }}">{{ sn.solutions_name }}</option>
               {% endfor %}
             </select>
@@ -639,7 +639,7 @@
           <div class="form-group">
             <label>Solution Category <span class="text-danger">*</span></label>
             <select class="form-control" id="edit_section2_heading" name="solutions_heading" required>
-              {% for sn in solutions_names %}
+              {% for sn in subsolutions %}
               <option value="{{ sn.pk }}">{{ sn.solutions_name }}</option>
               {% endfor %}
             </select>

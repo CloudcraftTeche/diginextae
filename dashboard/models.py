@@ -508,7 +508,7 @@ class solutionsDigitalMarketing(models.Model):
 
 class SolutionsSection1(models.Model):
     solutions_heading = models.ForeignKey(
-        SolutionsName,
+        Subsolutions,
         on_delete=models.CASCADE,
         related_name='section1_items'
     )
@@ -528,7 +528,7 @@ class SolutionsSection1(models.Model):
 
 class SolutionsSection2(models.Model):
     solutions_heading = models.ForeignKey(
-        SolutionsName,
+        Subsolutions,
         on_delete=models.CASCADE,
         related_name='section2_items'
     )

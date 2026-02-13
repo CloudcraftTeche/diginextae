@@ -513,7 +513,7 @@
               <select class="form-control" name="service_heading" required>
                 <option value="">Select Service Category</option>
                 {% for sn in subservices %}
-                <option value="{{ sn.subservice_name }}">{{ sn.subservice_name }}</option>
+                <option value="{{ sn.pk }}">{{ sn.subservice_name }}</option>
                 {% endfor %}
               </select>
             </div>
@@ -550,7 +550,7 @@
               <label>Service Category <span class="text-danger">*</span></label>
               <select class="form-control" id="edit_section1_heading" name="service_heading" required>
                 {% for sn in subservices %}
-                <option value="{{ sn.subservice_name }}">{{ sn.subservice_name }}</option>
+                <option value="{{ sn.pk }}">{{ sn.subservice_name }}</option>
                 {% endfor %}
               </select>
             </div>
@@ -588,7 +588,7 @@
               <select class="form-control" name="service_heading" required>
                 <option value="">Select Service Category</option>
                 {% for sn in subservices %}
-                <option value="{{ sn.subservice_name }}">{{ sn.subservice_name }}</option>
+                <option value="{{ sn.pk }}">{{ sn.subservice_name }}</option>
                 {% endfor %}
               </select>
             </div>
@@ -625,7 +625,7 @@
               <label>Service Category <span class="text-danger">*</span></label>
               <select class="form-control" id="edit_section2_heading" name="service_heading" required>
                 {% for sn in subservices %}
-                <option value="{{ sn.subservice_name }}">{{ sn.subservice_name }}</option>
+                <option value="{{ sn.pk }}">{{ sn.subservice_name }}</option>
                 {% endfor %}
               </select>
             </div>

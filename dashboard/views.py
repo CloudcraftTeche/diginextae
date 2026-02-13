@@ -1563,6 +1563,7 @@ def solutions_management(request):
         # Solution Sections 2
         'section2_list': section2_list,
         'section2_count': section2_list.count(),
+        'subsolutions': subsolutions,
     }
     return render(request, 'solutions_management.html', context)
 
