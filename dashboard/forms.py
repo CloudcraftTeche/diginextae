@@ -3,7 +3,8 @@ from .models import (
     HomeBanner, HomeText1, HomeBanner2, HomeText2, Conncepts,
     HomeBanner3, HomeText3, HomeAvailableWorks, HomeBanner4, 
     Contents, HomeAboutUs, HomeQuestions, Question, Footer,
-    HomeDigitalMarketing,  HomeVision,Insights,InsightsDigitalMarketing,OurWorksDigitalMarketing,OurInsights,Blog
+    HomeDigitalMarketing,  HomeVision,Insights,InsightsDigitalMarketing,OurWorksDigitalMarketing,OurInsights,
+    Blog,Design
 )
 
 
@@ -413,3 +414,8 @@ class BlogForm(forms.ModelForm):
             'content': forms.Textarea(attrs={'id': 'id_content'}),
         }
    
+class DesignForm(forms.ModelForm):
+    class Meta:
+        model = Design
+        fields = "__all__"
+        exclude = ["slug"]

@@ -3164,3 +3164,65 @@ def location_delete(request, id):
     location.delete()
     messages.success(request, "Location deleted successfully")
     return redirect('location_list')
+
+# ================= DESIGN PAGE =================
+@login_required
+def design_page(request):
+    designs = Design.objects.all().order_by("-id")
+    return render(request, "design.html", {"designs": designs})
+
+
+# CREATE
+@login_required
+def design_create(request):
+    if request.method == "POST":
+        form = DesignForm(request.POST, request.FILES)
+        images = request.FILES.getlist("images")
+
+        if form.is_valid():
+            design = form.save()
+
+            for img in images:
+                DesignImage.objects.create(design=design, image=img)
+
+    return redirect("design_page")
+
+
+# EDIT
+@login_required
+def design_edit(request, pk):
+    design = get_object_or_404(Design, pk=pk)
+
+    if request.method == "POST":
+        form = DesignForm(request.POST, request.FILES, instance=design)
+        images = request.FILES.getlist("images")
+
+        if form.is_valid():
+            design = form.save()
+
+            # add new images
+            for img in images:
+                DesignImage.objects.create(design=design, image=img)
+
+    return redirect("design_page")
+
+
+# DELETE DESIGN
+@login_required
+def design_delete(request, pk):
+    design = get_object_or_404(Design, pk=pk)
+    design.delete()
+    return redirect("design_page")
+
+
+# DELETE SINGLE IMAGE
+@login_required
+def design_image_delete(request, pk):
+    image = get_object_or_404(DesignImage, pk=pk)
+    image.delete()
+
+    return JsonResponse({
+        "success": True,
+        "message": "Image deleted"
+    })
+

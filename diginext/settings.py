@@ -200,8 +200,8 @@ WSGI_APPLICATION = 'diginext.wsgi.application'
 # }
 
 # Database Configuration
-# database_url = os.getenv('DATABASE_URL')
-database_url = 'postgresql://diginext:pTeZ8hRxGUp2B5YTde7nWw7ViON8M2Ka@dpg-d5n6ael6ubrc73algg2g-a/diginext'
+database_url = os.getenv('DATABASE_URL')
+# database_url = 'postgresql://diginext:pTeZ8hRxGUp2B5YTde7nWw7ViON8M2Ka@dpg-d5n6ael6ubrc73algg2g-a/diginext'
 
 if database_url:
     # Production: Use DATABASE_URL (Render automatically provides this)

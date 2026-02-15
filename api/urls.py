@@ -34,6 +34,7 @@ from .views import (
     InsightsListView, OurInsightsListView,
     OurInsightsDetailView, InsightsDigitalMarketingView,
     BlogListView, CareerListView, LocationListView,LocationDetailView
+    ,DesignListView, DesignDetailView
 )
 
 urlpatterns = [
@@ -118,5 +119,10 @@ urlpatterns = [
     #Location
     path('locations/', LocationListView.as_view(), name='location-list'),
     path('locations/<int:id>/', LocationDetailView.as_view(), name='location-detail'),
+    
+    # design
+    path('design/', DesignListView.as_view(), name='design-list'),
+    path('design/<slug:slug>/', DesignDetailView.as_view(), name='design-detail'),
+    
     
 ]

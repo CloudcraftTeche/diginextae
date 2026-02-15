@@ -335,6 +335,14 @@
                   </a>
             </li>
 
+            <li class="nav-item">
+                  <a href="{% url 'design_page' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'design_page' %}active{% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Design</p>
+                  </a>
+            </li>
+
 
 
             <li class="nav-item">

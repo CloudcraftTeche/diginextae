@@ -365,4 +365,13 @@ path('locations/', views.location_list, name='location_list'),
 path('locations/create/', views.location_create, name='location_create'),
 path('locations/edit/<int:id>/', views.location_edit, name='location_edit'),
 path('locations/delete/<int:id>/', views.location_delete, name='location_delete'),
+
+
+# ==================== DESIGN SECTION ====================
+path('design/', views.design_page, name='design_page'),
+path('design/create/', views.design_create, name='design_create'),
+path('design/edit/<int:pk>/', views.design_edit, name='design_edit'),
+path('design/delete/<int:pk>/', views.design_delete, name='design_delete'),
+path("design/image/delete/<int:pk>/", views.design_image_delete, name="design_image_delete"),
+
 ]

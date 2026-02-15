@@ -34,6 +34,7 @@ from dashboard.models import (
     Blog,Career,Location, OurWorkSection2,
     ServiceSection1, ServiceSection2,
     SolutionsSection1, SolutionsSection2,
+    Design, DesignImage,
 )
 
 class ProjectGoalSerializer(serializers.ModelSerializer):
@@ -456,3 +457,17 @@ class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields = '__all__'
+        
+class DesignImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DesignImage
+        fields = ["id", "image"]
+        
+class DesignSerializer(serializers.ModelSerializer):
+    images = DesignImageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Design
+        fields = "__all__"
+
+        

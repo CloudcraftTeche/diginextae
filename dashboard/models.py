@@ -1107,3 +1107,43 @@ class Location(models.Model):
         )
     def __str__(self):
         return self.location
+
+class Design(models.Model):
+    banner_image = models.ImageField(upload_to="design/banner/")
+    banner_heading = models.CharField(max_length=255)
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+
+    slug = models.SlugField(unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        # Auto generate slug if not exists
+        if not self.slug:
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+
+            # Ensure unique slug
+            while Design.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+            self.slug = slug
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
+
+
+class DesignImage(models.Model):
+    design = models.ForeignKey(
+        Design,
+        related_name="images",
+        on_delete=models.CASCADE
+    )
+
+    image = CloudinaryField("design_image")
+
+    def __str__(self):
+        return self.design.title

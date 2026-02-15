@@ -35,7 +35,9 @@ from dashboard.models import (
     Insights,
     InsightsDigitalMarketing,
     OurInsights,
-    Blog,Career,Location
+    Blog,Career,Location,
+    # design
+    Design,
 )
 from .serializers import (
     HomeBannerSerializer, HomeText1Serializer, HomeBanner2Serializer,
@@ -76,6 +78,8 @@ from .serializers import (
     BlogSerializer,
     CareerSerializer,
     LocationSerializer,
+    DesignSerializer,
+    
 
 )
 
@@ -1426,5 +1430,46 @@ class LocationDetailView(APIView):
             return custom_response(
                 success=False,
                 message=f"Error retrieving location: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+            
+# design
+class DesignListView(APIView):
+    """GET: Retrieve all active Designs"""
+
+    def get(self, request):
+        try:
+            designs = Design.objects.all() 
+            serializer = DesignSerializer(designs, many=True)
+            return custom_response(
+                success=True,
+                message="Designs retrieved successfully",
+                data=serializer.data
+            )
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving designs: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class DesignDetailView(APIView):
+    """GET: Retrieve a single Design by slug"""
+
+    def get(self, request, slug):
+        try:
+            design = get_object_or_404(Design, slug=slug)
+            serializer = DesignSerializer(design)
+
+            return custom_response(
+                success=True,
+                message="Design retrieved successfully",
+                data=serializer.data
+            )
+
+        except Exception as e:
+            return custom_response(
+                success=False,
+                message=f"Error retrieving design: {str(e)}",
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )

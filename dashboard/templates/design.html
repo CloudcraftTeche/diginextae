@@ -1,0 +1,319 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Design Management{% endblock %}
+
+{% block content %}
+
+<div class="content-wrapper">
+
+  <!-- HEADER -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+
+        <div class="col-sm-6">
+          <h1 class="m-0">Design Management</h1>
+          <p class="text-muted">Create, edit and manage design pages</p>
+        </div>
+
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a href="{% url 'dashboard' %}">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">Designs</li>
+          </ol>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <section class="content">
+    <div class="container-fluid">
+
+      <!-- ADD BUTTON -->
+      <div class="mb-3">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#createDesignModal">
+          Add Design
+        </button>
+      </div>
+
+      {% if designs %}
+      <div class="row">
+
+        {% for design in designs %}
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm">
+
+            {% if design.banner_image %}
+            <img src="{{ design.banner_image.url }}"
+                 class="card-img-top"
+                 style="height:220px;object-fit:cover;">
+            {% endif %}
+
+            <div class="card-body">
+              <h5>{{ design.banner_heading }}</h5>
+              <h6 class="text-muted">{{ design.title }}</h6>
+              <p>{{ design.description|truncatewords:20 }}</p>
+            </div>
+
+            <div class="card-footer bg-white text-center">
+
+              <!-- EDIT -->
+              <button class="btn btn-sm btn-warning"
+                onclick="editDesign(
+                  {{ design.id }},
+                  '{{ design.banner_heading|escapejs }}',
+                  '{{ design.title|escapejs }}',
+                  '{{ design.description|escapejs }}',
+                  '{% if design.banner_image %}{{ design.banner_image.url }}{% endif %}',
+                  [
+                    {% for img in design.images.all %}
+                      {id:{{ img.id }}, url:'{{ img.image.url }}'}{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                  ]
+                )">
+                Edit
+              </button>
+
+              <!-- DELETE -->
+              <button class="btn btn-sm btn-danger"
+                onclick="deleteItem('{% url 'design_delete' design.id %}')">
+                Delete
+              </button>
+
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+      {% endif %}
+
+    </div>
+  </section>
+</div>
+
+
+<!-- ================= CREATE DESIGN MODAL ================= -->
+<div class="modal fade" id="createDesignModal">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+
+      <form method="POST" action="{% url 'design_create' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="modal-header bg-primary text-white">
+          <h5>Add Design</h5>
+          <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="form-group">
+            <label>Banner Image</label>
+            <input type="file" class="form-control" name="banner_image" required>
+          </div>
+
+          <div class="form-group">
+            <label>Banner Heading</label>
+            <input type="text" class="form-control" name="banner_heading" required>
+          </div>
+
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" class="form-control" name="title" required>
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-control" name="description"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Images</label>
+            <input type="file" class="form-control" name="images" multiple>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ================= EDIT MODAL ================= -->
+<div class="modal fade" id="editDesignModal">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+
+      <form method="POST" action="" enctype="multipart/form-data" id="editDesignForm">
+        {% csrf_token %}
+
+        <div class="modal-header bg-warning text-white">
+          <h5>Edit Design</h5>
+          <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="form-group">
+            <label>Banner Image</label>
+            <input type="file" class="form-control" name="banner_image">
+            <div id="bannerPreview" class="mt-2"></div>
+          </div>
+
+          <div class="form-group">
+            <label>Banner Heading</label>
+            <input type="text" class="form-control" name="banner_heading">
+          </div>
+
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" class="form-control" name="title">
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-control" name="description"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Existing Images</label>
+            <div id="existingImages" class="d-flex flex-wrap"></div>
+          </div>
+
+          <div class="form-group">
+            <label>Add More Images</label>
+            <input type="file"
+                   class="form-control"
+                   name="images"
+                   multiple
+                   onchange="previewEditImages(event)">
+            <div id="editImagePreview" class="mt-3 d-flex flex-wrap"></div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-warning">Update</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+/* DELETE DESIGN */
+function deleteItem(url) {
+  if (confirm("Delete this design?")) {
+    window.location.href = url;
+  }
+}
+
+
+/* EDIT DESIGN */
+function editDesign(id, banner_heading, title, description, banner_image, images) {
+
+  $("#editDesignModal").modal("show");
+
+  const form = $("#editDesignForm");
+  form.attr("action", "{% url 'design_edit' 0 %}".replace("0", id));
+
+  form.find('input[name="banner_heading"]').val(banner_heading);
+  form.find('input[name="title"]').val(title);
+  form.find('textarea[name="description"]').val(description);
+
+  // banner preview
+  $("#bannerPreview").html(
+    banner_image ? `<img src="${banner_image}" style="max-height:150px;border-radius:8px;">` : ""
+  );
+
+  // existing images
+  let html = "";
+
+  if (images && images.length > 0) {
+    images.forEach(img => {
+      html += `
+        <div style="position:relative;margin:5px;">
+          <img src="${img.url}"
+               style="width:100px;height:100px;object-fit:cover;border-radius:8px;">
+          <button type="button"
+            onclick="deleteDesignImage(${img.id}, this.parentElement)"
+            style="position:absolute;top:-5px;right:-5px;background:red;color:white;border:none;border-radius:50%;width:22px;height:22px;">
+            ×
+          </button>
+        </div>
+      `;
+    });
+  } else {
+    html = "<p class='text-muted'>No images</p>";
+  }
+
+  $("#existingImages").html(html);
+}
+
+
+/* DELETE SINGLE IMAGE */
+function deleteDesignImage(id, element) {
+
+  if (!confirm("Delete this image?")) return;
+
+  fetch("{% url 'design_image_delete' 0 %}".replace("0", id), {
+    method: "POST",
+    headers: {
+      "X-CSRFToken": "{{ csrf_token }}"
+    }
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) element.remove();
+    else alert("Delete failed");
+  });
+}
+
+
+/* PREVIEW NEW UPLOAD */
+function previewEditImages(event) {
+  const preview = document.getElementById("editImagePreview");
+  preview.innerHTML = "";
+
+  Array.from(event.target.files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      preview.innerHTML += `
+        <div style="position:relative;margin:5px;">
+          <img src="${e.target.result}"
+               style="width:100px;height:100px;object-fit:cover;border-radius:8px;">
+        </div>`;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+
+/* RESET MODAL */
+$("#editDesignModal").on("hidden.bs.modal", function () {
+  $("#existingImages").html("");
+  $("#editImagePreview").html("");
+  $("#bannerPreview").html("");
+  this.querySelector("form").reset();
+});
+
+</script>
+
+{% endblock %}
