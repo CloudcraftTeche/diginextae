@@ -1102,7 +1102,7 @@ class Location(models.Model):
     description = models.TextField()
     image = CloudinaryField('image', blank=True, null=True)
 
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
