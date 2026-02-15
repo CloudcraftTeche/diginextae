@@ -118,7 +118,7 @@ urlpatterns = [
     
     #Location
     path('locations/', LocationListView.as_view(), name='location-list'),
-    path('locations/<int:id>/', LocationDetailView.as_view(), name='location-detail'),
+    path('locations/<slug:slug>/', LocationDetailView.as_view(), name='location-detail'),
     
     # design
     path('design/', DesignListView.as_view(), name='design-list'),

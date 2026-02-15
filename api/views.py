@@ -1413,11 +1413,11 @@ class LocationListView(APIView):
             )
 
 class LocationDetailView(APIView):
-    """GET: Retrieve a single Location by ID"""
+    """GET: Retrieve a single Location by slug"""
 
-    def get(self, request, id):
+    def get(self, request, slug):
         try:
-            location = get_object_or_404(Location, id=id)
+            location = get_object_or_404(Location, slug=slug)
             serializer = LocationSerializer(location)
 
             return custom_response(
