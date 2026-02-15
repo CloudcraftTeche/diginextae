@@ -1100,11 +1100,25 @@ class Location(models.Model):
     location = models.CharField(max_length=150)
     heading = models.CharField(max_length=200)
     description = models.TextField()
-    image = CloudinaryField(
-            'image',
-            blank=True,
-            null=True
-        )
+    image = CloudinaryField('image', blank=True, null=True)
+
+    slug = models.SlugField(unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.location)
+            slug = base_slug
+            counter = 1
+
+            # ensure unique slug
+            while Location.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+            self.slug = slug
+
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.location
 
