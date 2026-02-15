@@ -11,26 +11,3 @@ python manage.py collectstatic --no-input
 
 # Run migrations
 python manage.py migrate
-
-# Generate slugs for existing Location data
-python manage.py shell -c "
-from dashboard.models import Location
-from django.utils.text import slugify
-
-for obj in Location.objects.all():
-    if not obj.slug:
-        base_slug = slugify(obj.location)
-        slug = base_slug
-        counter = 1
-
-        while Location.objects.filter(slug=slug).exclude(id=obj.id).exists():
-            slug = f'{base_slug}-{counter}'
-            counter += 1
-
-        obj.slug = slug
-        obj.save()
-
-print('Slugs created successfully')
-"
-
-"
