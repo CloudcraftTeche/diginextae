@@ -1102,7 +1102,7 @@ class Location(models.Model):
     description = models.TextField()
     image = CloudinaryField('image', blank=True, null=True)
 
-    slug = models.SlugField(blank=True, null=True)
+    slug = models.SlugField(blank=True, null=True, unique=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -1110,8 +1110,7 @@ class Location(models.Model):
             slug = base_slug
             counter = 1
 
-            # ensure unique slug
-            while Location.objects.filter(slug=slug).exists():
+            while Location.objects.filter(slug=slug).exclude(id=self.id).exists():
                 slug = f"{base_slug}-{counter}"
                 counter += 1
 
