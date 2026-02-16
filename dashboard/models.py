@@ -581,12 +581,10 @@ class Expertise(models.Model):
 class OurWorks(models.Model):
     """Our Works Portfolio"""
 
-    # Banner Section
     banner_image = CloudinaryField('image', folder='our_works/banners', null=True, blank=True)
     banner_heading = models.CharField(max_length=255, null=True, blank=True)
     banner_description = models.TextField(null=True, blank=True)
 
-    # Work Details
     title = models.CharField(max_length=200)
     description = models.TextField()
     image = CloudinaryField('image', folder='our_works')
@@ -598,6 +596,7 @@ class OurWorks(models.Model):
         blank=True,
         related_name='works'
     )
+
     expertise = models.ForeignKey(
         'Expertise',
         on_delete=models.SET_NULL,
@@ -611,18 +610,15 @@ class OurWorks(models.Model):
     launch_date = models.CharField(max_length=100, null=True, blank=True)
     system = models.CharField(max_length=150, null=True, blank=True)
 
-    # Banner 2
     banner2_image = CloudinaryField('image', folder='our_works/banners', null=True, blank=True)
     banner2_title = models.CharField(max_length=255, null=True, blank=True)
 
-    # ✅ SEO fields (nullable)
-    slug = models.SlugField(max_length=255, blank=True, null=True)
+    # ✅ SEO fields
+    slug = models.SlugField(max_length=255, unique=True, blank=True, null=True)
     meta_title = models.CharField(max_length=255, blank=True, null=True)
     meta_description = models.TextField(blank=True, null=True)
     meta_keywords = models.CharField(max_length=500, blank=True, null=True)
-    
-    
-    # Status & Timestamps
+
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -633,6 +629,23 @@ class OurWorks(models.Model):
 
     def __str__(self):
         return self.title
+
+    # ✅ Auto generate unique slug
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+
+            while OurWorks.objects.filter(slug=slug).exclude(id=self.id).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+            self.slug = slug
+
+        super().save(*args, **kwargs)
+        
+        
 # ==================== OUR WORK SECTION 2 ====================
 
 class OurWorkSection2(models.Model):
@@ -682,21 +695,6 @@ class OurWorkSection2(models.Model):
 
     def __str__(self):
         return f"Section 2 - {self.ourwork.title}: {self.title}"
-
-    # ✅ Auto generate slug
-    def save(self, *args, **kwargs):
-        if not self.slug and self.title:
-            base_slug = slugify(self.title)
-            slug = base_slug
-            counter = 1
-
-            while OurWorkSection2.objects.filter(slug=slug).exclude(id=self.id).exists():
-                slug = f"{base_slug}-{counter}"
-                counter += 1
-
-            self.slug = slug
-
-        super().save(*args, **kwargs)
         
 # ==================== PROJECT GOALS SECTION ====================
 
