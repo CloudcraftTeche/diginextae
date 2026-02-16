@@ -614,7 +614,7 @@ class OurWorks(models.Model):
     banner2_title = models.CharField(max_length=255, null=True, blank=True)
 
     # ✅ SEO fields
-    slug = models.SlugField(max_length=255, unique=True, blank=True, null=True)
+    slug = models.SlugField(max_length=255, blank=True, null=True)
     meta_title = models.CharField(max_length=255, blank=True, null=True)
     meta_description = models.TextField(blank=True, null=True)
     meta_keywords = models.CharField(max_length=500, blank=True, null=True)
