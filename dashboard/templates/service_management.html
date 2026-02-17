@@ -315,16 +315,12 @@
                     </div>
                     <div class="card-body">
                       {% if section1_list %}
-                      {% regroup section1_list|dictsort:"service_heading.service_name" by service_heading as grouped_section1 %}
-                      {% for group in grouped_section1 %}
-                      <div class="mb-3 mt-4">
-                        <h4 class="text-primary border-bottom pb-2">{{ group.grouper.service_name }}</h4>
-                      </div>
                       <div class="row">
-                        {% for sec1 in group.list %}
+                        {% for sec1 in section1_list %}
                         <div class="col-lg-6 col-md-6 mb-3">
                           <div class="card shadow-sm h-100">
                             <div class="card-body">
+                              <h6 class="card-title font-weight-bold text-primary">{{ sec1.service_heading.service_name }}</h6>
                               <h5 class="card-subtitle mb-2">{{ sec1.title }}</h5>
                               <p class="card-text text-muted">{{ sec1.description|truncatewords:30 }}</p>
                               <small class="text-muted">Created: {{ sec1.created_at|date:"M d, Y" }}</small>
@@ -343,7 +339,6 @@
                         </div>
                         {% endfor %}
                       </div>
-                      {% endfor %}
                       {% else %}
                       <div class="alert alert-info">
                         <i class="fas fa-info-circle"></i> No Section 1 items added yet.
@@ -365,7 +360,7 @@
                       {% if section2_list %}
 
                         <!-- Group by Service Heading -->
-                        {% regroup section2_list|dictsort:"service_heading.service_name" by service_heading as grouped_section2 %}
+                        {% regroup section2_list by service_heading as grouped_section2 %}
 
                         {% for group in grouped_section2 %}
 
