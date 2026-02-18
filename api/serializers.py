@@ -35,6 +35,8 @@ from dashboard.models import (
     ServiceSection1, ServiceSection2,
     SolutionsSection1, SolutionsSection2,
     Design, DesignImage,
+    InsightChallengeItem,
+    InsightChallengeSection,
 )
 
 class ProjectGoalSerializer(serializers.ModelSerializer):
@@ -437,11 +439,26 @@ class InsightsDigitalMarketingSerializer(serializers.ModelSerializer):
     class Meta:
         model = InsightsDigitalMarketing
         fields = '__all__'
+        
+class InsightChallengeItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InsightChallengeItem
+        fields = ["id", "text", "created_at"]
 
+class InsightChallengeSectionSerializer(serializers.ModelSerializer):
+    items = InsightChallengeItemSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = InsightChallengeSection
+        fields = ["id", "title", "description", "created_at", "items"]
+        
 class OurInsightsSerializer(serializers.ModelSerializer):
+    challenge_sections = InsightChallengeSectionSerializer(many=True, read_only=True)
+
     class Meta:
         model = OurInsights
-        fields = '__all__'
+        fields = "__all__"
+
         
 class BlogSerializer(serializers.ModelSerializer):
     class Meta:
@@ -471,3 +488,4 @@ class DesignSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
         
+

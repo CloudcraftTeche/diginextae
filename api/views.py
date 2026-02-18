@@ -1273,14 +1273,18 @@ class OurInsightsDetailView(APIView):
             insight = None
 
             # 1️⃣ Try fetching by slug
-            insight = OurInsights.objects.filter(
+            insight = OurInsights.objects.prefetch_related(
+                "challenge_sections__items"   # nested relation
+            ).filter(
                 slug=pk,
                 is_active=True
             ).first()
 
             # 2️⃣ If not found, try fetching by ID
             if not insight:
-                insight = OurInsights.objects.get(
+                insight = OurInsights.objects.prefetch_related(
+                    "challenge_sections__items"
+                ).get(
                     pk=pk,
                     is_active=True
                 )
