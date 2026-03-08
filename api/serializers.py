@@ -37,6 +37,10 @@ from dashboard.models import (
     Design, DesignImage,
     InsightChallengeItem,
     InsightChallengeSection,
+    InsightStrategy, InsightStrategyBlock, InsightStrategyPoint,
+    InsightResult, InsightResultBlock,
+    InsightAchievement, InsightAchievementPoint,
+    InsightGrowth,
 )
 
 class ProjectGoalSerializer(serializers.ModelSerializer):
@@ -452,13 +456,124 @@ class InsightChallengeSectionSerializer(serializers.ModelSerializer):
         model = InsightChallengeSection
         fields = ["id", "title", "description", "created_at", "items"]
         
+# ─── Strategy ──────────────────────────────────────────────────
+
+class InsightStrategyPointSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = InsightStrategyPoint
+        fields = ['id', 'text', 'order']
+
+
+class InsightStrategyBlockSerializer(serializers.ModelSerializer):
+    points = InsightStrategyPointSerializer(many=True, read_only=True)
+
+    class Meta:
+        model  = InsightStrategyBlock
+        fields = ['id', 'heading', 'order', 'points']
+
+
+class InsightStrategySerializer(serializers.ModelSerializer):
+    blocks = InsightStrategyBlockSerializer(many=True, read_only=True)
+
+    class Meta:
+        model  = InsightStrategy
+        fields = ['id', 'heading', 'description', 'blocks']
+
+
+# ─── Results ───────────────────────────────────────────────────
+
+class InsightResultBlockSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
+    class Meta:
+        model  = InsightResultBlock
+        fields = ['id', 'image', 'heading', 'title', 'description', 'order']
+
+    def get_image(self, obj):
+        request = self.context.get('request')
+        if obj.image:
+            return request.build_absolute_uri(obj.image.url) if request else obj.image.url
+        return None
+
+
+class InsightResultSerializer(serializers.ModelSerializer):
+    blocks = InsightResultBlockSerializer(many=True, read_only=True)
+
+    class Meta:
+        model  = InsightResult
+        fields = ['id', 'heading', 'description', 'blocks']
+
+
+# ─── Achievements ──────────────────────────────────────────────
+
+class InsightAchievementPointSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = InsightAchievementPoint
+        fields = ['id', 'text', 'order']
+
+
+class InsightAchievementSerializer(serializers.ModelSerializer):
+    points = InsightAchievementPointSerializer(many=True, read_only=True)
+
+    class Meta:
+        model  = InsightAchievement
+        fields = ['id', 'heading', 'points']
+
+
+# ─── Growth ────────────────────────────────────────────────────
+
+class InsightGrowthSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = InsightGrowth
+        fields = ['id', 'heading', 'description']
+
+
+# ─── Main OurInsights Serializer ───────────────────────────────
+
 class OurInsightsSerializer(serializers.ModelSerializer):
     challenge_sections = InsightChallengeSectionSerializer(many=True, read_only=True)
 
-    class Meta:
-        model = OurInsights
-        fields = "__all__"
+    strategy     = serializers.SerializerMethodField()
+    results      = serializers.SerializerMethodField()
+    achievements = serializers.SerializerMethodField()
+    growth       = serializers.SerializerMethodField()
 
+    class Meta:
+        model  = OurInsights
+        fields = '__all__'
+
+    def get_strategy(self, obj):
+        try:
+            return InsightStrategySerializer(
+                obj.strategy, context=self.context
+            ).data
+        except InsightStrategy.DoesNotExist:
+            return None
+
+    def get_results(self, obj):
+        try:
+            return InsightResultSerializer(
+                obj.result, context=self.context
+            ).data
+        except InsightResult.DoesNotExist:
+            return None
+
+    def get_achievements(self, obj):
+        try:
+            return InsightAchievementSerializer(
+                obj.achievement, context=self.context
+            ).data
+        except InsightAchievement.DoesNotExist:
+            return None
+
+    def get_growth(self, obj):
+        try:
+            return InsightGrowthSerializer(
+                obj.growth, context=self.context
+            ).data
+        except InsightGrowth.DoesNotExist:
+            return None
+        
         
 class BlogSerializer(serializers.ModelSerializer):
     class Meta:

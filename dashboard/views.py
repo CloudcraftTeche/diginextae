@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import cloudinary.uploader
+from django.views.decorators.http import require_POST
 import json
 from .models import *
 from .forms import *
@@ -3226,3 +3227,177 @@ def design_image_delete(request, pk):
         "message": "Image deleted"
     })
 
+# ─── helper ────────────────────────────────────────────────────
+def _block_indices(request, prefix):
+    indices = set()
+    for key in list(request.POST.keys()) + list(request.FILES.keys()):
+        if key.startswith(f'{prefix}['):
+            try:
+                indices.add(int(key.split('[')[1].split(']')[0]))
+            except (IndexError, ValueError):
+                pass
+    return sorted(indices)
+
+
+# ─── Strategy ──────────────────────────────────────────────────
+@require_POST
+def insight_strategy_save(request, insight_id):
+    insight = get_object_or_404(OurInsights, pk=insight_id)
+
+    strategy, _ = InsightStrategy.objects.get_or_create(insight=insight)
+    strategy.heading     = request.POST.get('heading', '').strip()
+    strategy.description = request.POST.get('description', '').strip()
+    strategy.save()
+
+    strategy.blocks.all().delete()
+
+    for order, idx in enumerate(_block_indices(request, 'strategy_blocks')):
+        heading = request.POST.get(f'strategy_blocks[{idx}][heading]', '').strip()
+        points  = [p.strip() for p in request.POST.getlist(f'strategy_blocks[{idx}][points][]') if p.strip()]
+
+        if not heading and not points:
+            continue
+
+        block = InsightStrategyBlock.objects.create(strategy=strategy, heading=heading, order=order)
+        for pt_order, text in enumerate(points):
+            InsightStrategyPoint.objects.create(block=block, text=text, order=pt_order)
+
+    messages.success(request, 'Strategy saved successfully.')
+    return redirect('our_insights_page')
+
+
+# ─── Results ───────────────────────────────────────────────────
+@require_POST
+def insight_result_save(request, insight_id):
+    insight = get_object_or_404(OurInsights, pk=insight_id)
+
+    result, _ = InsightResult.objects.get_or_create(insight=insight)
+    result.heading     = request.POST.get('heading', '').strip()
+    result.description = request.POST.get('description', '').strip()
+    result.save()
+
+    existing  = {b.order: b for b in result.blocks.all()}
+    kept_pks  = []
+
+    for order, idx in enumerate(_block_indices(request, 'results_blocks')):
+        heading     = request.POST.get(f'results_blocks[{idx}][heading]',     '').strip()
+        title       = request.POST.get(f'results_blocks[{idx}][title]',       '').strip()
+        description = request.POST.get(f'results_blocks[{idx}][description]', '').strip()
+        image_file  = request.FILES.get(f'results_blocks[{idx}][image]')
+
+        if not any([heading, title, description, image_file]):
+            continue
+
+        block             = existing.get(order, InsightResultBlock(result=result))
+        block.heading     = heading
+        block.title       = title
+        block.description = description
+        block.order       = order
+        if image_file:
+            block.image = image_file
+        block.save()
+        kept_pks.append(block.pk)
+
+    result.blocks.exclude(pk__in=kept_pks).delete()
+
+    messages.success(request, 'Results saved successfully.')
+    return redirect('our_insights_page')
+
+
+# ─── Achievements ──────────────────────────────────────────────
+@require_POST
+def insight_achievement_save(request, insight_id):
+    insight = get_object_or_404(OurInsights, pk=insight_id)
+
+    achievement, _ = InsightAchievement.objects.get_or_create(insight=insight)
+    achievement.heading = request.POST.get('heading', '').strip()
+    achievement.save()
+
+    achievement.points.all().delete()
+
+    points = [p.strip() for p in request.POST.getlist('achievements_points[]') if p.strip()]
+    for order, text in enumerate(points):
+        InsightAchievementPoint.objects.create(achievement=achievement, text=text, order=order)
+
+    messages.success(request, 'Achievements saved successfully.')
+    return redirect('our_insights_page')
+
+
+# ─── Growth ────────────────────────────────────────────────────
+@require_POST
+def insight_growth_save(request, insight_id):
+    insight = get_object_or_404(OurInsights, pk=insight_id)
+
+    growth, _ = InsightGrowth.objects.get_or_create(insight=insight)
+    growth.heading     = request.POST.get('heading', '').strip()
+    growth.description = request.POST.get('description', '').strip()
+    growth.save()
+
+    messages.success(request, 'Growth saved successfully.')
+    return redirect('our_insights_page')
+
+
+
+# ─── Content GET (JSON for modal pre-population) ───────────────
+def insight_content_get(request, insight_id):
+    insight = get_object_or_404(OurInsights, pk=insight_id)
+
+    # Strategy
+    try:
+        s = insight.strategy
+        strategy_data = {
+            'heading':     s.heading,
+            'description': s.description,
+            'blocks': [
+                {'heading': b.heading, 'points': list(b.points.values_list('text', flat=True))}
+                for b in s.blocks.all()
+            ],
+        }
+    except InsightStrategy.DoesNotExist:
+        strategy_data = {}
+
+    # Results
+    try:
+        r = insight.result
+        result_data = {
+            'heading':     r.heading,
+            'description': r.description,
+            'blocks': [
+                {
+                    'heading':     b.heading,
+                    'title':       b.title,
+                    'description': b.description,
+                    'image_url':   b.image.url if b.image else '',
+                }
+                for b in r.blocks.all()
+            ],
+        }
+    except InsightResult.DoesNotExist:
+        result_data = {}
+
+    # Achievements
+    try:
+        a = insight.achievement
+        achievement_data = {
+            'heading': a.heading,
+            'points':  list(a.points.values_list('text', flat=True)),
+        }
+    except InsightAchievement.DoesNotExist:
+        achievement_data = {}
+
+    # Growth
+    try:
+        g = insight.growth
+        growth_data = {
+            'heading':     g.heading,
+            'description': g.description,
+        }
+    except InsightGrowth.DoesNotExist:
+        growth_data = {}
+
+    return JsonResponse({
+        'strategy':     strategy_data,
+        'results':      result_data,
+        'achievements': achievement_data,
+        'growth':       growth_data,
+    })

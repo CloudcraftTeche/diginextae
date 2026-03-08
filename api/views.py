@@ -1272,24 +1272,28 @@ class OurInsightsDetailView(APIView):
         try:
             insight = None
 
-            # 1️⃣ Try fetching by slug
-            insight = OurInsights.objects.prefetch_related(
-                "challenge_sections__items"   # nested relation
-            ).filter(
+            prefetch = [
+                'challenge_sections__items',
+                'strategy__blocks__points',   # strategy → blocks → points
+                'result__blocks',             # results  → blocks
+                'achievement__points',        # achievements → points
+                'growth',                     # growth (single row)
+            ]
+
+            # 1. Try fetching by slug
+            insight = OurInsights.objects.prefetch_related(*prefetch).filter(
                 slug=pk,
                 is_active=True
             ).first()
 
-            # 2️⃣ If not found, try fetching by ID
+            # 2. Fallback to ID
             if not insight:
-                insight = OurInsights.objects.prefetch_related(
-                    "challenge_sections__items"
-                ).get(
+                insight = OurInsights.objects.prefetch_related(*prefetch).get(
                     pk=pk,
                     is_active=True
                 )
 
-            serializer = OurInsightsSerializer(insight)
+            serializer = OurInsightsSerializer(insight, context={'request': request})
 
             return custom_response(
                 success=True,
@@ -1310,6 +1314,7 @@ class OurInsightsDetailView(APIView):
                 message=f"Error retrieving our insight: {str(e)}",
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
 
 
 

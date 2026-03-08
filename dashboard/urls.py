@@ -342,6 +342,14 @@ path('our-insights/create/', views.our_insights_create, name='our_insights_creat
 path('our-insights/<int:pk>/edit/', views.our_insights_edit, name='our_insights_edit'),
 path('our-insights/<int:pk>/delete/', views.our_insights_delete, name='our_insights_delete'),
 
+# Add these paths into your existing dashboard/urls.py urlpatterns list
+
+path('insights/<int:insight_id>/content/get/',           views.insight_content_get,       name='insight_content_get'),
+path('insights/<int:insight_id>/content/strategy/',      views.insight_strategy_save,     name='insight_strategy_save'),
+path('insights/<int:insight_id>/content/results/',       views.insight_result_save,       name='insight_result_save'),
+path('insights/<int:insight_id>/content/achievements/',  views.insight_achievement_save,  name='insight_achievement_save'),
+path('insights/<int:insight_id>/content/growth/',        views.insight_growth_save,       name='insight_growth_save'),
+
 
 # ==================== Blog section====================
 path('blog/', views.blog_page, name='blog_page'),

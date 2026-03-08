@@ -1045,6 +1045,101 @@ class InsightChallengeItem(models.Model):
 
     def __str__(self):
         return self.text
+
+
+class InsightStrategy(models.Model):
+    insight     = models.OneToOneField(OurInsights, on_delete=models.CASCADE, related_name='strategy')
+    heading     = models.CharField(max_length=255, blank=True)
+    description = models.TextField(blank=True)
+    created_at  = models.DateTimeField(auto_now_add=True)
+    updated_at  = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Strategy – {self.insight.title}"
+
+
+class InsightStrategyBlock(models.Model):
+    strategy = models.ForeignKey(InsightStrategy, on_delete=models.CASCADE, related_name='blocks')
+    heading  = models.CharField(max_length=255, blank=True)
+    order    = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return f"Block {self.order} – {self.heading}"
+
+
+class InsightStrategyPoint(models.Model):
+    block = models.ForeignKey(InsightStrategyBlock, on_delete=models.CASCADE, related_name='points')
+    text  = models.CharField(max_length=500)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return self.text
+
+
+class InsightResult(models.Model):
+    insight     = models.OneToOneField(OurInsights, on_delete=models.CASCADE, related_name='result')
+    heading     = models.CharField(max_length=255, blank=True)
+    description = models.TextField(blank=True)
+    created_at  = models.DateTimeField(auto_now_add=True)
+    updated_at  = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Result – {self.insight.title}"
+
+
+class InsightResultBlock(models.Model):
+    result      = models.ForeignKey(InsightResult, on_delete=models.CASCADE, related_name='blocks')
+    image       = models.ImageField(upload_to='insight_results/', null=True, blank=True)
+    heading     = models.CharField(max_length=255, blank=True)
+    title       = models.CharField(max_length=255, blank=True)
+    description = models.TextField(blank=True)
+    order       = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return f"Block {self.order} – {self.heading}"
+
+
+class InsightAchievement(models.Model):
+    insight    = models.OneToOneField(OurInsights, on_delete=models.CASCADE, related_name='achievement')
+    heading    = models.CharField(max_length=255, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Achievement – {self.insight.title}"
+
+
+class InsightAchievementPoint(models.Model):
+    achievement = models.ForeignKey(InsightAchievement, on_delete=models.CASCADE, related_name='points')
+    text        = models.CharField(max_length=500)
+    order       = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return self.text
+
+
+class InsightGrowth(models.Model):
+    insight     = models.OneToOneField(OurInsights, on_delete=models.CASCADE, related_name='growth')
+    heading     = models.CharField(max_length=255, blank=True)
+    description = models.TextField(blank=True)
+    created_at  = models.DateTimeField(auto_now_add=True)
+    updated_at  = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Growth – {self.insight.title}"
+    
     
 # ==================== Blog ====================
 class Blog(models.Model):
@@ -1158,3 +1253,4 @@ class DesignImage(models.Model):
 
     def __str__(self):
         return self.design.title
+
